@@ -6,13 +6,13 @@
 --  ██║     ███████╗╚██████╔╝██║██████╔╝     ╚████╔╝ ██║
 --  ╚═╝     ╚══════╝ ╚═════╝ ╚═╝╚═════╝       ╚═══╝  ╚═╝
 --
---  FLUID UI v1.0.0 — By SZK
+--  FLUID UI v1.1.0 — By SZK
 -- ═══════════════════════════════════════════════════════════════════
 
 local SZK = {
     Themes = {}, Windows = {}, Flags = {}, Icons = {},
     CurrentTheme = nil, ConfigFolder = "SZK_Configs",
-    Version = "1.0.0",
+    Version = "1.1.0",
     _connections = {},
 }
 
@@ -24,7 +24,6 @@ local UserInputService = game:GetService("UserInputService")
 local RunService       = game:GetService("RunService")
 local HttpService      = game:GetService("HttpService")
 local Players          = game:GetService("Players")
-local TeleportService  = game:GetService("TeleportService")
 local LocalPlayer      = Players.LocalPlayer
 local Mouse            = LocalPlayer and LocalPlayer:GetMouse()
 local CoreGui          = game:GetService("CoreGui")
@@ -339,42 +338,8 @@ SZK.Themes["BLOOD"]          = BuildTheme("BLOOD",          {accent = "#A52A2A",
 SZK.Themes["COCOA"]          = BuildTheme("COCOA",          {accent = "#A0522D", accent2 = "#CD853F", outline = "#A0522D", toggle = "#8B4513", slider = "#A0522D", text = "#FAF0E6", placeholder = "#CD853F", elemBg = "#1A120C", elemBg2 = "#20160E", bg = "#0A0604", bg2 = "#100A06", bg3 = "#160E08", icon = "#A0522D"})
 SZK.Themes["LIGHT"]          = BuildTheme("LIGHT",          {accent = "#2A2A2A", accent2 = "#505050", outline = "#E0E0E0", toggle = "#2A2A2A", slider = "#2A2A2A", text = "#1A1A1A", textDim = "#404040", placeholder = "#808080", elemBg = "#F5F5F5", elemBg2 = "#FFFFFF", bg = "#FAFAFA", bg2 = "#F0F0F0", bg3 = "#E8E8E8", icon = "#2A2A2A"})
 
--- ═══════════════════════════════════════════════════════════════
---  NUEVOS TEMAS FLUIDOS — como agua y niebla 💧🌫️
--- ═══════════════════════════════════════════════════════════════
-SZK.Themes["MOONLIGHT"]       = BuildTheme("MOONLIGHT",       {accent = "#E8E8E8", accent2 = "#F4F4F4", outline = "#E8E8E8", toggle = "#E8E8E8", slider = "#F4F4F4", text = "#FAFAFA", placeholder = "#D8D8D8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4F4F4"})
-SZK.Themes["DUSTY PINK"]      = BuildTheme("DUSTY PINK",      {accent = "#F4D0E0", accent2 = "#F8E0E8", outline = "#F8E0E8", toggle = "#F4D0E0", slider = "#F8E0E8", text = "#FFF5F8", placeholder = "#D8B8C8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0E8"})
-SZK.Themes["SOFT IVORY"]      = BuildTheme("SOFT IVORY",      {accent = "#F8F0E8", accent2 = "#FFF8F0", outline = "#FFF8F0", toggle = "#F8F0E8", slider = "#FFF8F0", text = "#FFFAF5", placeholder = "#E8D8C8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#FFF8F0"})
-SZK.Themes["SOFT LILAC"]      = BuildTheme("SOFT LILAC",      {accent = "#E8D8F0", accent2 = "#F4E0F8", outline = "#F4E0F8", toggle = "#E8D8F0", slider = "#F4E0F8", text = "#FAF5FF", placeholder = "#D8C0D0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4E0F8"})
-SZK.Themes["SOFT SAGE"]       = BuildTheme("SOFT SAGE",       {accent = "#D8E8D8", accent2 = "#E0F0E0", outline = "#E0F0E0", toggle = "#D8E8D8", slider = "#E0F0E0", text = "#F5F8F0", placeholder = "#B8C0B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F0E0"})
-SZK.Themes["SOFT BEIGE"]      = BuildTheme("SOFT BEIGE",      {accent = "#F4E8D8", accent2 = "#F8F0E0", outline = "#F8F0E0", toggle = "#F4E8D8", slider = "#F8F0E0", text = "#FFF8F0", placeholder = "#D8C8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8F0E0"})
-SZK.Themes["SOFT TERRACOTTA"] = BuildTheme("SOFT TERRACOTTA", {accent = "#F4D0B8", accent2 = "#F8E0C8", outline = "#F8E0C8", toggle = "#F4D0B8", slider = "#F8E0C8", text = "#FFF8F0", placeholder = "#D8B0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0C8"})
-SZK.Themes["SOFT CYAN"]       = BuildTheme("SOFT CYAN",       {accent = "#D0F0E8", accent2 = "#E0F8F0", outline = "#E0F8F0", toggle = "#D0F0E8", slider = "#E0F8F0", text = "#F0F8F5", placeholder = "#B0C8C0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F8F0"})
-SZK.Themes["SOFT TURQUOISE"]  = BuildTheme("SOFT TURQUOISE",  {accent = "#C8F0E0", accent2 = "#D8F8E8", outline = "#D8F8E8", toggle = "#C8F0E0", slider = "#D8F8E8", text = "#F0FFF0", placeholder = "#A8C8B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#D8F8E8"})
-SZK.Themes["SOFT INDIGO"]     = BuildTheme("SOFT INDIGO",     {accent = "#D0E0F0", accent2 = "#E0E8F8", outline = "#E0E8F8", toggle = "#D0E0F0", slider = "#E0E8F8", text = "#F0F5FF", placeholder = "#B0B8C8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0E8F8"})
-SZK.Themes["SOFT CHERRY"]     = BuildTheme("SOFT CHERRY",     {accent = "#F4B8C0", accent2 = "#F8D0C8", outline = "#F8D0C8", toggle = "#F4B8C0", slider = "#F8D0C8", text = "#FFF5F8", placeholder = "#D8A8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D0C8"})
-SZK.Themes["SOFT MINT"]       = BuildTheme("SOFT MINT",       {accent = "#C8F0D8", accent2 = "#D8F8E0", outline = "#D8F8E0", toggle = "#C8F0D8", slider = "#D8F8E0", text = "#F0FFF0", placeholder = "#A8C8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#D8F8E0"})
-SZK.Themes["SOFT APRICOT"]    = BuildTheme("SOFT APRICOT",    {accent = "#F4E0C8", accent2 = "#F8E8D8", outline = "#F8E8D8", toggle = "#F4E0C8", slider = "#F8E8D8", text = "#FFF8F0", placeholder = "#D8C0A8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E8D8"})
-SZK.Themes["SOFT LIME"]       = BuildTheme("SOFT LIME",       {accent = "#E0F4D0", accent2 = "#E8F8D8", outline = "#E8F8D8", toggle = "#E0F4D0", slider = "#E8F8D8", text = "#F5FFF0", placeholder = "#B8C8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E8F8D8"})
-SZK.Themes["SOFT LAVENDER"]   = BuildTheme("SOFT LAVENDER",   {accent = "#E8D0F0", accent2 = "#F4E0F8", outline = "#F4E0F8", toggle = "#E8D0F0", slider = "#F4E0F8", text = "#FAF5FF", placeholder = "#D8B8D0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4E0F8"})
-SZK.Themes["SOFT PEACH"]      = BuildTheme("SOFT PEACH",      {accent = "#F4D8C0", accent2 = "#F8E0C8", outline = "#F8E0C8", toggle = "#F4D8C0", slider = "#F8E0C8", text = "#FFF8F0", placeholder = "#D8B0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0C8"})
-SZK.Themes["SOFT BLUSH"]      = BuildTheme("SOFT BLUSH",      {accent = "#F4C8D0", accent2 = "#F8D8D8", outline = "#F8D8D8", toggle = "#F4C8D0", slider = "#F8D8D8", text = "#FFF5F8", placeholder = "#D8A8B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D8D8"})
-SZK.Themes["SOFT IVY"]        = BuildTheme("SOFT IVY",        {accent = "#D8E8C8", accent2 = "#E0F0D0", outline = "#E0F0D0", toggle = "#D8E8C8", slider = "#E0F0D0", text = "#F5F8F0", placeholder = "#B8C0B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F0D0"})
-SZK.Themes["SOFT SUNRISE"]    = BuildTheme("SOFT SUNRISE",    {accent = "#F4E0B8", accent2 = "#F8E8C8", outline = "#F8E8C8", toggle = "#F4E0B8", slider = "#F8E8C8", text = "#FFF8E1", placeholder = "#D8C0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E8C8"})
-SZK.Themes["SOFT TWILIGHT"]   = BuildTheme("SOFT TWILIGHT",   {accent = "#E8D0E0", accent2 = "#F4E0E8", outline = "#F4E0E8", toggle = "#E8D0E0", slider = "#F4E0E8", text = "#FAF0F5", placeholder = "#D8B8C0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4E0E8"})
-SZK.Themes["SOFT DAWN"]       = BuildTheme("SOFT DAWN",       {accent = "#F4D8D0", accent2 = "#F8E0D8", outline = "#F8E0D8", toggle = "#F4D8D0", slider = "#F8E0D8", text = "#FFF5F5", placeholder = "#D8B0B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0D8"})
-SZK.Themes["SOFT CLOVER"]     = BuildTheme("SOFT CLOVER",     {accent = "#D8F0C8", accent2 = "#E0F8D0", outline = "#E0F8D0", toggle = "#D8F0C8", slider = "#E0F8D0", text = "#F5FFF0", placeholder = "#B8C0B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F8D0"})
-SZK.Themes["SOFT CORAL"]      = BuildTheme("SOFT CORAL",      {accent = "#F4C8B8", accent2 = "#F8D8C0", outline = "#F8D8C0", toggle = "#F4C8B8", slider = "#F8D8C0", text = "#FFF8F0", placeholder = "#D8B0A8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D8C0"})
-SZK.Themes["SOFT FUCHSIA"]    = BuildTheme("SOFT FUCHSIA",    {accent = "#F4B8D0", accent2 = "#F8D0D8", outline = "#F8D0D8", toggle = "#F4B8D0", slider = "#F8D0D8", text = "#FFF5F8", placeholder = "#D8B8C0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D0D8"})
-SZK.Themes["SOFT TANGERINE"]  = BuildTheme("SOFT TANGERINE",  {accent = "#F4E0A8", accent2 = "#F8E8B8", outline = "#F8E8B8", toggle = "#F4E0A8", slider = "#F8E8B8", text = "#FFF8E1", placeholder = "#D8C0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E8B8"})
-
 SZK.ThemeOrder = {
     "SZK",
-    "MOONLIGHT", "DUSTY PINK", "SOFT IVORY", "SOFT LILAC", "SOFT SAGE",
-    "SOFT BEIGE", "SOFT TERRACOTTA", "SOFT CYAN", "SOFT TURQUOISE", "SOFT INDIGO",
-    "SOFT CHERRY", "SOFT MINT", "SOFT APRICOT", "SOFT LIME", "SOFT LAVENDER",
-    "SOFT PEACH", "SOFT BLUSH", "SOFT IVY", "SOFT SUNRISE", "SOFT TWILIGHT",
-    "SOFT DAWN", "SOFT CLOVER", "SOFT CORAL", "SOFT FUCHSIA", "SOFT TANGERINE",
     "AMBIENT", "SOFT MIST", "WARM BLUSH", "SUNSET HUE", "SOFT GOLDEN",
     "PEACH BLOSSOM", "LAVENDER MIST", "SEAFOAM SOFT", "SOFT LEMON", "SOFT ROSE", "PEACH",
     "VENOM", "CYBER", "PURPLE", "GOLD", "NEON", "OCEAN", "ROSE", "FOREST",
@@ -463,12 +428,14 @@ function SZK:Notify(config)
     frame.Parent = slot
     Round(11, frame)
 
+    -- Glass-style gradient overlay
     MultiGradient(frame, {
         Shade(theme.ElementBackground, 0.12),
         theme.ElementBackground,
         Shade(theme.ElementBackground, -0.03),
     }, 135)
 
+    -- Outer glow around the card
     local glow = Instance.new("Frame")
     glow.Size = UDim2.new(1, 8, 1, 8)
     glow.Position = UDim2.new(0, -4, 0, -4)
@@ -479,6 +446,7 @@ function SZK:Notify(config)
     glow.Parent = frame
     Round(15, glow)
 
+    -- Shadow underneath
     local shadow = Instance.new("Frame")
     shadow.BackgroundColor3 = Color3.new(0, 0, 0)
     shadow.BackgroundTransparency = 0.7
@@ -489,8 +457,10 @@ function SZK:Notify(config)
     shadow.Parent = frame
     Round(14, shadow)
 
+    -- Thin accent border
     local stroke = Outline(frame, accent, 1.2, 0.35)
 
+    -- Left accent bar (very thin)
     local bar = Instance.new("Frame")
     bar.Size = UDim2.new(0, 2, 1, -14)
     bar.Position = UDim2.new(0, 0, 0, 7)
@@ -501,6 +471,7 @@ function SZK:Notify(config)
     Round(2, bar)
     Gradient(bar, accent, Blend(accent, Color3.new(1, 1, 1), 0.4), 90)
 
+    -- Icon badge (compact)
     local iconImg
     local resolvedCheck = iconKey and ResolveIcon(iconKey) or ""
     if resolvedCheck ~= "" then
@@ -525,6 +496,7 @@ function SZK:Notify(config)
     local textLeft = iconImg and 46 or 14
     local textWidth = -(textLeft + 14)
 
+    -- Title
     local tLbl = Instance.new("TextLabel")
     tLbl.Text = title
     tLbl.Font = Enum.Font.GothamBold
@@ -538,6 +510,7 @@ function SZK:Notify(config)
     tLbl.ZIndex = 6
     tLbl.Parent = frame
 
+    -- Content (subtitle)
     if hasContent then
         local cLbl = Instance.new("TextLabel")
         cLbl.Text = content
@@ -554,6 +527,7 @@ function SZK:Notify(config)
         cLbl.Parent = frame
     end
 
+    -- Progress bar (super thin, at bottom edge)
     local progressBg = Instance.new("Frame")
     progressBg.Size = UDim2.new(1, -4, 0, 2)
     progressBg.Position = UDim2.new(0, 2, 1, -3)
@@ -573,6 +547,7 @@ function SZK:Notify(config)
     Round(2, progressFill)
     Gradient(progressFill, accent, Blend(accent, Color3.new(1, 1, 1), 0.5), 0)
 
+    -- Buttons
     if hasBtns then
         local row = Instance.new("Frame")
         row.Size = UDim2.new(1, -22, 0, 22)
@@ -622,6 +597,7 @@ function SZK:Notify(config)
         end
     end
 
+    -- Entrance animation
     Tween(slot, 0.42, { Size = UDim2.new(1, 0, 0, CARD_H) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
     Tween(frame, 0.45, { Position = UDim2.new(0, 0, 0, 0) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
@@ -709,6 +685,7 @@ function SZK:CreateWindow(config)
     WindowGui.DisplayOrder = MainGui.DisplayOrder
     WindowGui.IgnoreGuiInset = true
 
+    -- ═══ MAIN FRAME ═══
     local MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.fromOffset(size.X, size.Y)
     MainFrame.Position = UDim2.fromScale(0.5, 0.5)
@@ -744,6 +721,7 @@ function SZK:CreateWindow(config)
     RecalculateScale()
     Track(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(RecalculateScale))
 
+    -- ═══ SOMBRA MULTICAPA ═══
     for i = 1, 3 do
         local s = Instance.new("Frame")
         s.Name = "Shadow_" .. i
@@ -757,6 +735,7 @@ function SZK:CreateWindow(config)
         Round(16 + i * 4, s)
     end
 
+    -- ═══ GLOW EXTERIOR ═══
     local OuterGlow = Instance.new("Frame")
     OuterGlow.Size = UDim2.new(1, 4, 1, 4)
     OuterGlow.Position = UDim2.new(0, -2, 0, -2)
@@ -767,6 +746,7 @@ function SZK:CreateWindow(config)
     OuterGlow.Parent = MainFrame
     Round(18, OuterGlow)
 
+    -- ═══ BORDE PRINCIPAL ═══
     local MainStroke = Instance.new("UIStroke")
     MainStroke.Color = Theme.Accent
     MainStroke.Thickness = 1.5
@@ -783,6 +763,7 @@ function SZK:CreateWindow(config)
     strokeGradient.Rotation = 135
     strokeGradient.Parent = MainStroke
 
+    -- ═══ BACKGROUND ═══
     local BgImage = Instance.new("ImageLabel")
     BgImage.Size = UDim2.fromScale(1, 1)
     BgImage.BackgroundTransparency = 1
@@ -805,6 +786,9 @@ function SZK:CreateWindow(config)
         Shade(Theme.Background, -0.02),
     }, 135)
 
+    -- ═══════════════════════════════════════════════════════════
+    --  SCAN EFFECTS (FIXED POSITIONING)
+    -- ═══════════════════════════════════════════════════════════
     local scansEnabled = true
     local activeScans = {}
 
@@ -894,22 +878,25 @@ function SZK:CreateWindow(config)
         return scan
     end
 
-    CreateScan("h", UDim2.new(0, 0, 0, 0),         UDim2.new(1, -180, 0, 0),       180, 1.4, 3, 0)
-    CreateScan("h", UDim2.new(1, -180, 0, 0),      UDim2.new(0, 0, 0, 0),          180, 1.5, 3, 0.4)
-    CreateScan("h", UDim2.new(0, 0, 1, -3),        UDim2.new(1, -180, 1, -3),      180, 1.45, 3, 0.8)
-    CreateScan("h", UDim2.new(1, -180, 1, -3),     UDim2.new(0, 0, 1, -3),         180, 1.55, 3, 1.2)
+    -- ═══ HORIZONTALES (FIXED: using proportional positioning) ═══
+    CreateScan("h", UDim2.new(0, 0, 0, 1),         UDim2.new(1, 0, 0, 1),       180, 1.4, 3, 0)
+    CreateScan("h", UDim2.new(1, 0, 0, 1),      UDim2.new(0, 0, 0, 1),          180, 1.5, 3, 0.4)
+    CreateScan("h", UDim2.new(0, 0, 1, -2),        UDim2.new(1, 0, 1, -2),      180, 1.45, 3, 0.8)
+    CreateScan("h", UDim2.new(1, 0, 1, -2),     UDim2.new(0, 0, 1, -2),         180, 1.55, 3, 1.2)
 
-    CreateScan("h", UDim2.new(0, 0, 0.5, -1.5),    UDim2.new(1, -220, 0.5, -1.5),  220, 2.0, 2, 0.6)
-    CreateScan("h", UDim2.new(1, -220, 0.5, -1.5), UDim2.new(0, 0, 0.5, -1.5),     220, 2.2, 2, 1.4)
+    CreateScan("h", UDim2.new(0, 0, 0.5, -1),    UDim2.new(1, 0, 0.5, -1),  220, 2.0, 2, 0.6)
+    CreateScan("h", UDim2.new(1, 0, 0.5, -1), UDim2.new(0, 0, 0.5, -1),     220, 2.2, 2, 1.4)
 
-    CreateScan("v", UDim2.new(0, 0, 0, 0),         UDim2.new(0, 0, 1, -140),       140, 1.4, 3, 0.2)
-    CreateScan("v", UDim2.new(0, 0, 1, -140),      UDim2.new(0, 0, 0, 0),          140, 1.5, 3, 0.7)
-    CreateScan("v", UDim2.new(1, -3, 0, 0),        UDim2.new(1, -3, 1, -140),      140, 1.45, 3, 1.05)
-    CreateScan("v", UDim2.new(1, -3, 1, -140),     UDim2.new(1, -3, 0, 0),         140, 1.55, 3, 0.35)
+    -- ═══ VERTICALES (FIXED: using proportional positioning) ═══
+    CreateScan("v", UDim2.new(0, 1, 0, 0),         UDim2.new(0, 1, 1, 0),       140, 1.4, 3, 0.2)
+    CreateScan("v", UDim2.new(0, 1, 1, 0),      UDim2.new(0, 1, 0, 0),          140, 1.5, 3, 0.7)
+    CreateScan("v", UDim2.new(1, -2, 0, 0),        UDim2.new(1, -2, 1, 0),      140, 1.45, 3, 1.05)
+    CreateScan("v", UDim2.new(1, -2, 1, 0),     UDim2.new(1, -2, 0, 0),         140, 1.55, 3, 0.35)
 
-    CreateScan("v", UDim2.new(0.5, -1.5, 0, 0),    UDim2.new(0.5, -1.5, 1, -180),  180, 2.1, 2, 0.9)
-    CreateScan("v", UDim2.new(0.5, -1.5, 1, -180), UDim2.new(0.5, -1.5, 0, 0),     180, 2.3, 2, 1.6)
+    CreateScan("v", UDim2.new(0.5, -1, 0, 0),    UDim2.new(0.5, -1, 1, 0),  180, 2.1, 2, 0.9)
+    CreateScan("v", UDim2.new(0.5, -1, 1, 0), UDim2.new(0.5, -1, 0, 0),     180, 2.3, 2, 1.6)
 
+    -- ═══ HEADER ═══
     local HeaderBar = Instance.new("Frame")
     HeaderBar.Size = UDim2.new(1, 0, 0, 58)
     HeaderBar.BackgroundColor3 = Theme.Background2
@@ -934,6 +921,7 @@ function SZK:CreateWindow(config)
     headerDivider.ZIndex = 6
     headerDivider.Parent = HeaderBar
 
+    -- ═══ AVATAR ═══
     local AvatarHolder = Instance.new("Frame")
     AvatarHolder.Size = UDim2.fromOffset(40, 40)
     AvatarHolder.Position = UDim2.new(0, 14, 0.5, -20)
@@ -973,6 +961,7 @@ function SZK:CreateWindow(config)
     Round(5, onlineDot)
     Outline(onlineDot, Theme.Background2, 2, 0)
 
+    -- ═══ TITLE ═══
     local TitleLabel = Instance.new("TextLabel")
     TitleLabel.Text = title
     TitleLabel.Font = Enum.Font.GothamBold
@@ -1000,7 +989,7 @@ function SZK:CreateWindow(config)
     versionLbl.BackgroundTransparency = 1
     versionLbl.Text = "v" .. SZK.Version
     versionLbl.Font = Enum.Font.GothamBold
-    versionLbl.TextSize = 18
+    versionLbl.TextSize = 12
     versionLbl.TextColor3 = Theme.Accent
     versionLbl.ZIndex = 8
     versionLbl.Parent = versionBadge
@@ -1008,7 +997,7 @@ function SZK:CreateWindow(config)
     local DescLabel = Instance.new("TextLabel")
     DescLabel.Text = description
     DescLabel.Font = Enum.Font.Gotham
-    DescLabel.TextSize = 18
+    DescLabel.TextSize = 12
     DescLabel.TextColor3 = Theme.Placeholder
     DescLabel.Position = UDim2.new(0, 140, 0, 32)
     DescLabel.Size = UDim2.new(0, 180, 0, 18)
@@ -1018,6 +1007,7 @@ function SZK:CreateWindow(config)
     DescLabel.ZIndex = 6
     DescLabel.Parent = HeaderBar
 
+    -- ═══ BOTONES DE VENTANA ═══
     local ctrlSize = 28
     local ctrlSpacing = 6
 
@@ -1029,7 +1019,7 @@ function SZK:CreateWindow(config)
         btn.BackgroundTransparency = 1
         btn.Text = symbol
         btn.Font = Enum.Font.GothamBold
-        btn.TextSize = 18
+        btn.TextSize = 16
         btn.TextColor3 = Theme.Placeholder
         btn.AutoButtonColor = false
         btn.ZIndex = 8
@@ -1067,6 +1057,9 @@ function SZK:CreateWindow(config)
         end)
     end
 
+    -- ═══════════════════════════════════════════════════════════
+    --  MODAL DE CONFIRMACIÓN
+    -- ═══════════════════════════════════════════════════════════
     local ModalBackdrop = Instance.new("TextButton")
     ModalBackdrop.Size = UDim2.fromScale(1, 1)
     ModalBackdrop.BackgroundColor3 = Color3.new(0, 0, 0)
@@ -1129,7 +1122,7 @@ function SZK:CreateWindow(config)
     ModalTitle.BackgroundTransparency = 1
     ModalTitle.Text = "Close Window?"
     ModalTitle.Font = Enum.Font.GothamBold
-    ModalTitle.TextSize = 18
+    ModalTitle.TextSize = 16
     ModalTitle.TextColor3 = Theme.Text
     ModalTitle.TextXAlignment = Enum.TextXAlignment.Left
     ModalTitle.ZIndex = 501
@@ -1141,7 +1134,7 @@ function SZK:CreateWindow(config)
     ModalMsg.BackgroundTransparency = 1
     ModalMsg.Text = "Do you want to close this window?\nYou will not be able to open it again."
     ModalMsg.Font = Enum.Font.Gotham
-    ModalMsg.TextSize = 18
+    ModalMsg.TextSize = 12
     ModalMsg.TextColor3 = Theme.Placeholder
     ModalMsg.TextXAlignment = Enum.TextXAlignment.Left
     ModalMsg.TextYAlignment = Enum.TextYAlignment.Top
@@ -1162,7 +1155,7 @@ function SZK:CreateWindow(config)
     CancelBtn.BackgroundTransparency = 0
     CancelBtn.Text = "Cancel"
     CancelBtn.Font = Enum.Font.GothamBold
-    CancelBtn.TextSize = 18
+    CancelBtn.TextSize = 14
     CancelBtn.TextColor3 = Theme.Text
     CancelBtn.AutoButtonColor = false
     CancelBtn.ZIndex = 502
@@ -1177,7 +1170,7 @@ function SZK:CreateWindow(config)
     ConfirmBtn.BackgroundTransparency = 0
     ConfirmBtn.Text = "Close Window"
     ConfirmBtn.Font = Enum.Font.GothamBold
-    ConfirmBtn.TextSize = 18
+    ConfirmBtn.TextSize = 14
     ConfirmBtn.TextColor3 = Color3.new(1, 1, 1)
     ConfirmBtn.AutoButtonColor = false
     ConfirmBtn.ZIndex = 502
@@ -1198,6 +1191,7 @@ function SZK:CreateWindow(config)
         Tween(ConfirmBtn, 0.15, { BackgroundColor3 = Color3.fromRGB(200, 45, 45) })
     end)
 
+    -- ═══ SIDEBAR ═══
     local SIDEBAR_W = 145
     local Sidebar = Instance.new("ScrollingFrame")
     Sidebar.Size = UDim2.new(0, SIDEBAR_W, 1, -78)
@@ -1232,6 +1226,7 @@ function SZK:CreateWindow(config)
     PageHost.ZIndex = 5
     PageHost.Parent = MainFrame
 
+    -- ═══ FOOTER ═══
     if showFooter then
         local footer = Instance.new("Frame")
         footer.Size = UDim2.new(1, 0, 0, 22)
@@ -1248,13 +1243,16 @@ function SZK:CreateWindow(config)
         footLbl.BackgroundTransparency = 1
         footLbl.Text = "FLUID UI v" .. SZK.Version .. "  •  RightShift to toggle"
         footLbl.Font = Enum.Font.Gotham
-        footLbl.TextSize = 18
+        footLbl.TextSize = 11
         footLbl.TextColor3 = Theme.Placeholder
         footLbl.TextTransparency = 0.4
         footLbl.ZIndex = 6
         footLbl.Parent = footer
     end
 
+    -- ═══════════════════════════════════════════════════════════
+    --  BOTÓN FLOTANTE (color del theme + SCANS en 4 lados)
+    -- ═══════════════════════════════════════════════════════════
     local FB_W, FB_H = 155, 50
 
     local FloatBtn = Instance.new("TextButton")
@@ -1295,6 +1293,9 @@ function SZK:CreateWindow(config)
     fbInnerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     fbInnerStroke.Parent = FloatBtn
 
+    -- ═══════════════════════════════════════════════════════════
+    --  SCANS DEL BOTÓN FLOTANTE — 4 líneas (1 por lado)
+    -- ═══════════════════════════════════════════════════════════
     local fbScansEnabled = true
     local fbActiveScans = {}
 
@@ -1376,9 +1377,13 @@ function SZK:CreateWindow(config)
         end)
     end
 
+    -- Lado SUPERIOR (izq → der)
     CreateFBScan("h", UDim2.new(0, 4, 0, 2),              UDim2.new(1, -60, 0, 2),              56, 1.4, 2, 0)
+    -- Lado INFERIOR (der → izq)
     CreateFBScan("h", UDim2.new(1, -60, 1, -4),           UDim2.new(0, 4, 1, -4),               56, 1.4, 2, 0.7)
+    -- Lado IZQUIERDO (abajo → arriba)
     CreateFBScan("v", UDim2.new(0, 2, 1, -18),            UDim2.new(0, 2, 0, 2),                16, 0.9, 2, 1.4)
+    -- Lado DERECHO (arriba → abajo)
     CreateFBScan("v", UDim2.new(1, -4, 0, 2),             UDim2.new(1, -4, 1, -18),             16, 0.9, 2, 2.1)
 
     local DragIcon = Instance.new("Frame")
@@ -1412,7 +1417,7 @@ function SZK:CreateWindow(config)
     FBLabel.BackgroundTransparency = 1
     FBLabel.Text = openBtnText
     FBLabel.Font = Enum.Font.GothamBold
-    FBLabel.TextSize = 18
+    FBLabel.TextSize = 14
     FBLabel.TextColor3 = Theme.Text
     FBLabel.TextXAlignment = Enum.TextXAlignment.Center
     FBLabel.ZIndex = 12
@@ -1475,6 +1480,7 @@ function SZK:CreateWindow(config)
         Tween(FloatBtn, 0.2, { BackgroundColor3 = Theme.Background2 })
     end))
 
+    -- ═══ RESIZE GRIP ═══
     local RESIZE_HIT = 36
     local ResizeGrip = Instance.new("TextButton")
     ResizeGrip.AnchorPoint = Vector2.new(1, 1)
@@ -1586,6 +1592,7 @@ function SZK:CreateWindow(config)
     end
     EnableDrag(HeaderBar, MainFrame)
 
+    -- ═══ MIN/MAX/CLOSE ═══
     local isMaximized = false
     local savedSize = size
     local savedPos = MainFrame.Position
@@ -1718,6 +1725,7 @@ function SZK:CreateWindow(config)
         end)
     end))
 
+    -- ═══ THEME POPUP ═══
     local ThemePopup
     if showThemeSel then
         ThemePopup = Instance.new("Frame")
@@ -1791,7 +1799,7 @@ function SZK:CreateWindow(config)
                 label.BackgroundTransparency = 1
                 label.Text = tName
                 label.Font = Enum.Font.GothamSemibold
-                label.TextSize = 18
+                label.TextSize = 12
                 label.TextColor3 = Theme.Text
                 label.TextXAlignment = Enum.TextXAlignment.Left
                 label.TextTruncate = Enum.TextTruncate.AtEnd
@@ -1869,6 +1877,7 @@ function SZK:CreateWindow(config)
 
     local Window = { Tabs = {}, Connections = Connections }
 
+    -- ═══ ROW BUILDER ═══
     local function RegisterRow(parent, height)
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, height or 58)
@@ -1916,6 +1925,9 @@ function SZK:CreateWindow(config)
         return frame, stroke, accentBar
     end
 
+    -- ═══════════════════════════════════════════════════════════
+    --  CREATE TAB
+    -- ═══════════════════════════════════════════════════════════
     function Window:CreateTab(tabConfig)
         local cfg = type(tabConfig) == "table" and tabConfig or {}
         local tabName = cfg.Name or cfg.Title or (type(tabConfig) == "string" and tabConfig) or "Tab"
@@ -1980,7 +1992,7 @@ function SZK:CreateWindow(config)
         tLabel.BackgroundTransparency = 1
         tLabel.Text = tabName
         tLabel.Font = Enum.Font.GothamSemibold
-        tLabel.TextSize = 18
+        tLabel.TextSize = 14
         tLabel.TextColor3 = Theme.Placeholder
         tLabel.TextXAlignment = Enum.TextXAlignment.Left
         tLabel.TextTruncate = Enum.TextTruncate.AtEnd
@@ -2037,8 +2049,8 @@ function SZK:CreateWindow(config)
 
         local Tab = {}
         Window.Tabs[tabName] = Tab
-        Tab.Page = page  -- expose the page for custom layouts
 
+        -- ═══ CREATE SECTION ═══
         function Tab:CreateSection(secConfig)
             local secCfg = type(secConfig) == "table" and secConfig or {}
             local secName = secCfg.Name or secCfg.Title or (type(secConfig) == "string" and secConfig) or ""
@@ -2076,7 +2088,7 @@ function SZK:CreateWindow(config)
                 hLabel.BackgroundTransparency = 1
                 hLabel.Text = string.upper(tostring(secName))
                 hLabel.Font = Enum.Font.GothamBold
-                hLabel.TextSize = 18
+                hLabel.TextSize = 12
                 hLabel.TextColor3 = Theme.Placeholder
                 hLabel.TextXAlignment = Enum.TextXAlignment.Left
                 hLabel.ZIndex = 7
@@ -2100,6 +2112,7 @@ function SZK:CreateWindow(config)
                 return image
             end
 
+            -- ─── TOGGLE ───
             function Section:CreateToggle(tConfig)
                 local c = tConfig or {}
                 local name     = c.Name or c.Title or "Toggle"
@@ -2117,7 +2130,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Text
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
@@ -2131,7 +2144,7 @@ function SZK:CreateWindow(config)
                     dLbl.BackgroundTransparency = 1
                     dLbl.Text = desc
                     dLbl.Font = Enum.Font.Gotham
-                    dLbl.TextSize = 18
+                    dLbl.TextSize = 12
                     dLbl.TextColor3 = Theme.Placeholder
                     dLbl.TextXAlignment = Enum.TextXAlignment.Left
                     dLbl.TextYAlignment = Enum.TextYAlignment.Top
@@ -2205,6 +2218,7 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
+            -- ─── SLIDER ───
             function Section:CreateSlider(sConfig)
                 local c = sConfig or {}
                 local name     = c.Name or c.Title or "Slider"
@@ -2222,7 +2236,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Text
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
@@ -2235,7 +2249,7 @@ function SZK:CreateWindow(config)
                 valLbl.BackgroundTransparency = 1
                 valLbl.Text = tostring(default) .. suffix
                 valLbl.Font = Enum.Font.GothamBold
-                valLbl.TextSize = 18
+                valLbl.TextSize = 14
                 valLbl.TextColor3 = Theme.Accent
                 valLbl.TextXAlignment = Enum.TextXAlignment.Right
                 valLbl.ZIndex = 7
@@ -2322,6 +2336,7 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
+            -- ─── BUTTON ───
             function Section:CreateButton(bConfig)
                 local c = bConfig or {}
                 local name     = c.Name or c.Title or "Button"
@@ -2374,7 +2389,7 @@ function SZK:CreateWindow(config)
                 titleLbl.BackgroundTransparency = 1
                 titleLbl.Text = name
                 titleLbl.Font = Enum.Font.GothamBold
-                titleLbl.TextSize = 18
+                titleLbl.TextSize = 14
                 titleLbl.TextColor3 = Theme.Text
                 titleLbl.TextXAlignment = Enum.TextXAlignment.Left
                 titleLbl.ZIndex = 7
@@ -2387,7 +2402,7 @@ function SZK:CreateWindow(config)
                     dLbl.BackgroundTransparency = 1
                     dLbl.Text = desc
                     dLbl.Font = Enum.Font.Gotham
-                    dLbl.TextSize = 18
+                    dLbl.TextSize = 12
                     dLbl.TextColor3 = Theme.Placeholder
                     dLbl.TextXAlignment = Enum.TextXAlignment.Left
                     dLbl.ZIndex = 7
@@ -2416,6 +2431,7 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
+            -- ─── INPUT ───
             function Section:CreateInput(iConfig)
                 local c = iConfig or {}
                 local name        = c.Name or c.Title or "Input"
@@ -2433,7 +2449,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Text
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
@@ -2458,7 +2474,7 @@ function SZK:CreateWindow(config)
                 box.PlaceholderColor3 = Theme.Placeholder
                 box.TextColor3 = Theme.Text
                 box.Font = Enum.Font.Gotham
-                box.TextSize = 18
+                box.TextSize = 14
                 box.ClearTextOnFocus = false
                 box.TextWrapped = multiline
                 box.TextXAlignment = Enum.TextXAlignment.Left
@@ -2486,6 +2502,7 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
+            -- ─── DROPDOWN ───
             function Section:CreateDropdown(dConfig)
                 local c = dConfig or {}
                 local name     = c.Name or c.Title or "Dropdown"
@@ -2505,7 +2522,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Text
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
@@ -2529,7 +2546,7 @@ function SZK:CreateWindow(config)
                 selLbl.BackgroundTransparency = 1
                 selLbl.Text = selected ~= nil and tostring(selected) or "Select..."
                 selLbl.Font = Enum.Font.Gotham
-                selLbl.TextSize = 18
+                selLbl.TextSize = 14
                 selLbl.TextColor3 = Theme.Text
                 selLbl.TextXAlignment = Enum.TextXAlignment.Left
                 selLbl.TextTruncate = Enum.TextTruncate.AtEnd
@@ -2542,7 +2559,7 @@ function SZK:CreateWindow(config)
                 arrow.BackgroundTransparency = 1
                 arrow.Text = "▾"
                 arrow.Font = Enum.Font.GothamBold
-                arrow.TextSize = 18
+                arrow.TextSize = 14
                 arrow.TextColor3 = Theme.Placeholder
                 arrow.ZIndex = 8
                 arrow.Parent = sel
@@ -2593,7 +2610,7 @@ function SZK:CreateWindow(config)
                     ob.BackgroundTransparency = 1
                     ob.Text = "  " .. txt
                     ob.Font = Enum.Font.Gotham
-                    ob.TextSize = 18
+                    ob.TextSize = 14
                     ob.TextColor3 = Theme.Text
                     ob.TextXAlignment = Enum.TextXAlignment.Left
                     ob.AutoButtonColor = false
@@ -2644,6 +2661,7 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
+            -- ─── KEYBIND ───
             function Section:CreateKeybind(kConfig)
                 local c = kConfig or {}
                 local name     = c.Name or c.Title or "Keybind"
@@ -2658,7 +2676,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Text
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
@@ -2671,7 +2689,7 @@ function SZK:CreateWindow(config)
                 keyBtn.BackgroundColor3 = Shade(Theme.ElementBackground, 0.08)
                 keyBtn.Text = default and default.Name or "None"
                 keyBtn.Font = Enum.Font.GothamBold
-                keyBtn.TextSize = 18
+                keyBtn.TextSize = 14
                 keyBtn.TextColor3 = Theme.Text
                 keyBtn.AutoButtonColor = false
                 keyBtn.ZIndex = 7
@@ -2715,6 +2733,7 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
+            -- ─── LABEL ───
             function Section:CreateLabel(text, iconKey)
                 local row = Instance.new("Frame")
                 row.Size = UDim2.new(1, 0, 0, 32)
@@ -2734,13 +2753,14 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = tostring(text)
                 lbl.Font = Enum.Font.GothamMedium
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Placeholder
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
                 lbl.Parent = row
             end
 
+            -- ─── PARAGRAPH ───
             function Section:CreateParagraph(text)
                 local row = Instance.new("Frame")
                 row.Size = UDim2.new(1, 0, 0, 0)
@@ -2769,7 +2789,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = tostring(text)
                 lbl.Font = Enum.Font.Gotham
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Text
                 lbl.TextWrapped = true
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
@@ -2777,6 +2797,7 @@ function SZK:CreateWindow(config)
                 lbl.Parent = row
             end
 
+            -- ─── DIVIDER ───
             function Section:CreateDivider()
                 local row = Instance.new("Frame")
                 row.Size = UDim2.new(1, 0, 0, 16)
@@ -2806,6 +2827,7 @@ function SZK:CreateWindow(config)
                 grad.Parent = line
             end
 
+            -- ─── PROGRESS BAR ───
             function Section:CreateProgressBar(pConfig)
                 local c = pConfig or {}
                 local name     = c.Name or c.Title or "Progress"
@@ -2820,7 +2842,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = Theme.Text
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
@@ -2832,7 +2854,7 @@ function SZK:CreateWindow(config)
                 valLbl.BackgroundTransparency = 1
                 valLbl.Text = tostring(default) .. "%"
                 valLbl.Font = Enum.Font.GothamBold
-                valLbl.TextSize = 18
+                valLbl.TextSize = 14
                 valLbl.TextColor3 = Theme.Accent
                 valLbl.TextXAlignment = Enum.TextXAlignment.Right
                 valLbl.ZIndex = 7
@@ -2869,6 +2891,7 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
+            -- ─── BADGE ───
             function Section:CreateBadge(bConfig)
                 local c = bConfig or {}
                 local text  = c.Text or "Badge"
@@ -2895,7 +2918,7 @@ function SZK:CreateWindow(config)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = text
                 lbl.Font = Enum.Font.GothamBold
-                lbl.TextSize = 18
+                lbl.TextSize = 14
                 lbl.TextColor3 = color
                 lbl.ZIndex = 8
                 lbl.Parent = badge
@@ -2928,242 +2951,29 @@ function SZK:CreateWindow(config)
     end
 
     -- ═══════════════════════════════════════════════════════════
-    --  HOME TAB — auto-created as the first tab
+    --  BACKGROUND ICON / BANNER SUPPORT
     -- ═══════════════════════════════════════════════════════════
-    if config.Home ~= false then
-        local homeTab = Window:CreateTab({ Name = "Home", Icon = "home" })
-        local homePage = homeTab.Page
 
-        -- Helper: create a small info card
-        local function makeInfoCard(parent, iconName, labelText, valueText)
-            local card = Instance.new("Frame")
-            card.BackgroundColor3 = Theme.ElementBackground
-            card.BackgroundTransparency = 0.08
-            card.Parent = parent
-            Round(10, card)
-            Outline(card, Theme.Outline, 1, 0.45)
-
-            local iconImg = Img(card, iconName, UDim2.fromOffset(16, 16), Theme.Accent, 0, 8)
-            if iconImg then
-                iconImg.Position = UDim2.new(0, 12, 0, 12)
-            end
-
-            local lbl = Instance.new("TextLabel")
-            lbl.Text = labelText
-            lbl.Font = Enum.Font.Gotham
-            lbl.TextSize = 11
-            lbl.TextColor3 = Theme.Placeholder
-            lbl.Position = UDim2.new(0, 36, 0, 11)
-            lbl.Size = UDim2.new(1, -48, 0, 14)
-            lbl.BackgroundTransparency = 1
-            lbl.TextXAlignment = Enum.TextXAlignment.Left
-            lbl.ZIndex = 7
-            lbl.Parent = card
-
-            local val = Instance.new("TextLabel")
-            val.Text = valueText
-            val.Font = Enum.Font.GothamBold
-            val.TextSize = 14
-            val.TextColor3 = Theme.Text
-            val.Position = UDim2.new(0, 36, 0, 27)
-            val.Size = UDim2.new(1, -48, 0, 18)
-            val.BackgroundTransparency = 1
-            val.TextXAlignment = Enum.TextXAlignment.Left
-            val.TextTruncate = Enum.TextTruncate.AtEnd
-            val.ZIndex = 7
-            val.Parent = card
-
-            return card
+    -- Adds a background icon behind the window content
+    function Window:SetBackgroundIcon(iconKey, transparency, scale)
+        if self._bgIcon then self._bgIcon:Destroy() end
+        local icon = Img(MainFrame, iconKey, UDim2.fromScale(scale or 0.6, scale or 0.6), Theme.Accent, transparency or 0.85, 0)
+        if icon then
+            icon.AnchorPoint = Vector2.new(0.5, 0.5)
+            icon.Position = UDim2.fromScale(0.5, 0.5)
+            icon.ScaleType = Enum.ScaleType.Fit
+            self._bgIcon = icon
         end
+    end
 
-        -- ─── Hero Card ───
-        local hero = Instance.new("Frame")
-        hero.Size = UDim2.new(1, 0, 0, 128)
-        hero.BackgroundColor3 = Theme.ElementBackground
-        hero.BackgroundTransparency = 0.02
-        hero.Parent = homePage
-        Round(14, hero)
-        Outline(hero, Theme.Accent, 1.5, 0.35)
-
-        MultiGradient(hero, {
-            Blend(Theme.Accent, Theme.ElementBackground, 0.82),
-            Theme.ElementBackground,
-            Shade(Theme.ElementBackground, -0.03),
-        }, 135)
-
-        local heroAvatar = Instance.new("ImageLabel")
-        heroAvatar.Size = UDim2.fromOffset(60, 60)
-        heroAvatar.Position = UDim2.new(0, 20, 0, 20)
-        heroAvatar.BackgroundColor3 = Theme.ElementBackground
-        heroAvatar.BackgroundTransparency = 0
-        heroAvatar.Image = LocalPlayer and string.format("rbxthumb://type=AvatarHeadShot&id=%d&w=150&h=150", LocalPlayer.UserId) or ""
-        heroAvatar.Parent = hero
-        Round(30, heroAvatar)
-        Outline(heroAvatar, Theme.Accent, 2, 0.15)
-
-        local welcomeLbl = Instance.new("TextLabel")
-        welcomeLbl.Text = "Welcome back,"
-        welcomeLbl.Font = Enum.Font.Gotham
-        welcomeLbl.TextSize = 14
-        welcomeLbl.TextColor3 = Theme.Placeholder
-        welcomeLbl.Position = UDim2.new(0, 94, 0, 22)
-        welcomeLbl.Size = UDim2.new(1, -114, 0, 16)
-        welcomeLbl.BackgroundTransparency = 1
-        welcomeLbl.TextXAlignment = Enum.TextXAlignment.Left
-        welcomeLbl.ZIndex = 7
-        welcomeLbl.Parent = hero
-
-        local usernameLbl = Instance.new("TextLabel")
-        usernameLbl.Text = LocalPlayer and LocalPlayer.DisplayName or "Player"
-        usernameLbl.Font = Enum.Font.GothamBold
-        usernameLbl.TextSize = 22
-        usernameLbl.TextColor3 = Theme.Text
-        usernameLbl.Position = UDim2.new(0, 94, 0, 38)
-        usernameLbl.Size = UDim2.new(1, -114, 0, 26)
-        usernameLbl.BackgroundTransparency = 1
-        usernameLbl.TextXAlignment = Enum.TextXAlignment.Left
-        usernameLbl.ZIndex = 7
-        usernameLbl.Parent = hero
-
-        local heroVersion = Instance.new("Frame")
-        heroVersion.Size = UDim2.fromOffset(72, 20)
-        heroVersion.Position = UDim2.new(0, 94, 0, 70)
-        heroVersion.BackgroundColor3 = Theme.Accent
-        heroVersion.BackgroundTransparency = 0.85
-        heroVersion.ZIndex = 7
-        heroVersion.Parent = hero
-        Round(6, heroVersion)
-        Outline(heroVersion, Theme.Accent, 1, 0.6)
-
-        local heroVerLbl = Instance.new("TextLabel")
-        heroVerLbl.Size = UDim2.fromScale(1, 1)
-        heroVerLbl.BackgroundTransparency = 1
-        heroVerLbl.Text = "v" .. SZK.Version
-        heroVerLbl.Font = Enum.Font.GothamBold
-        heroVerLbl.TextSize = 12
-        heroVerLbl.TextColor3 = Theme.Accent
-        heroVerLbl.ZIndex = 8
-        heroVerLbl.Parent = heroVersion
-
-        local heroDesc = Instance.new("TextLabel")
-        heroDesc.Text = "FLUID UI • Premium Roblox Interface"
-        heroDesc.Font = Enum.Font.Gotham
-        heroDesc.TextSize = 12
-        heroDesc.TextColor3 = Theme.Placeholder
-        heroDesc.Position = UDim2.new(0, 94, 0, 96)
-        heroDesc.Size = UDim2.new(1, -114, 0, 16)
-        heroDesc.BackgroundTransparency = 1
-        heroDesc.TextXAlignment = Enum.TextXAlignment.Left
-        heroDesc.ZIndex = 7
-        heroDesc.Parent = hero
-
-        -- ─── Info Grid ───
-        local infoFrame = Instance.new("Frame")
-        infoFrame.Size = UDim2.new(1, 0, 0, 136)
-        infoFrame.BackgroundTransparency = 1
-        infoFrame.Parent = homePage
-
-        local grid = Instance.new("UIGridLayout")
-        grid.CellSize = UDim2.new(0.5, -4, 0, 64)
-        grid.CellPadding = UDim2.new(0, 8, 0, 8)
-        grid.SortOrder = Enum.SortOrder.LayoutOrder
-        grid.Parent = infoFrame
-
-        local accountAge = LocalPlayer and LocalPlayer.AccountAge or 0
-        local ageText
-        if accountAge >= 365 then
-            ageText = tostring(math.floor(accountAge / 365)) .. "y " .. tostring(math.floor((accountAge % 365) / 30)) .. "m"
-        elseif accountAge >= 30 then
-            ageText = tostring(math.floor(accountAge / 30)) .. " months"
-        else
-            ageText = tostring(accountAge) .. " days"
+    -- Adds a banner image at the top of the window (like a header banner)
+    function Window:SetBanner(imageKey, transparency)
+        if self._banner then self._banner:Destroy() end
+        local banner = Img(MainFrame, imageKey, UDim2.new(1, 0, 0, 58), Color3.new(1,1,1), transparency or 0.2, 6)
+        if banner then
+            banner.ScaleType = Enum.ScaleType.Crop
+            self._banner = banner
         end
-
-        makeInfoCard(infoFrame, "package", "Version", SZK.Version)
-        makeInfoCard(infoFrame, "map-pin", "Place ID", tostring(game.PlaceId))
-        makeInfoCard(infoFrame, "user", "User ID", tostring(LocalPlayer and LocalPlayer.UserId or 0))
-        makeInfoCard(infoFrame, "calendar", "Account Age", ageText)
-
-        -- ─── Quick Actions ───
-        local actionsSection = homeTab:CreateSection({ Name = "Quick Actions", Icon = "zap" })
-
-        actionsSection:CreateButton({
-            Name = "Copy Discord Invite",
-            Desc = "Join the community server",
-            Icon = "message-circle",
-            Callback = function()
-                if setclipboard then
-                    setclipboard("https://discord.gg/yourinvite")
-                    SZK:Success("Copied!", "Discord invite copied to clipboard.", 2)
-                else
-                    SZK:Warn("Clipboard unavailable", "Your executor does not support setclipboard.", 3)
-                end
-            end,
-        })
-
-        actionsSection:CreateButton({
-            Name = "Copy Script Link",
-            Desc = "Copy the loader URL",
-            Icon = "link",
-            Callback = function()
-                if setclipboard then
-                    setclipboard("https://raw.githubusercontent.com/SZKHUB/SZKWINDUI1/refs/heads/main/lua/windui/szk.lua")
-                    SZK:Success("Copied!", "Script link copied to clipboard.", 2)
-                else
-                    SZK:Warn("Clipboard unavailable", "Your executor does not support setclipboard.", 3)
-                end
-            end,
-        })
-
-        actionsSection:CreateButton({
-            Name = "Rejoin Server",
-            Desc = "Reconnect to the current server",
-            Icon = "refresh-cw",
-            Callback = function()
-                SZK:Info("Rejoining", "Reconnecting to the server...", 2)
-                task.wait(0.5)
-                TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
-            end,
-        })
-
-        actionsSection:CreateButton({
-            Name = "Server Hop",
-            Desc = "Join a different server",
-            Icon = "globe",
-            Callback = function()
-                SZK:Info("Server Hopping", "Looking for a new server...", 2)
-                task.spawn(function()
-                    local ok, servers = pcall(function()
-                        return HttpService:JSONDecode(game:HttpGet(
-                            "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
-                        ))
-                    end)
-                    if ok and servers and servers.data then
-                        for _, s in ipairs(servers.data) do
-                            if s.id ~= game.JobId and s.playing < s.maxPlayers then
-                                TeleportService:TeleportToPlaceInstance(game.PlaceId, s.id, LocalPlayer)
-                                return
-                            end
-                        end
-                    end
-                    SZK:Error("Server Hop Failed", "Could not find an available server.", 3)
-                end)
-            end,
-        })
-
-        -- ─── What's New ───
-        local whatsNew = homeTab:CreateSection({ Name = "What's New", Icon = "sparkles" })
-        whatsNew:CreateParagraph(
-            "v1.0.0 — Initial release of FLUID UI.\n\n" ..
-            "• 26 new fluid / mist themes\n" ..
-            "• Compact modern notification system\n" ..
-            "• Scan animations on the floating button\n" ..
-            "• Auto-created Home tab with quick actions\n" ..
-            "• Full theme selector with live preview\n\n" ..
-            "Thanks for using FLUID UI by SZK."
-        )
-
-        Window.HomeTab = homeTab
     end
 
     -- ═══ API DE WINDOW ═══
