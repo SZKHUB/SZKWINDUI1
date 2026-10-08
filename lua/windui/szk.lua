@@ -304,6 +304,9 @@ SZK.Themes.SZK = BuildTheme("SZK", {
     bg = "#08080A", bg2 = "#101014", bg3 = "#15151A",
 })
 
+-- ═══════════════════════════════════════════════════════════════
+--  TEMAS ORIGINALES (SZK / DARK / LIGHT / etc.)
+-- ═══════════════════════════════════════════════════════════════
 SZK.Themes["AMBIENT"]        = BuildTheme("AMBIENT",        {accent = "#E8B4B8", accent2 = "#F4C2C6", outline = "#F4C2C6", toggle = "#E8B4B8", slider = "#F4C2C6", text = "#F8E8E9", placeholder = "#D8A8A9", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4C2C6"})
 SZK.Themes["SOFT MIST"]      = BuildTheme("SOFT MIST",      {accent = "#D4E0E6", accent2 = "#E8EEF0", outline = "#E8EEF0", toggle = "#D4E0E6", slider = "#E8EEF0", text = "#F5F8F9", placeholder = "#B8C0C4", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E8EEF0"})
 SZK.Themes["WARM BLUSH"]     = BuildTheme("WARM BLUSH",     {accent = "#F5D0C5", accent2 = "#F8E0D6", outline = "#F8E0D6", toggle = "#F5D0C5", slider = "#F8E0D6", text = "#FFF5F2", placeholder = "#E8B4B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0D6"})
@@ -338,12 +341,57 @@ SZK.Themes["BLOOD"]          = BuildTheme("BLOOD",          {accent = "#A52A2A",
 SZK.Themes["COCOA"]          = BuildTheme("COCOA",          {accent = "#A0522D", accent2 = "#CD853F", outline = "#A0522D", toggle = "#8B4513", slider = "#A0522D", text = "#FAF0E6", placeholder = "#CD853F", elemBg = "#1A120C", elemBg2 = "#20160E", bg = "#0A0604", bg2 = "#100A06", bg3 = "#160E08", icon = "#A0522D"})
 SZK.Themes["LIGHT"]          = BuildTheme("LIGHT",          {accent = "#2A2A2A", accent2 = "#505050", outline = "#E0E0E0", toggle = "#2A2A2A", slider = "#2A2A2A", text = "#1A1A1A", textDim = "#404040", placeholder = "#808080", elemBg = "#F5F5F5", elemBg2 = "#FFFFFF", bg = "#FAFAFA", bg2 = "#F0F0F0", bg3 = "#E8E8E8", icon = "#2A2A2A"})
 
+-- ═══════════════════════════════════════════════════════════════
+--  NUEVOS TEMAS FLUIDOS — como agua y niebla 💧🌫️
+-- ═══════════════════════════════════════════════════════════════
+SZK.Themes["MOONLIGHT"]       = BuildTheme("MOONLIGHT",       {accent = "#E8E8E8", accent2 = "#F4F4F4", outline = "#E8E8E8", toggle = "#E8E8E8", slider = "#F4F4F4", text = "#FAFAFA", placeholder = "#D8D8D8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4F4F4"})
+SZK.Themes["DUSTY PINK"]      = BuildTheme("DUSTY PINK",      {accent = "#F4D0E0", accent2 = "#F8E0E8", outline = "#F8E0E8", toggle = "#F4D0E0", slider = "#F8E0E8", text = "#FFF5F8", placeholder = "#D8B8C8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0E8"})
+SZK.Themes["SOFT IVORY"]      = BuildTheme("SOFT IVORY",      {accent = "#F8F0E8", accent2 = "#FFF8F0", outline = "#FFF8F0", toggle = "#F8F0E8", slider = "#FFF8F0", text = "#FFFAF5", placeholder = "#E8D8C8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#FFF8F0"})
+SZK.Themes["SOFT LILAC"]      = BuildTheme("SOFT LILAC",      {accent = "#E8D8F0", accent2 = "#F4E0F8", outline = "#F4E0F8", toggle = "#E8D8F0", slider = "#F4E0F8", text = "#FAF5FF", placeholder = "#D8C0D0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4E0F8"})
+SZK.Themes["SOFT SAGE"]       = BuildTheme("SOFT SAGE",       {accent = "#D8E8D8", accent2 = "#E0F0E0", outline = "#E0F0E0", toggle = "#D8E8D8", slider = "#E0F0E0", text = "#F5F8F0", placeholder = "#B8C0B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F0E0"})
+SZK.Themes["SOFT BEIGE"]      = BuildTheme("SOFT BEIGE",      {accent = "#F4E8D8", accent2 = "#F8F0E0", outline = "#F8F0E0", toggle = "#F4E8D8", slider = "#F8F0E0", text = "#FFF8F0", placeholder = "#D8C8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8F0E0"})
+SZK.Themes["SOFT TERRACOTTA"] = BuildTheme("SOFT TERRACOTTA", {accent = "#F4D0B8", accent2 = "#F8E0C8", outline = "#F8E0C8", toggle = "#F4D0B8", slider = "#F8E0C8", text = "#FFF8F0", placeholder = "#D8B0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0C8"})
+SZK.Themes["SOFT CYAN"]       = BuildTheme("SOFT CYAN",       {accent = "#D0F0E8", accent2 = "#E0F8F0", outline = "#E0F8F0", toggle = "#D0F0E8", slider = "#E0F8F0", text = "#F0F8F5", placeholder = "#B0C8C0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F8F0"})
+SZK.Themes["SOFT TURQUOISE"]  = BuildTheme("SOFT TURQUOISE",  {accent = "#C8F0E0", accent2 = "#D8F8E8", outline = "#D8F8E8", toggle = "#C8F0E0", slider = "#D8F8E8", text = "#F0FFF0", placeholder = "#A8C8B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#D8F8E8"})
+SZK.Themes["SOFT INDIGO"]     = BuildTheme("SOFT INDIGO",     {accent = "#D0E0F0", accent2 = "#E0E8F8", outline = "#E0E8F8", toggle = "#D0E0F0", slider = "#E0E8F8", text = "#F0F5FF", placeholder = "#B0B8C8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0E8F8"})
+SZK.Themes["SOFT CHERRY"]     = BuildTheme("SOFT CHERRY",     {accent = "#F4B8C0", accent2 = "#F8D0C8", outline = "#F8D0C8", toggle = "#F4B8C0", slider = "#F8D0C8", text = "#FFF5F8", placeholder = "#D8A8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D0C8"})
+SZK.Themes["SOFT MINT"]       = BuildTheme("SOFT MINT",       {accent = "#C8F0D8", accent2 = "#D8F8E0", outline = "#D8F8E0", toggle = "#C8F0D8", slider = "#D8F8E0", text = "#F0FFF0", placeholder = "#A8C8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#D8F8E0"})
+SZK.Themes["SOFT APRICOT"]    = BuildTheme("SOFT APRICOT",    {accent = "#F4E0C8", accent2 = "#F8E8D8", outline = "#F8E8D8", toggle = "#F4E0C8", slider = "#F8E8D8", text = "#FFF8F0", placeholder = "#D8C0A8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E8D8"})
+SZK.Themes["SOFT LIME"]       = BuildTheme("SOFT LIME",       {accent = "#E0F4D0", accent2 = "#E8F8D8", outline = "#E8F8D8", toggle = "#E0F4D0", slider = "#E8F8D8", text = "#F5FFF0", placeholder = "#B8C8B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E8F8D8"})
+SZK.Themes["SOFT LAVENDER"]   = BuildTheme("SOFT LAVENDER",   {accent = "#E8D0F0", accent2 = "#F4E0F8", outline = "#F4E0F8", toggle = "#E8D0F0", slider = "#F4E0F8", text = "#FAF5FF", placeholder = "#D8B8D0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4E0F8"})
+SZK.Themes["SOFT PEACH"]      = BuildTheme("SOFT PEACH",      {accent = "#F4D8C0", accent2 = "#F8E0C8", outline = "#F8E0C8", toggle = "#F4D8C0", slider = "#F8E0C8", text = "#FFF8F0", placeholder = "#D8B0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0C8"})
+SZK.Themes["SOFT BLUSH"]      = BuildTheme("SOFT BLUSH",      {accent = "#F4C8D0", accent2 = "#F8D8D8", outline = "#F8D8D8", toggle = "#F4C8D0", slider = "#F8D8D8", text = "#FFF5F8", placeholder = "#D8A8B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D8D8"})
+SZK.Themes["SOFT IVY"]        = BuildTheme("SOFT IVY",        {accent = "#D8E8C8", accent2 = "#E0F0D0", outline = "#E0F0D0", toggle = "#D8E8C8", slider = "#E0F0D0", text = "#F5F8F0", placeholder = "#B8C0B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F0D0"})
+SZK.Themes["SOFT SUNRISE"]    = BuildTheme("SOFT SUNRISE",    {accent = "#F4E0B8", accent2 = "#F8E8C8", outline = "#F8E8C8", toggle = "#F4E0B8", slider = "#F8E8C8", text = "#FFF8E1", placeholder = "#D8C0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E8C8"})
+SZK.Themes["SOFT TWILIGHT"]   = BuildTheme("SOFT TWILIGHT",   {accent = "#E8D0E0", accent2 = "#F4E0E8", outline = "#F4E0E8", toggle = "#E8D0E0", slider = "#F4E0E8", text = "#FAF0F5", placeholder = "#D8B8C0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4E0E8"})
+SZK.Themes["SOFT DAWN"]       = BuildTheme("SOFT DAWN",       {accent = "#F4D8D0", accent2 = "#F8E0D8", outline = "#F8E0D8", toggle = "#F4D8D0", slider = "#F8E0D8", text = "#FFF5F5", placeholder = "#D8B0B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0D8"})
+SZK.Themes["SOFT CLOVER"]     = BuildTheme("SOFT CLOVER",     {accent = "#D8F0C8", accent2 = "#E0F8D0", outline = "#E0F8D0", toggle = "#D8F0C8", slider = "#E0F8D0", text = "#F5FFF0", placeholder = "#B8C0B8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E0F8D0"})
+SZK.Themes["SOFT CORAL"]      = BuildTheme("SOFT CORAL",      {accent = "#F4C8B8", accent2 = "#F8D8C0", outline = "#F8D8C0", toggle = "#F4C8B8", slider = "#F8D8C0", text = "#FFF8F0", placeholder = "#D8B0A8", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D8C0"})
+SZK.Themes["SOFT FUCHSIA"]    = BuildTheme("SOFT FUCHSIA",    {accent = "#F4B8D0", accent2 = "#F8D0D8", outline = "#F8D0D8", toggle = "#F4B8D0", slider = "#F8D0D8", text = "#FFF5F8", placeholder = "#D8B8C0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D0D8"})
+SZK.Themes["SOFT TANGERINE"]  = BuildTheme("SOFT TANGERINE",  {accent = "#F4E0A8", accent2 = "#F8E8B8", outline = "#F8E8B8", toggle = "#F4E0A8", slider = "#F8E8B8", text = "#FFF8E1", placeholder = "#D8C0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E8B8"})
+
+-- ═══════════════════════════════════════════════════════════════
+--  ORDEN DE TEMAS EN EL SELECTOR
+-- ═══════════════════════════════════════════════════════════════
 SZK.ThemeOrder = {
     "SZK",
+
+    -- Fluidos / Mist (nuevos)
+    "MOONLIGHT", "DUSTY PINK", "SOFT IVORY", "SOFT LILAC", "SOFT SAGE",
+    "SOFT BEIGE", "SOFT TERRACOTTA", "SOFT CYAN", "SOFT TURQUOISE", "SOFT INDIGO",
+    "SOFT CHERRY", "SOFT MINT", "SOFT APRICOT", "SOFT LIME", "SOFT LAVENDER",
+    "SOFT PEACH", "SOFT BLUSH", "SOFT IVY", "SOFT SUNRISE", "SOFT TWILIGHT",
+    "SOFT DAWN", "SOFT CLOVER", "SOFT CORAL", "SOFT FUCHSIA", "SOFT TANGERINE",
+
+    -- Pastel originales
     "AMBIENT", "SOFT MIST", "WARM BLUSH", "SUNSET HUE", "SOFT GOLDEN",
     "PEACH BLOSSOM", "LAVENDER MIST", "SEAFOAM SOFT", "SOFT LEMON", "SOFT ROSE", "PEACH",
+
+    -- Vibrantes
     "VENOM", "CYBER", "PURPLE", "GOLD", "NEON", "OCEAN", "ROSE", "FOREST",
     "EMERALD", "CORAL", "LAVENDER", "COPPER", "SAPPHIRE", "LIME", "INDIGO", "AMBER",
+
+    -- Oscuros
     "DARK", "SLATE", "MIDNIGHT", "BLOOD", "COCOA", "LIGHT",
 }
 
@@ -428,14 +476,12 @@ function SZK:Notify(config)
     frame.Parent = slot
     Round(11, frame)
 
-    -- Glass-style gradient overlay
     MultiGradient(frame, {
         Shade(theme.ElementBackground, 0.12),
         theme.ElementBackground,
         Shade(theme.ElementBackground, -0.03),
     }, 135)
 
-    -- Outer glow around the card
     local glow = Instance.new("Frame")
     glow.Size = UDim2.new(1, 8, 1, 8)
     glow.Position = UDim2.new(0, -4, 0, -4)
@@ -446,7 +492,6 @@ function SZK:Notify(config)
     glow.Parent = frame
     Round(15, glow)
 
-    -- Shadow underneath
     local shadow = Instance.new("Frame")
     shadow.BackgroundColor3 = Color3.new(0, 0, 0)
     shadow.BackgroundTransparency = 0.7
@@ -457,10 +502,8 @@ function SZK:Notify(config)
     shadow.Parent = frame
     Round(14, shadow)
 
-    -- Thin accent border
     local stroke = Outline(frame, accent, 1.2, 0.35)
 
-    -- Left accent bar (very thin)
     local bar = Instance.new("Frame")
     bar.Size = UDim2.new(0, 2, 1, -14)
     bar.Position = UDim2.new(0, 0, 0, 7)
@@ -471,7 +514,6 @@ function SZK:Notify(config)
     Round(2, bar)
     Gradient(bar, accent, Blend(accent, Color3.new(1, 1, 1), 0.4), 90)
 
-    -- Icon badge (compact)
     local iconImg
     local resolvedCheck = iconKey and ResolveIcon(iconKey) or ""
     if resolvedCheck ~= "" then
@@ -496,7 +538,6 @@ function SZK:Notify(config)
     local textLeft = iconImg and 46 or 14
     local textWidth = -(textLeft + 14)
 
-    -- Title
     local tLbl = Instance.new("TextLabel")
     tLbl.Text = title
     tLbl.Font = Enum.Font.GothamBold
@@ -510,7 +551,6 @@ function SZK:Notify(config)
     tLbl.ZIndex = 6
     tLbl.Parent = frame
 
-    -- Content (subtitle)
     if hasContent then
         local cLbl = Instance.new("TextLabel")
         cLbl.Text = content
@@ -527,7 +567,6 @@ function SZK:Notify(config)
         cLbl.Parent = frame
     end
 
-    -- Progress bar (super thin, at bottom edge)
     local progressBg = Instance.new("Frame")
     progressBg.Size = UDim2.new(1, -4, 0, 2)
     progressBg.Position = UDim2.new(0, 2, 1, -3)
@@ -547,7 +586,6 @@ function SZK:Notify(config)
     Round(2, progressFill)
     Gradient(progressFill, accent, Blend(accent, Color3.new(1, 1, 1), 0.5), 0)
 
-    -- Buttons
     if hasBtns then
         local row = Instance.new("Frame")
         row.Size = UDim2.new(1, -22, 0, 22)
@@ -597,7 +635,6 @@ function SZK:Notify(config)
         end
     end
 
-    -- Entrance animation
     Tween(slot, 0.42, { Size = UDim2.new(1, 0, 0, CARD_H) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
     Tween(frame, 0.45, { Position = UDim2.new(0, 0, 0, 0) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
@@ -685,7 +722,6 @@ function SZK:CreateWindow(config)
     WindowGui.DisplayOrder = MainGui.DisplayOrder
     WindowGui.IgnoreGuiInset = true
 
-    -- ═══ MAIN FRAME ═══
     local MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.fromOffset(size.X, size.Y)
     MainFrame.Position = UDim2.fromScale(0.5, 0.5)
@@ -721,7 +757,6 @@ function SZK:CreateWindow(config)
     RecalculateScale()
     Track(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(RecalculateScale))
 
-    -- ═══ SOMBRA MULTICAPA ═══
     for i = 1, 3 do
         local s = Instance.new("Frame")
         s.Name = "Shadow_" .. i
@@ -735,7 +770,6 @@ function SZK:CreateWindow(config)
         Round(16 + i * 4, s)
     end
 
-    -- ═══ GLOW EXTERIOR ═══
     local OuterGlow = Instance.new("Frame")
     OuterGlow.Size = UDim2.new(1, 4, 1, 4)
     OuterGlow.Position = UDim2.new(0, -2, 0, -2)
@@ -746,7 +780,6 @@ function SZK:CreateWindow(config)
     OuterGlow.Parent = MainFrame
     Round(18, OuterGlow)
 
-    -- ═══ BORDE PRINCIPAL ═══
     local MainStroke = Instance.new("UIStroke")
     MainStroke.Color = Theme.Accent
     MainStroke.Thickness = 1.5
@@ -763,7 +796,6 @@ function SZK:CreateWindow(config)
     strokeGradient.Rotation = 135
     strokeGradient.Parent = MainStroke
 
-    -- ═══ BACKGROUND ═══
     local BgImage = Instance.new("ImageLabel")
     BgImage.Size = UDim2.fromScale(1, 1)
     BgImage.BackgroundTransparency = 1
@@ -786,9 +818,6 @@ function SZK:CreateWindow(config)
         Shade(Theme.Background, -0.02),
     }, 135)
 
-    -- ═══════════════════════════════════════════════════════════
-    --  SCAN EFFECTS
-    -- ═══════════════════════════════════════════════════════════
     local scansEnabled = true
     local activeScans = {}
 
@@ -878,7 +907,6 @@ function SZK:CreateWindow(config)
         return scan
     end
 
-    -- ═══ HORIZONTALES ═══
     CreateScan("h", UDim2.new(0, 0, 0, 0),         UDim2.new(1, -180, 0, 0),       180, 1.4, 3, 0)
     CreateScan("h", UDim2.new(1, -180, 0, 0),      UDim2.new(0, 0, 0, 0),          180, 1.5, 3, 0.4)
     CreateScan("h", UDim2.new(0, 0, 1, -3),        UDim2.new(1, -180, 1, -3),      180, 1.45, 3, 0.8)
@@ -887,7 +915,6 @@ function SZK:CreateWindow(config)
     CreateScan("h", UDim2.new(0, 0, 0.5, -1.5),    UDim2.new(1, -220, 0.5, -1.5),  220, 2.0, 2, 0.6)
     CreateScan("h", UDim2.new(1, -220, 0.5, -1.5), UDim2.new(0, 0, 0.5, -1.5),     220, 2.2, 2, 1.4)
 
-    -- ═══ VERTICALES ═══
     CreateScan("v", UDim2.new(0, 0, 0, 0),         UDim2.new(0, 0, 1, -140),       140, 1.4, 3, 0.2)
     CreateScan("v", UDim2.new(0, 0, 1, -140),      UDim2.new(0, 0, 0, 0),          140, 1.5, 3, 0.7)
     CreateScan("v", UDim2.new(1, -3, 0, 0),        UDim2.new(1, -3, 1, -140),      140, 1.45, 3, 1.05)
@@ -896,7 +923,6 @@ function SZK:CreateWindow(config)
     CreateScan("v", UDim2.new(0.5, -1.5, 0, 0),    UDim2.new(0.5, -1.5, 1, -180),  180, 2.1, 2, 0.9)
     CreateScan("v", UDim2.new(0.5, -1.5, 1, -180), UDim2.new(0.5, -1.5, 0, 0),     180, 2.3, 2, 1.6)
 
-    -- ═══ HEADER ═══
     local HeaderBar = Instance.new("Frame")
     HeaderBar.Size = UDim2.new(1, 0, 0, 58)
     HeaderBar.BackgroundColor3 = Theme.Background2
@@ -921,7 +947,6 @@ function SZK:CreateWindow(config)
     headerDivider.ZIndex = 6
     headerDivider.Parent = HeaderBar
 
-    -- ═══ AVATAR ═══
     local AvatarHolder = Instance.new("Frame")
     AvatarHolder.Size = UDim2.fromOffset(40, 40)
     AvatarHolder.Position = UDim2.new(0, 14, 0.5, -20)
@@ -961,7 +986,6 @@ function SZK:CreateWindow(config)
     Round(5, onlineDot)
     Outline(onlineDot, Theme.Background2, 2, 0)
 
-    -- ═══ TITLE ═══
     local TitleLabel = Instance.new("TextLabel")
     TitleLabel.Text = title
     TitleLabel.Font = Enum.Font.GothamBold
@@ -1007,7 +1031,6 @@ function SZK:CreateWindow(config)
     DescLabel.ZIndex = 6
     DescLabel.Parent = HeaderBar
 
-    -- ═══ BOTONES DE VENTANA ═══
     local ctrlSize = 28
     local ctrlSpacing = 6
 
@@ -1057,9 +1080,6 @@ function SZK:CreateWindow(config)
         end)
     end
 
-    -- ═══════════════════════════════════════════════════════════
-    --  MODAL DE CONFIRMACIÓN
-    -- ═══════════════════════════════════════════════════════════
     local ModalBackdrop = Instance.new("TextButton")
     ModalBackdrop.Size = UDim2.fromScale(1, 1)
     ModalBackdrop.BackgroundColor3 = Color3.new(0, 0, 0)
@@ -1191,7 +1211,6 @@ function SZK:CreateWindow(config)
         Tween(ConfirmBtn, 0.15, { BackgroundColor3 = Color3.fromRGB(200, 45, 45) })
     end)
 
-    -- ═══ SIDEBAR ═══
     local SIDEBAR_W = 145
     local Sidebar = Instance.new("ScrollingFrame")
     Sidebar.Size = UDim2.new(0, SIDEBAR_W, 1, -78)
@@ -1226,7 +1245,6 @@ function SZK:CreateWindow(config)
     PageHost.ZIndex = 5
     PageHost.Parent = MainFrame
 
-    -- ═══ FOOTER ═══
     if showFooter then
         local footer = Instance.new("Frame")
         footer.Size = UDim2.new(1, 0, 0, 22)
@@ -1250,9 +1268,6 @@ function SZK:CreateWindow(config)
         footLbl.Parent = footer
     end
 
-    -- ═══════════════════════════════════════════════════════════
-    --  BOTÓN FLOTANTE (color del theme + SCANS en 4 lados)
-    -- ═══════════════════════════════════════════════════════════
     local FB_W, FB_H = 155, 50
 
     local FloatBtn = Instance.new("TextButton")
@@ -1293,9 +1308,6 @@ function SZK:CreateWindow(config)
     fbInnerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     fbInnerStroke.Parent = FloatBtn
 
-    -- ═══════════════════════════════════════════════════════════
-    --  SCANS DEL BOTÓN FLOTANTE — 4 líneas (1 por lado)
-    -- ═══════════════════════════════════════════════════════════
     local fbScansEnabled = true
     local fbActiveScans = {}
 
@@ -1377,13 +1389,9 @@ function SZK:CreateWindow(config)
         end)
     end
 
-    -- Lado SUPERIOR (izq → der)
     CreateFBScan("h", UDim2.new(0, 4, 0, 2),              UDim2.new(1, -60, 0, 2),              56, 1.4, 2, 0)
-    -- Lado INFERIOR (der → izq)
     CreateFBScan("h", UDim2.new(1, -60, 1, -4),           UDim2.new(0, 4, 1, -4),               56, 1.4, 2, 0.7)
-    -- Lado IZQUIERDO (abajo → arriba)
     CreateFBScan("v", UDim2.new(0, 2, 1, -18),            UDim2.new(0, 2, 0, 2),                16, 0.9, 2, 1.4)
-    -- Lado DERECHO (arriba → abajo)
     CreateFBScan("v", UDim2.new(1, -4, 0, 2),             UDim2.new(1, -4, 1, -18),             16, 0.9, 2, 2.1)
 
     local DragIcon = Instance.new("Frame")
@@ -1480,7 +1488,6 @@ function SZK:CreateWindow(config)
         Tween(FloatBtn, 0.2, { BackgroundColor3 = Theme.Background2 })
     end))
 
-    -- ═══ RESIZE GRIP ═══
     local RESIZE_HIT = 36
     local ResizeGrip = Instance.new("TextButton")
     ResizeGrip.AnchorPoint = Vector2.new(1, 1)
@@ -1592,7 +1599,6 @@ function SZK:CreateWindow(config)
     end
     EnableDrag(HeaderBar, MainFrame)
 
-    -- ═══ MIN/MAX/CLOSE ═══
     local isMaximized = false
     local savedSize = size
     local savedPos = MainFrame.Position
@@ -1725,7 +1731,6 @@ function SZK:CreateWindow(config)
         end)
     end))
 
-    -- ═══ THEME POPUP ═══
     local ThemePopup
     if showThemeSel then
         ThemePopup = Instance.new("Frame")
@@ -1877,7 +1882,6 @@ function SZK:CreateWindow(config)
 
     local Window = { Tabs = {}, Connections = Connections }
 
-    -- ═══ ROW BUILDER ═══
     local function RegisterRow(parent, height)
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, height or 58)
@@ -1925,9 +1929,6 @@ function SZK:CreateWindow(config)
         return frame, stroke, accentBar
     end
 
-    -- ═══════════════════════════════════════════════════════════
-    --  CREATE TAB
-    -- ═══════════════════════════════════════════════════════════
     function Window:CreateTab(tabConfig)
         local cfg = type(tabConfig) == "table" and tabConfig or {}
         local tabName = cfg.Name or cfg.Title or (type(tabConfig) == "string" and tabConfig) or "Tab"
@@ -2050,7 +2051,6 @@ function SZK:CreateWindow(config)
         local Tab = {}
         Window.Tabs[tabName] = Tab
 
-        -- ═══ CREATE SECTION ═══
         function Tab:CreateSection(secConfig)
             local secCfg = type(secConfig) == "table" and secConfig or {}
             local secName = secCfg.Name or secCfg.Title or (type(secConfig) == "string" and secConfig) or ""
@@ -2112,7 +2112,6 @@ function SZK:CreateWindow(config)
                 return image
             end
 
-            -- ─── TOGGLE ───
             function Section:CreateToggle(tConfig)
                 local c = tConfig or {}
                 local name     = c.Name or c.Title or "Toggle"
@@ -2218,7 +2217,6 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
-            -- ─── SLIDER ───
             function Section:CreateSlider(sConfig)
                 local c = sConfig or {}
                 local name     = c.Name or c.Title or "Slider"
@@ -2336,7 +2334,6 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
-            -- ─── BUTTON ───
             function Section:CreateButton(bConfig)
                 local c = bConfig or {}
                 local name     = c.Name or c.Title or "Button"
@@ -2431,7 +2428,6 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
-            -- ─── INPUT ───
             function Section:CreateInput(iConfig)
                 local c = iConfig or {}
                 local name        = c.Name or c.Title or "Input"
@@ -2502,7 +2498,6 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
-            -- ─── DROPDOWN ───
             function Section:CreateDropdown(dConfig)
                 local c = dConfig or {}
                 local name     = c.Name or c.Title or "Dropdown"
@@ -2661,7 +2656,6 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
-            -- ─── KEYBIND ───
             function Section:CreateKeybind(kConfig)
                 local c = kConfig or {}
                 local name     = c.Name or c.Title or "Keybind"
@@ -2733,7 +2727,6 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
-            -- ─── LABEL ───
             function Section:CreateLabel(text, iconKey)
                 local row = Instance.new("Frame")
                 row.Size = UDim2.new(1, 0, 0, 32)
@@ -2760,7 +2753,6 @@ function SZK:CreateWindow(config)
                 lbl.Parent = row
             end
 
-            -- ─── PARAGRAPH ───
             function Section:CreateParagraph(text)
                 local row = Instance.new("Frame")
                 row.Size = UDim2.new(1, 0, 0, 0)
@@ -2797,7 +2789,6 @@ function SZK:CreateWindow(config)
                 lbl.Parent = row
             end
 
-            -- ─── DIVIDER ───
             function Section:CreateDivider()
                 local row = Instance.new("Frame")
                 row.Size = UDim2.new(1, 0, 0, 16)
@@ -2827,7 +2818,6 @@ function SZK:CreateWindow(config)
                 grad.Parent = line
             end
 
-            -- ─── PROGRESS BAR ───
             function Section:CreateProgressBar(pConfig)
                 local c = pConfig or {}
                 local name     = c.Name or c.Title or "Progress"
@@ -2891,7 +2881,6 @@ function SZK:CreateWindow(config)
                 return obj
             end
 
-            -- ─── BADGE ───
             function Section:CreateBadge(bConfig)
                 local c = bConfig or {}
                 local text  = c.Text or "Badge"
@@ -2950,7 +2939,6 @@ function SZK:CreateWindow(config)
         return Tab
     end
 
-    -- ═══ API DE WINDOW ═══
     function Window:SetSize(newSize)
         if typeof(newSize) == "Vector2" then
             size = Vector2.new(
