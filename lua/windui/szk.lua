@@ -884,17 +884,11 @@ function SZK:CreateWindow(config)
     CreateScan("h", UDim2.new(0, 0, 1, -2),        UDim2.new(1, 0, 1, -2),      180, 1.45, 3, 0.8)
     CreateScan("h", UDim2.new(1, 0, 1, -2),     UDim2.new(0, 0, 1, -2),         180, 1.55, 3, 1.2)
 
-    CreateScan("h", UDim2.new(0, 0, 0.5, -1),    UDim2.new(1, 0, 0.5, -1),  220, 2.0, 2, 0.6)
-    CreateScan("h", UDim2.new(1, 0, 0.5, -1), UDim2.new(0, 0, 0.5, -1),     220, 2.2, 2, 1.4)
-
     -- ═══ VERTICALES (FIXED: using proportional positioning) ═══
     CreateScan("v", UDim2.new(0, 1, 0, 0),         UDim2.new(0, 1, 1, 0),       140, 1.4, 3, 0.2)
     CreateScan("v", UDim2.new(0, 1, 1, 0),      UDim2.new(0, 1, 0, 0),          140, 1.5, 3, 0.7)
     CreateScan("v", UDim2.new(1, -2, 0, 0),        UDim2.new(1, -2, 1, 0),      140, 1.45, 3, 1.05)
     CreateScan("v", UDim2.new(1, -2, 1, 0),     UDim2.new(1, -2, 0, 0),         140, 1.55, 3, 0.35)
-
-    CreateScan("v", UDim2.new(0.5, -1, 0, 0),    UDim2.new(0.5, -1, 1, 0),  180, 2.1, 2, 0.9)
-    CreateScan("v", UDim2.new(0.5, -1, 1, 0), UDim2.new(0.5, -1, 0, 0),     180, 2.3, 2, 1.6)
 
     -- ═══ HEADER ═══
     local HeaderBar = Instance.new("Frame")
