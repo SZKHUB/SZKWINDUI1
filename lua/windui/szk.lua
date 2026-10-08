@@ -1,6 +1,6 @@
 -- ═══════════════════════════════════════════════════════════════
---  FLUID UI v2.1 — By SZK
---  Compacto + Scans gruesos + Toggle del color del tema
+--  FLUID UI v2.2 — By SZK
+--  Modal de confirmación de cierre + notificación
 -- ═══════════════════════════════════════════════════════════════
 local SZK = { Themes = {}, Windows = {}, Flags = {}, Icons = {}, CurrentTheme = nil, ConfigFolder = "SZK_Configs" }
 
@@ -468,7 +468,7 @@ function SZK:CreateWindow(config)
     config = config or {}
     local title        = config.Title or "FLUID"
     local description  = config.Description or "AUTHOR SZK"
-    local size         = config.Size or Vector2.new(480, 420)  -- ⬅️ MÁS COMPACTO
+    local size         = config.Size or Vector2.new(480, 420)
     if typeof(size) == "UDim2" then size = Vector2.new(size.X.Offset, size.Y.Offset) end
     local toggleKey    = config.ToggleKey or Enum.KeyCode.RightShift
     local themeName    = config.Theme or "SZK"
@@ -479,7 +479,7 @@ function SZK:CreateWindow(config)
     local openBtnIcon  = config.OpenButtonIcon
     local openBtnText  = config.OpenButtonText or "RysHub"
 
-    local MIN_SIZE = Vector2.new(380, 300)   -- ⬅️ MÍNIMO MÁS CHICO
+    local MIN_SIZE = Vector2.new(380, 300)
     local MAX_SIZE = Vector2.new(1200, 800)
     if config.MinSize then MIN_SIZE = config.MinSize end
     if config.MaxSize then MAX_SIZE = config.MaxSize end
@@ -512,7 +512,6 @@ function SZK:CreateWindow(config)
     WindowGui.DisplayOrder = MainGui.DisplayOrder
     WindowGui.Parent = parent
 
-    -- ═══ MAIN FRAME ═══
     local MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.fromOffset(size.X, size.Y)
     MainFrame.Position = UDim2.fromScale(0.5, 0.5)
@@ -582,7 +581,7 @@ function SZK:CreateWindow(config)
     OverlayGrad.Parent = Overlay
 
     -- ═══════════════════════════════════════════════════════════
-    --  SCAN EFFECT — Grosor aumentado (3px) 
+    --  SCAN EFFECT
     -- ═══════════════════════════════════════════════════════════
     local scansEnabled = true
 
@@ -616,7 +615,6 @@ function SZK:CreateWindow(config)
         })
         grad.Parent = scan
 
-        -- Glow (bloom) — ancho mayor
         local glow = Instance.new("Frame")
         glow.BorderSizePixel = 0
         glow.BackgroundColor3 = Theme.Accent
@@ -664,7 +662,6 @@ function SZK:CreateWindow(config)
         return scan
     end
 
-    -- ⬅️ AHORA CON GROSOR 3 (antes 2) Y 2 (antes 1)
     CreateScan("h", UDim2.new(0, 0, 0, 0),        UDim2.new(1, -140, 0, 0), 140, 1.6, 3, 0)
     CreateScan("h", UDim2.new(1, -140, 0, 0),     UDim2.new(0, 0, 0, 0),     140, 1.8, 3, 0.4)
     CreateScan("h", UDim2.new(0, 0, 1, -3),       UDim2.new(1, -140, 1, -3), 140, 1.7, 3, 0.8)
@@ -746,8 +743,7 @@ function SZK:CreateWindow(config)
     DescLabel.Parent = HeaderBar
 
     -- ═══════════════════════════════════════════════════════════
-    --  BOTONES DE VENTANA ESTILO RYSHUB
-    --  Orden: [−] [⧉] [✕]
+    --  BOTONES DE VENTANA
     -- ═══════════════════════════════════════════════════════════
     local ctrlBtnSize = 26
     local ctrlBtnSpacing = 6
@@ -774,7 +770,6 @@ function SZK:CreateWindow(config)
         Tween(CloseBtn, 0.15, { TextColor3 = Theme.Text })
     end)
 
-    -- Botón Maximizar (⧉)
     local MaxBtn = Instance.new("TextButton")
     MaxBtn.Size = UDim2.fromOffset(ctrlBtnSize, ctrlBtnSize)
     MaxBtn.Position = UDim2.new(1, -34 - (ctrlBtnSize + ctrlBtnSpacing), 0.5, -13)
@@ -797,7 +792,6 @@ function SZK:CreateWindow(config)
         Tween(MaxBtn, 0.15, { TextColor3 = Theme.Placeholder })
     end)
 
-    -- Botón Minimizar (−)
     local MinBtn = Instance.new("TextButton")
     MinBtn.Size = UDim2.fromOffset(ctrlBtnSize, ctrlBtnSize)
     MinBtn.Position = UDim2.new(1, -34 - (ctrlBtnSize + ctrlBtnSpacing) * 2, 0.5, -13)
@@ -820,7 +814,6 @@ function SZK:CreateWindow(config)
         Tween(MinBtn, 0.15, { TextColor3 = Theme.Placeholder })
     end)
 
-    -- Botón tema (◐)
     local ThemeBtn
     if showThemeSel then
         ThemeBtn = Instance.new("TextButton")
@@ -846,6 +839,87 @@ function SZK:CreateWindow(config)
             Tween(themeStroke, 0.15, { Transparency = 0.5 })
         end)
     end
+
+    -- ═══════════════════════════════════════════════════════════
+    --  MODAL DE CONFIRMACIÓN DE CIERRE (estilo RysHub)
+    -- ═══════════════════════════════════════════════════════════
+    local ConfirmModal = Instance.new("Frame")
+    ConfirmModal.Size = UDim2.fromOffset(300, 170)
+    ConfirmModal.Position = UDim2.fromScale(0.5, 0.5)
+    ConfirmModal.AnchorPoint = Vector2.new(0.5, 0.5)
+    ConfirmModal.BackgroundColor3 = Theme.ElementBackground
+    ConfirmModal.BackgroundTransparency = 0.02
+    ConfirmModal.Visible = false
+    ConfirmModal.ZIndex = 500
+    ConfirmModal.Parent = WindowGui
+    Round(14, ConfirmModal)
+    Outline(ConfirmModal, Color3.fromRGB(180, 40, 40), 1.5, 0.2)
+
+    local ModalTitle = Instance.new("TextLabel")
+    ModalTitle.Size = UDim2.new(1, -32, 0, 28)
+    ModalTitle.Position = UDim2.new(0, 16, 0, 16)
+    ModalTitle.BackgroundTransparency = 1
+    ModalTitle.Text = "Close Window"
+    ModalTitle.Font = Enum.Font.GothamBold
+    ModalTitle.TextSize = 18
+    ModalTitle.TextColor3 = Theme.Text
+    ModalTitle.TextXAlignment = Enum.TextXAlignment.Left
+    ModalTitle.ZIndex = 501
+    ModalTitle.Parent = ConfirmModal
+
+    local ModalMsg = Instance.new("TextLabel")
+    ModalMsg.Size = UDim2.new(1, -32, 0, 50)
+    ModalMsg.Position = UDim2.new(0, 16, 0, 48)
+    ModalMsg.BackgroundTransparency = 1
+    ModalMsg.Text = "Do you want to close this window?\nYou will not be able to open it again."
+    ModalMsg.Font = Enum.Font.Gotham
+    ModalMsg.TextSize = 18
+    ModalMsg.TextColor3 = Theme.Placeholder
+    ModalMsg.TextXAlignment = Enum.TextXAlignment.Left
+    ModalMsg.TextYAlignment = Enum.TextYAlignment.Top
+    ModalMsg.TextWrapped = true
+    ModalMsg.ZIndex = 501
+    ModalMsg.Parent = ConfirmModal
+
+    local BtnRow = Instance.new("Frame")
+    BtnRow.Size = UDim2.new(1, -32, 0, 38)
+    BtnRow.Position = UDim2.new(0, 16, 1, -54)
+    BtnRow.BackgroundTransparency = 1
+    BtnRow.ZIndex = 501
+    BtnRow.Parent = ConfirmModal
+
+    local CancelBtn = Instance.new("TextButton")
+    CancelBtn.Size = UDim2.new(0.5, -6, 1, 0)
+    CancelBtn.BackgroundColor3 = Shade(Theme.ElementBackground, 0.1)
+    CancelBtn.BackgroundTransparency = 0.1
+    CancelBtn.Text = "Cancel"
+    CancelBtn.Font = Enum.Font.GothamBold
+    CancelBtn.TextSize = 18
+    CancelBtn.TextColor3 = Theme.Text
+    CancelBtn.AutoButtonColor = false
+    CancelBtn.ZIndex = 502
+    CancelBtn.Parent = BtnRow
+    Round(10, CancelBtn)
+    Outline(CancelBtn, Theme.Outline, 1, 0.5)
+
+    local ConfirmBtn = Instance.new("TextButton")
+    ConfirmBtn.Size = UDim2.new(0.5, -6, 1, 0)
+    ConfirmBtn.Position = UDim2.new(0.5, 6, 0, 0)
+    ConfirmBtn.BackgroundColor3 = Color3.fromRGB(180, 40, 40)
+    ConfirmBtn.BackgroundTransparency = 0
+    ConfirmBtn.Text = "Close Window"
+    ConfirmBtn.Font = Enum.Font.GothamBold
+    ConfirmBtn.TextSize = 18
+    ConfirmBtn.TextColor3 = Color3.new(1, 1, 1)
+    ConfirmBtn.AutoButtonColor = false
+    ConfirmBtn.ZIndex = 502
+    ConfirmBtn.Parent = BtnRow
+    Round(10, ConfirmBtn)
+
+    CancelBtn.MouseEnter:Connect(function() Tween(CancelBtn, 0.15, { BackgroundTransparency = 0 }) end)
+    CancelBtn.MouseLeave:Connect(function() Tween(CancelBtn, 0.15, { BackgroundTransparency = 0.1 }) end)
+    ConfirmBtn.MouseEnter:Connect(function() Tween(ConfirmBtn, 0.15, { BackgroundColor3 = Color3.fromRGB(210, 50, 50) }) end)
+    ConfirmBtn.MouseLeave:Connect(function() Tween(ConfirmBtn, 0.15, { BackgroundColor3 = Color3.fromRGB(180, 40, 40) }) end)
 
     -- ═══ SIDEBAR ═══
     local SIDEBAR_W = 135
@@ -882,7 +956,7 @@ function SZK:CreateWindow(config)
     PageHost.ZIndex = 5
     PageHost.Parent = MainFrame
 
-    -- ═══ BOTÓN FLOTANTE RYSHUB ═══
+    -- ═══ BOTÓN FLOTANTE ═══
     local FB_W, FB_H = 150, 48
 
     local FloatBtn = Instance.new("TextButton")
@@ -1113,7 +1187,7 @@ function SZK:CreateWindow(config)
     end
     EnableDrag(HeaderBar, MainFrame)
 
-    -- ═══ MINIMIZAR / RESTAURAR / MAXIMIZAR ═══
+    -- ═══ MINIMIZAR / MAXIMIZAR / CERRAR ═══
     local isMaximized = false
     local savedSize = size
     local savedPos = MainFrame.Position
@@ -1135,7 +1209,6 @@ function SZK:CreateWindow(config)
     end
 
     local function Minimize()
-        -- Minimizar = cerrar visualmente pero mantener en memoria
         Tween(MainFrame, 0.25, { Size = UDim2.fromOffset(size.X * 0.7, size.Y * 0.7) }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
         task.delay(0.25, function()
             MainFrame.Visible = false
@@ -1145,7 +1218,6 @@ function SZK:CreateWindow(config)
 
     local function Maximize()
         if isMaximized then
-            -- Restaurar
             Tween(MainFrame, 0.3, {
                 Size = UDim2.fromOffset(savedSize.X, savedSize.Y),
                 Position = savedPos
@@ -1153,7 +1225,6 @@ function SZK:CreateWindow(config)
             isMaximized = false
             MaxBtn.Text = "⧉"
         else
-            -- Maximizar
             savedSize = size
             savedPos = MainFrame.Position
             local vp = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1280, 720)
@@ -1166,7 +1237,61 @@ function SZK:CreateWindow(config)
         end
     end
 
-    CloseBtn.MouseButton1Click:Connect(CloseWindow)
+    -- ═══════════════════════════════════════════════════════════
+    --  LÓGICA DE CIERRE REAL (destruye el UI + notificación)
+    -- ═══════════════════════════════════════════════════════════
+    local function ReallyClose()
+        -- 1. Notificación
+        SZK:Info("UI Closed", "The interface has been closed successfully.", 3)
+
+        -- 2. Detener scans
+        scansEnabled = false
+
+        -- 3. Desconectar conexiones
+        for _, c in ipairs(Connections) do pcall(function() c:Disconnect() end) end
+
+        -- 4. Remover de la lista
+        for i, w in ipairs(SZK.Windows) do
+            if w == Window then table.remove(SZK.Windows, i) break end
+        end
+
+        -- 5. Animar cierre
+        Tween(MainFrame, 0.3, {
+            Size = UDim2.fromOffset(size.X * 0.6, size.Y * 0.6),
+            BackgroundTransparency = 0.6
+        }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+
+        Tween(ConfirmModal, 0.25, {
+            Size = UDim2.fromOffset(200, 100),
+            BackgroundTransparency = 0.6
+        }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+
+        -- 6. Destruir todo
+        task.delay(0.32, function()
+            pcall(function() WindowGui:Destroy() end)
+        end)
+    end
+
+    CancelBtn.MouseButton1Click:Connect(function()
+        Tween(ConfirmModal, 0.15, { BackgroundTransparency = 1 })
+        task.delay(0.15, function()
+            ConfirmModal.Visible = false
+            ConfirmModal.BackgroundTransparency = 0.02
+        end)
+    end)
+
+    ConfirmBtn.MouseButton1Click:Connect(ReallyClose)
+
+    CloseBtn.MouseButton1Click:Connect(function()
+        ConfirmModal.Visible = true
+        ConfirmModal.BackgroundTransparency = 1
+        ConfirmModal.Size = UDim2.fromOffset(200, 100)
+        Tween(ConfirmModal, 0.25, {
+            Size = UDim2.fromOffset(300, 170),
+            BackgroundTransparency = 0.02
+        }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    end)
+
     MinBtn.MouseButton1Click:Connect(Minimize)
     MaxBtn.MouseButton1Click:Connect(Maximize)
 
@@ -1524,9 +1649,6 @@ function SZK:CreateWindow(config)
                 return image
             end
 
-            -- ═════════════════════════════════════════════════════
-            --  TOGGLE — Pelota más chica y del color del UI
-            -- ═════════════════════════════════════════════════════
             function Section:CreateToggle(tConfig)
                 local c = tConfig or {}
                 local name     = c.Name or c.Title or "Toggle"
@@ -1567,7 +1689,6 @@ function SZK:CreateWindow(config)
                     dLbl.Parent = row
                 end
 
-                -- ⬅️ CAMBIO: pelota 20px (antes 24), inset 4
                 local switchW, switchH, knobSize, inset = 46, 26, 20, 3
                 local track = Instance.new("TextButton")
                 track.AnchorPoint = Vector2.new(1, 0)
@@ -1581,17 +1702,16 @@ function SZK:CreateWindow(config)
                 Round(switchH, track)
                 local trackStroke = Outline(track, Color3.new(1,1,1), 1, 0.85)
 
-                -- ⬅️ CAMBIO: pelota del color del tema (ya no blanca)
                 local knob = Instance.new("Frame")
                 knob.AnchorPoint = Vector2.new(0, 0.5)
                 knob.Position = default and UDim2.new(1, -(inset + knobSize), 0.5, 0) or UDim2.new(0, inset, 0.5, 0)
                 knob.Size = UDim2.fromOffset(knobSize, knobSize)
-                knob.BackgroundColor3 = Theme.Background  -- ⬅️ CAMBIO
+                knob.BackgroundColor3 = Theme.Background
                 knob.BorderSizePixel = 0
                 knob.ZIndex = 9
                 knob.Parent = track
                 Round(knobSize, knob)
-                registerKnob(knob)  -- ⬅️ Registramos para que cambie con el tema
+                registerKnob(knob)
 
                 local state = default
                 if flag then SZK.Flags[flag] = state end
@@ -1678,12 +1798,11 @@ function SZK:CreateWindow(config)
                 Round(2, fill)
                 registerFill(fill)
 
-                -- ⬅️ Slider handle ahora del color del tema
                 local handle = Instance.new("Frame")
                 handle.Size = UDim2.fromOffset(14, 14)
                 handle.AnchorPoint = Vector2.new(0.5, 0.5)
                 handle.Position = UDim2.new(t0, 0, 0.5, 0)
-                handle.BackgroundColor3 = Theme.Background  -- ⬅️ CAMBIO
+                handle.BackgroundColor3 = Theme.Background
                 handle.ZIndex = 9
                 handle.Parent = track
                 Round(7, handle)
@@ -2215,7 +2334,8 @@ function SZK:CreateWindow(config)
         for i, w in ipairs(SZK.Windows) do
             if w == self then table.remove(SZK.Windows, i) break end
         end
-        WindowGui:Destroy()
+        pcall(function() ConfirmModal:Destroy() end)
+        pcall(function() WindowGui:Destroy() end)
     end
 
     MainFrame.Visible = true
