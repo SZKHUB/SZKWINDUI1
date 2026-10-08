@@ -373,19 +373,19 @@ MainGui.DisplayOrder = 999
 MainGui.IgnoreGuiInset = true
 
 local NotificationHolder = Instance.new("Frame")
-NotificationHolder.Size = UDim2.new(0, 270, 1, -20)
-NotificationHolder.Position = UDim2.new(1, -280, 0, 10)
+NotificationHolder.Size = UDim2.new(0, 240, 1, -20)
+NotificationHolder.Position = UDim2.new(1, -250, 0, 10)
 NotificationHolder.BackgroundTransparency = 1
 NotificationHolder.ZIndex = 9999
 NotificationHolder.Parent = MainGui
 
 local NotifList = Instance.new("UIListLayout")
 NotifList.VerticalAlignment = Enum.VerticalAlignment.Bottom
-NotifList.Padding = UDim.new(0, 8)
+NotifList.Padding = UDim.new(0, 6)
 NotifList.Parent = NotificationHolder
 
 -- ═══════════════════════════════════════════════════════════════
---  NOTIFICACIONES (compactas)
+--  NOTIFICACIONES — COMPACTAS Y MODERNAS
 -- ═══════════════════════════════════════════════════════════════
 function SZK:Notify(config)
     config = config or {}
@@ -405,6 +405,14 @@ function SZK:Notify(config)
     }
     local accent = typeColors[ntype] or theme.Info
 
+    local hasBtns    = buttons and #buttons > 0
+    local hasContent = content and content ~= ""
+
+    local CARD_H
+    if hasBtns then CARD_H = 84
+    elseif hasContent then CARD_H = 56
+    else CARD_H = 44 end
+
     local slot = Instance.new("Frame")
     slot.Size = UDim2.new(1, 0, 0, 0)
     slot.BackgroundTransparency = 1
@@ -412,90 +420,119 @@ function SZK:Notify(config)
     slot.Parent = NotificationHolder
 
     local frame = Instance.new("Frame")
-    frame.Position = UDim2.new(1, 60, 0, 0)
+    frame.Position = UDim2.new(1, 70, 0, 0)
     frame.Size = UDim2.new(1, 0, 1, 0)
     frame.BackgroundColor3 = theme.ElementBackground
     frame.BackgroundTransparency = 0.02
     frame.ClipsDescendants = true
     frame.Parent = slot
-    Round(12, frame)
+    Round(11, frame)
 
+    -- Glass-style gradient overlay
+    MultiGradient(frame, {
+        Shade(theme.ElementBackground, 0.12),
+        theme.ElementBackground,
+        Shade(theme.ElementBackground, -0.03),
+    }, 135)
+
+    -- Outer glow around the card
+    local glow = Instance.new("Frame")
+    glow.Size = UDim2.new(1, 8, 1, 8)
+    glow.Position = UDim2.new(0, -4, 0, -4)
+    glow.BackgroundColor3 = accent
+    glow.BackgroundTransparency = 0.86
+    glow.BorderSizePixel = 0
+    glow.ZIndex = -2
+    glow.Parent = frame
+    Round(15, glow)
+
+    -- Shadow underneath
     local shadow = Instance.new("Frame")
     shadow.BackgroundColor3 = Color3.new(0, 0, 0)
-    shadow.BackgroundTransparency = 0.65
+    shadow.BackgroundTransparency = 0.7
     shadow.BorderSizePixel = 0
-    shadow.Size = UDim2.new(1, 10, 1, 10)
-    shadow.Position = UDim2.new(0, -5, 0, -5)
+    shadow.Size = UDim2.new(1, 6, 1, 6)
+    shadow.Position = UDim2.new(0, -3, 0, -3)
     shadow.ZIndex = -1
     shadow.Parent = frame
-    Round(16, shadow)
+    Round(14, shadow)
 
-    local stroke = Outline(frame, accent, 1.2, 0.15)
+    -- Thin accent border
+    local stroke = Outline(frame, accent, 1.2, 0.35)
 
+    -- Left accent bar (very thin)
     local bar = Instance.new("Frame")
-    bar.Size = UDim2.new(0, 2.5, 1, -18)
-    bar.Position = UDim2.new(0, 0, 0, 9)
+    bar.Size = UDim2.new(0, 2, 1, -14)
+    bar.Position = UDim2.new(0, 0, 0, 7)
     bar.BackgroundColor3 = accent
-    bar.ZIndex = 2
+    bar.ZIndex = 3
     bar.BorderSizePixel = 0
     bar.Parent = frame
     Round(2, bar)
-    Gradient(bar, accent, Shade(accent, 0.2), 90)
+    Gradient(bar, accent, Blend(accent, Color3.new(1, 1, 1), 0.4), 90)
 
+    -- Icon badge (compact)
     local iconImg
     local resolvedCheck = iconKey and ResolveIcon(iconKey) or ""
     if resolvedCheck ~= "" then
         local badge = Instance.new("Frame")
-        badge.Size = UDim2.fromOffset(32, 32)
-        badge.Position = UDim2.new(0, 12, 0, 12)
+        badge.Size = UDim2.fromOffset(26, 26)
+        badge.Position = UDim2.new(0, 11, 0.5, -13)
         badge.BackgroundColor3 = accent
-        badge.BackgroundTransparency = 0.85
+        badge.BackgroundTransparency = 0.82
         badge.ZIndex = 3
         badge.Parent = frame
-        Round(9, badge)
+        Round(8, badge)
         Outline(badge, accent, 1, 0.5)
-        Gradient(badge, Blend(accent, Color3.new(0,0,0), 0.3), Blend(accent, Color3.new(1,1,1), 0.3), 135)
+        Gradient(badge, Blend(accent, Color3.new(0,0,0), 0.35), Blend(accent, Color3.new(1,1,1), 0.25), 135)
 
-        iconImg = Img(badge, iconKey, UDim2.fromOffset(18, 18), accent, 0, 4)
+        iconImg = Img(badge, iconKey, UDim2.fromOffset(14, 14), accent, 0, 4)
         if iconImg then
             iconImg.AnchorPoint = Vector2.new(0.5, 0.5)
             iconImg.Position = UDim2.fromScale(0.5, 0.5)
         end
     end
 
-    local textLeft = iconImg and 52 or 18
+    local textLeft = iconImg and 46 or 14
+    local textWidth = -(textLeft + 14)
 
+    -- Title
     local tLbl = Instance.new("TextLabel")
     tLbl.Text = title
     tLbl.Font = Enum.Font.GothamBold
-    tLbl.TextSize = 14
+    tLbl.TextSize = 13
     tLbl.TextColor3 = theme.Text
-    tLbl.Position = UDim2.new(0, textLeft, 0, 12)
-    tLbl.Size = UDim2.new(1, -(textLeft + 14), 0, 18)
+    tLbl.Position = UDim2.new(0, textLeft, 0, hasContent and 9 or 0)
+    tLbl.Size = UDim2.new(1, textWidth, 0, hasContent and 15 or CARD_H)
     tLbl.BackgroundTransparency = 1
     tLbl.TextXAlignment = Enum.TextXAlignment.Left
+    tLbl.TextYAlignment = hasContent and Enum.TextYAlignment.Top or Enum.TextYAlignment.Center
     tLbl.ZIndex = 6
     tLbl.Parent = frame
 
-    local cLbl = Instance.new("TextLabel")
-    cLbl.Text = content
-    cLbl.Font = Enum.Font.Gotham
-    cLbl.TextSize = 12
-    cLbl.TextColor3 = theme.Placeholder
-    cLbl.Position = UDim2.new(0, textLeft, 0, 32)
-    cLbl.Size = UDim2.new(1, -(textLeft + 14), 0, 32)
-    cLbl.BackgroundTransparency = 1
-    cLbl.TextXAlignment = Enum.TextXAlignment.Left
-    cLbl.TextYAlignment = Enum.TextYAlignment.Top
-    cLbl.TextWrapped = true
-    cLbl.ZIndex = 6
-    cLbl.Parent = frame
+    -- Content (subtitle)
+    if hasContent then
+        local cLbl = Instance.new("TextLabel")
+        cLbl.Text = content
+        cLbl.Font = Enum.Font.Gotham
+        cLbl.TextSize = 11
+        cLbl.TextColor3 = theme.Placeholder
+        cLbl.Position = UDim2.new(0, textLeft, 0, 25)
+        cLbl.Size = UDim2.new(1, textWidth, 0, hasBtns and 26 or 22)
+        cLbl.BackgroundTransparency = 1
+        cLbl.TextXAlignment = Enum.TextXAlignment.Left
+        cLbl.TextYAlignment = Enum.TextYAlignment.Top
+        cLbl.TextWrapped = true
+        cLbl.ZIndex = 6
+        cLbl.Parent = frame
+    end
 
+    -- Progress bar (super thin, at bottom edge)
     local progressBg = Instance.new("Frame")
-    progressBg.Size = UDim2.new(1, -4, 0, 2.5)
+    progressBg.Size = UDim2.new(1, -4, 0, 2)
     progressBg.Position = UDim2.new(0, 2, 1, -3)
     progressBg.BackgroundColor3 = accent
-    progressBg.BackgroundTransparency = 0.85
+    progressBg.BackgroundTransparency = 0.9
     progressBg.BorderSizePixel = 0
     progressBg.ZIndex = 4
     progressBg.Parent = frame
@@ -508,42 +545,51 @@ function SZK:Notify(config)
     progressFill.ZIndex = 5
     progressFill.Parent = progressBg
     Round(2, progressFill)
+    Gradient(progressFill, accent, Blend(accent, Color3.new(1, 1, 1), 0.5), 0)
 
-    if buttons and #buttons > 0 then
+    -- Buttons
+    if hasBtns then
         local row = Instance.new("Frame")
-        row.Size = UDim2.new(1, -30, 0, 26)
-        row.Position = UDim2.new(0, textLeft, 0, 70)
+        row.Size = UDim2.new(1, -22, 0, 22)
+        row.Position = UDim2.new(0, 11, 1, -28)
         row.BackgroundTransparency = 1
+        row.ZIndex = 6
         row.Parent = frame
         local rl = Instance.new("UIListLayout")
         rl.FillDirection = Enum.FillDirection.Horizontal
-        rl.Padding = UDim.new(0, 6)
+        rl.Padding = UDim.new(0, 5)
         rl.Parent = row
 
         for _, b in ipairs(buttons) do
             local nb = Instance.new("TextButton")
-            nb.Size = UDim2.fromOffset(0, 24)
+            nb.Size = UDim2.fromOffset(0, 22)
             nb.AutomaticSize = Enum.AutomaticSize.X
-            nb.BackgroundColor3 = b.Primary and accent or Shade(theme.ElementBackground, 0.1)
+            nb.BackgroundColor3 = b.Primary and accent or Shade(theme.ElementBackground, 0.14)
+            nb.BackgroundTransparency = b.Primary and 0 or 0.2
             nb.Text = "  " .. (b.Text or "Ok") .. "  "
             nb.Font = Enum.Font.GothamBold
-            nb.TextSize = 12
-            nb.TextColor3 = b.Primary and Color3.new(1,1,1) or theme.Text
+            nb.TextSize = 11
+            nb.TextColor3 = b.Primary and Color3.new(1, 1, 1) or theme.Text
             nb.AutoButtonColor = false
+            nb.ZIndex = 7
             nb.Parent = row
-            Round(7, nb)
-            Outline(nb, b.Primary and Blend(accent, Color3.new(1,1,1), 0.3) or theme.Outline, 1, 0.6)
+            Round(6, nb)
+            if b.Primary then
+                Outline(nb, Blend(accent, Color3.new(1, 1, 1), 0.3), 1, 0.4)
+            else
+                Outline(nb, theme.Outline, 1, 0.6)
+            end
 
             nb.MouseEnter:Connect(function()
-                Tween(nb, 0.15, { BackgroundColor3 = b.Primary and Blend(accent, Color3.new(1,1,1), 0.15) or Shade(theme.ElementBackground, 0.18) })
+                Tween(nb, 0.15, { BackgroundColor3 = b.Primary and Blend(accent, Color3.new(1, 1, 1), 0.15) or Shade(theme.ElementBackground, 0.22) })
             end)
             nb.MouseLeave:Connect(function()
-                Tween(nb, 0.15, { BackgroundColor3 = b.Primary and accent or Shade(theme.ElementBackground, 0.1) })
+                Tween(nb, 0.15, { BackgroundColor3 = b.Primary and accent or Shade(theme.ElementBackground, 0.14) })
             end)
             nb.MouseButton1Click:Connect(function()
                 if b.Callback then pcall(b.Callback) end
                 if b.CloseOnClick ~= false and slot.Parent then
-                    Tween(frame, 0.25, { Position = UDim2.new(1, 60, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                    Tween(frame, 0.25, { Position = UDim2.new(1, 70, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
                     local out = Tween(slot, 0.25, { Size = UDim2.new(1, 0, 0, 0) })
                     out.Completed:Connect(function() slot:Destroy() end)
                 end
@@ -551,15 +597,15 @@ function SZK:Notify(config)
         end
     end
 
-    local cardHeight = (buttons and #buttons > 0) and 104 or 76
-    Tween(slot, 0.4, { Size = UDim2.new(1, 0, 0, cardHeight) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+    -- Entrance animation
+    Tween(slot, 0.42, { Size = UDim2.new(1, 0, 0, CARD_H) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
     Tween(frame, 0.45, { Position = UDim2.new(0, 0, 0, 0) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
-    if not (buttons and #buttons > 0) then
+    if not hasBtns then
         Tween(progressFill, duration, { Size = UDim2.new(0, 0, 1, 0) }, Enum.EasingStyle.Linear)
         task.delay(duration, function()
             if not slot.Parent then return end
-            Tween(frame, 0.3, { Position = UDim2.new(1, 60, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+            Tween(frame, 0.3, { Position = UDim2.new(1, 70, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
             local out = Tween(slot, 0.3, { Size = UDim2.new(1, 0, 0, 0) })
             out.Completed:Connect(function() slot:Destroy() end)
         end)
@@ -1281,7 +1327,6 @@ function SZK:CreateWindow(config)
         })
         grad.Parent = scan
 
-        -- Glow suave
         local glow = Instance.new("Frame")
         glow.BorderSizePixel = 0
         glow.BackgroundColor3 = Theme.Accent
@@ -1307,7 +1352,6 @@ function SZK:CreateWindow(config)
         })
         glowGrad.Parent = glow
 
-        -- Registrar para cambio de tema
         table.insert(ThemedElements.Scans, {
             scan = scan, grad = grad,
             glow = glow, glowGrad = glowGrad,
@@ -1333,13 +1377,13 @@ function SZK:CreateWindow(config)
         end)
     end
 
-    -- Lado SUPERIOR (recorre de izquierda a derecha)
+    -- Lado SUPERIOR (izq → der)
     CreateFBScan("h", UDim2.new(0, 4, 0, 2),              UDim2.new(1, -60, 0, 2),              56, 1.4, 2, 0)
-    -- Lado INFERIOR (recorre de derecha a izquierda)
+    -- Lado INFERIOR (der → izq)
     CreateFBScan("h", UDim2.new(1, -60, 1, -4),           UDim2.new(0, 4, 1, -4),               56, 1.4, 2, 0.7)
-    -- Lado IZQUIERDO (recorre de abajo hacia arriba)
+    -- Lado IZQUIERDO (abajo → arriba)
     CreateFBScan("v", UDim2.new(0, 2, 1, -18),            UDim2.new(0, 2, 0, 2),                16, 0.9, 2, 1.4)
-    -- Lado DERECHO (recorre de arriba hacia abajo)
+    -- Lado DERECHO (arriba → abajo)
     CreateFBScan("v", UDim2.new(1, -4, 0, 2),             UDim2.new(1, -4, 1, -18),             16, 0.9, 2, 2.1)
 
     local DragIcon = Instance.new("Frame")
