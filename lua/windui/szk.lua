@@ -373,19 +373,19 @@ MainGui.DisplayOrder = 999
 MainGui.IgnoreGuiInset = true
 
 local NotificationHolder = Instance.new("Frame")
-NotificationHolder.Size = UDim2.new(0, 360, 1, -20)
-NotificationHolder.Position = UDim2.new(1, -370, 0, 10)
+NotificationHolder.Size = UDim2.new(0, 270, 1, -20)
+NotificationHolder.Position = UDim2.new(1, -280, 0, 10)
 NotificationHolder.BackgroundTransparency = 1
 NotificationHolder.ZIndex = 9999
 NotificationHolder.Parent = MainGui
 
 local NotifList = Instance.new("UIListLayout")
 NotifList.VerticalAlignment = Enum.VerticalAlignment.Bottom
-NotifList.Padding = UDim.new(0, 10)
+NotifList.Padding = UDim.new(0, 8)
 NotifList.Parent = NotificationHolder
 
 -- ═══════════════════════════════════════════════════════════════
---  NOTIFICACIONES
+--  NOTIFICACIONES (compactas)
 -- ═══════════════════════════════════════════════════════════════
 function SZK:Notify(config)
     config = config or {}
@@ -412,29 +412,29 @@ function SZK:Notify(config)
     slot.Parent = NotificationHolder
 
     local frame = Instance.new("Frame")
-    frame.Position = UDim2.new(1, 80, 0, 0)
+    frame.Position = UDim2.new(1, 60, 0, 0)
     frame.Size = UDim2.new(1, 0, 1, 0)
     frame.BackgroundColor3 = theme.ElementBackground
     frame.BackgroundTransparency = 0.02
     frame.ClipsDescendants = true
     frame.Parent = slot
-    Round(16, frame)
+    Round(12, frame)
 
     local shadow = Instance.new("Frame")
     shadow.BackgroundColor3 = Color3.new(0, 0, 0)
     shadow.BackgroundTransparency = 0.65
     shadow.BorderSizePixel = 0
-    shadow.Size = UDim2.new(1, 12, 1, 12)
-    shadow.Position = UDim2.new(0, -6, 0, -6)
+    shadow.Size = UDim2.new(1, 10, 1, 10)
+    shadow.Position = UDim2.new(0, -5, 0, -5)
     shadow.ZIndex = -1
     shadow.Parent = frame
-    Round(20, shadow)
+    Round(16, shadow)
 
-    local stroke = Outline(frame, accent, 1.5, 0.15)
+    local stroke = Outline(frame, accent, 1.2, 0.15)
 
     local bar = Instance.new("Frame")
-    bar.Size = UDim2.new(0, 3, 1, -24)
-    bar.Position = UDim2.new(0, 0, 0, 12)
+    bar.Size = UDim2.new(0, 2.5, 1, -18)
+    bar.Position = UDim2.new(0, 0, 0, 9)
     bar.BackgroundColor3 = accent
     bar.ZIndex = 2
     bar.BorderSizePixel = 0
@@ -446,52 +446,54 @@ function SZK:Notify(config)
     local resolvedCheck = iconKey and ResolveIcon(iconKey) or ""
     if resolvedCheck ~= "" then
         local badge = Instance.new("Frame")
-        badge.Size = UDim2.fromOffset(44, 44)
-        badge.Position = UDim2.new(0, 16, 0, 16)
+        badge.Size = UDim2.fromOffset(32, 32)
+        badge.Position = UDim2.new(0, 12, 0, 12)
         badge.BackgroundColor3 = accent
         badge.BackgroundTransparency = 0.85
         badge.ZIndex = 3
         badge.Parent = frame
-        Round(12, badge)
+        Round(9, badge)
         Outline(badge, accent, 1, 0.5)
         Gradient(badge, Blend(accent, Color3.new(0,0,0), 0.3), Blend(accent, Color3.new(1,1,1), 0.3), 135)
 
-        iconImg = Img(badge, iconKey, UDim2.fromOffset(24, 24), accent, 0, 4)
+        iconImg = Img(badge, iconKey, UDim2.fromOffset(18, 18), accent, 0, 4)
         if iconImg then
             iconImg.AnchorPoint = Vector2.new(0.5, 0.5)
             iconImg.Position = UDim2.fromScale(0.5, 0.5)
         end
     end
 
-    local textLeft = iconImg and 72 or 24
+    local textLeft = iconImg and 52 or 18
 
     local tLbl = Instance.new("TextLabel")
     tLbl.Text = title
     tLbl.Font = Enum.Font.GothamBold
-    tLbl.TextSize = 18
+    tLbl.TextSize = 14
     tLbl.TextColor3 = theme.Text
-    tLbl.Position = UDim2.new(0, textLeft, 0, 18)
-    tLbl.Size = UDim2.new(1, -(textLeft + 20), 0, 24)
+    tLbl.Position = UDim2.new(0, textLeft, 0, 12)
+    tLbl.Size = UDim2.new(1, -(textLeft + 14), 0, 18)
     tLbl.BackgroundTransparency = 1
     tLbl.TextXAlignment = Enum.TextXAlignment.Left
+    tLbl.ZIndex = 6
     tLbl.Parent = frame
 
     local cLbl = Instance.new("TextLabel")
     cLbl.Text = content
     cLbl.Font = Enum.Font.Gotham
-    cLbl.TextSize = 18
+    cLbl.TextSize = 12
     cLbl.TextColor3 = theme.Placeholder
-    cLbl.Position = UDim2.new(0, textLeft, 0, 46)
-    cLbl.Size = UDim2.new(1, -(textLeft + 20), 0, 44)
+    cLbl.Position = UDim2.new(0, textLeft, 0, 32)
+    cLbl.Size = UDim2.new(1, -(textLeft + 14), 0, 32)
     cLbl.BackgroundTransparency = 1
     cLbl.TextXAlignment = Enum.TextXAlignment.Left
     cLbl.TextYAlignment = Enum.TextYAlignment.Top
     cLbl.TextWrapped = true
+    cLbl.ZIndex = 6
     cLbl.Parent = frame
 
     local progressBg = Instance.new("Frame")
-    progressBg.Size = UDim2.new(1, -4, 0, 3)
-    progressBg.Position = UDim2.new(0, 2, 1, -4)
+    progressBg.Size = UDim2.new(1, -4, 0, 2.5)
+    progressBg.Position = UDim2.new(0, 2, 1, -3)
     progressBg.BackgroundColor3 = accent
     progressBg.BackgroundTransparency = 0.85
     progressBg.BorderSizePixel = 0
@@ -509,27 +511,27 @@ function SZK:Notify(config)
 
     if buttons and #buttons > 0 then
         local row = Instance.new("Frame")
-        row.Size = UDim2.new(1, -40, 0, 34)
-        row.Position = UDim2.new(0, textLeft, 0, 96)
+        row.Size = UDim2.new(1, -30, 0, 26)
+        row.Position = UDim2.new(0, textLeft, 0, 70)
         row.BackgroundTransparency = 1
         row.Parent = frame
         local rl = Instance.new("UIListLayout")
         rl.FillDirection = Enum.FillDirection.Horizontal
-        rl.Padding = UDim.new(0, 8)
+        rl.Padding = UDim.new(0, 6)
         rl.Parent = row
 
         for _, b in ipairs(buttons) do
             local nb = Instance.new("TextButton")
-            nb.Size = UDim2.fromOffset(0, 32)
+            nb.Size = UDim2.fromOffset(0, 24)
             nb.AutomaticSize = Enum.AutomaticSize.X
             nb.BackgroundColor3 = b.Primary and accent or Shade(theme.ElementBackground, 0.1)
             nb.Text = "  " .. (b.Text or "Ok") .. "  "
             nb.Font = Enum.Font.GothamBold
-            nb.TextSize = 18
+            nb.TextSize = 12
             nb.TextColor3 = b.Primary and Color3.new(1,1,1) or theme.Text
             nb.AutoButtonColor = false
             nb.Parent = row
-            Round(10, nb)
+            Round(7, nb)
             Outline(nb, b.Primary and Blend(accent, Color3.new(1,1,1), 0.3) or theme.Outline, 1, 0.6)
 
             nb.MouseEnter:Connect(function()
@@ -541,7 +543,7 @@ function SZK:Notify(config)
             nb.MouseButton1Click:Connect(function()
                 if b.Callback then pcall(b.Callback) end
                 if b.CloseOnClick ~= false and slot.Parent then
-                    Tween(frame, 0.25, { Position = UDim2.new(1, 80, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+                    Tween(frame, 0.25, { Position = UDim2.new(1, 60, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
                     local out = Tween(slot, 0.25, { Size = UDim2.new(1, 0, 0, 0) })
                     out.Completed:Connect(function() slot:Destroy() end)
                 end
@@ -549,7 +551,7 @@ function SZK:Notify(config)
         end
     end
 
-    local cardHeight = (buttons and #buttons > 0) and 140 or 106
+    local cardHeight = (buttons and #buttons > 0) and 104 or 76
     Tween(slot, 0.4, { Size = UDim2.new(1, 0, 0, cardHeight) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
     Tween(frame, 0.45, { Position = UDim2.new(0, 0, 0, 0) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
 
@@ -557,7 +559,7 @@ function SZK:Notify(config)
         Tween(progressFill, duration, { Size = UDim2.new(0, 0, 1, 0) }, Enum.EasingStyle.Linear)
         task.delay(duration, function()
             if not slot.Parent then return end
-            Tween(frame, 0.3, { Position = UDim2.new(1, 80, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+            Tween(frame, 0.3, { Position = UDim2.new(1, 60, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
             local out = Tween(slot, 0.3, { Size = UDim2.new(1, 0, 0, 0) })
             out.Completed:Connect(function() slot:Destroy() end)
         end)
@@ -739,7 +741,7 @@ function SZK:CreateWindow(config)
     }, 135)
 
     -- ═══════════════════════════════════════════════════════════
-    --  SCAN EFFECTS — 12 líneas cruzando, más visibles y rápidas
+    --  SCAN EFFECTS
     -- ═══════════════════════════════════════════════════════════
     local scansEnabled = true
     local activeScans = {}
@@ -776,7 +778,6 @@ function SZK:CreateWindow(config)
         })
         grad.Parent = scan
 
-        -- Glow
         local glow = Instance.new("Frame")
         glow.BorderSizePixel = 0
         glow.BackgroundColor3 = color
@@ -837,7 +838,6 @@ function SZK:CreateWindow(config)
     CreateScan("h", UDim2.new(0, 0, 1, -3),        UDim2.new(1, -180, 1, -3),      180, 1.45, 3, 0.8)
     CreateScan("h", UDim2.new(1, -180, 1, -3),     UDim2.new(0, 0, 1, -3),         180, 1.55, 3, 1.2)
 
-    -- Horizontales al medio
     CreateScan("h", UDim2.new(0, 0, 0.5, -1.5),    UDim2.new(1, -220, 0.5, -1.5),  220, 2.0, 2, 0.6)
     CreateScan("h", UDim2.new(1, -220, 0.5, -1.5), UDim2.new(0, 0, 0.5, -1.5),     220, 2.2, 2, 1.4)
 
@@ -847,7 +847,6 @@ function SZK:CreateWindow(config)
     CreateScan("v", UDim2.new(1, -3, 0, 0),        UDim2.new(1, -3, 1, -140),      140, 1.45, 3, 1.05)
     CreateScan("v", UDim2.new(1, -3, 1, -140),     UDim2.new(1, -3, 0, 0),         140, 1.55, 3, 0.35)
 
-    -- Verticales al medio
     CreateScan("v", UDim2.new(0.5, -1.5, 0, 0),    UDim2.new(0.5, -1.5, 1, -180),  180, 2.1, 2, 0.9)
     CreateScan("v", UDim2.new(0.5, -1.5, 1, -180), UDim2.new(0.5, -1.5, 0, 0),     180, 2.3, 2, 1.6)
 
@@ -1206,7 +1205,7 @@ function SZK:CreateWindow(config)
     end
 
     -- ═══════════════════════════════════════════════════════════
-    --  BOTÓN FLOTANTE (color del theme)
+    --  BOTÓN FLOTANTE (color del theme + SCANS en 4 lados)
     -- ═══════════════════════════════════════════════════════════
     local FB_W, FB_H = 155, 50
 
@@ -1218,7 +1217,7 @@ function SZK:CreateWindow(config)
     FloatBtn.Text = ""
     FloatBtn.AutoButtonColor = false
     FloatBtn.Visible = false
-    FloatBtn.ClipsDescendants = false
+    FloatBtn.ClipsDescendants = true
     FloatBtn.ZIndex = 10
     FloatBtn.Parent = WindowGui
     Round(FB_H / 2, FloatBtn)
@@ -1247,6 +1246,101 @@ function SZK:CreateWindow(config)
     fbInnerStroke.Transparency = 0.7
     fbInnerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     fbInnerStroke.Parent = FloatBtn
+
+    -- ═══════════════════════════════════════════════════════════
+    --  SCANS DEL BOTÓN FLOTANTE — 4 líneas (1 por lado)
+    -- ═══════════════════════════════════════════════════════════
+    local fbScansEnabled = true
+    local fbActiveScans = {}
+
+    local function CreateFBScan(orientation, startPos, endPos, length, travelTime, thickness, delayOffset)
+        local scan = Instance.new("Frame")
+        scan.BorderSizePixel = 0
+        scan.BackgroundColor3 = Theme.Accent
+        scan.ZIndex = 11
+        scan.Parent = FloatBtn
+
+        if orientation == "h" then
+            scan.Size = UDim2.new(0, length, 0, thickness)
+        else
+            scan.Size = UDim2.new(0, thickness, 0, length)
+        end
+        scan.Position = startPos
+
+        local grad = Instance.new("UIGradient")
+        grad.Rotation = orientation == "h" and 0 or 90
+        grad.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Theme.Accent),
+            ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 1)),
+            ColorSequenceKeypoint.new(1, Theme.Accent),
+        })
+        grad.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 1),
+            NumberSequenceKeypoint.new(0.5, 0),
+            NumberSequenceKeypoint.new(1, 1),
+        })
+        grad.Parent = scan
+
+        -- Glow suave
+        local glow = Instance.new("Frame")
+        glow.BorderSizePixel = 0
+        glow.BackgroundColor3 = Theme.Accent
+        glow.BackgroundTransparency = 0.6
+        glow.ZIndex = 10
+        glow.Parent = FloatBtn
+
+        if orientation == "h" then
+            glow.Size = UDim2.new(0, length, 0, thickness * 3)
+            glow.Position = startPos
+        else
+            glow.Size = UDim2.new(0, thickness * 3, 0, length)
+            glow.Position = startPos
+        end
+
+        local glowGrad = Instance.new("UIGradient")
+        glowGrad.Rotation = orientation == "h" and 0 or 90
+        glowGrad.Color = ColorSequence.new(Theme.Accent, Theme.Accent)
+        glowGrad.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 1),
+            NumberSequenceKeypoint.new(0.5, 0.4),
+            NumberSequenceKeypoint.new(1, 1),
+        })
+        glowGrad.Parent = glow
+
+        -- Registrar para cambio de tema
+        table.insert(ThemedElements.Scans, {
+            scan = scan, grad = grad,
+            glow = glow, glowGrad = glowGrad,
+        })
+
+        local scanObj = { scan = scan, glow = glow, enabled = true }
+        table.insert(fbActiveScans, scanObj)
+
+        task.spawn(function()
+            if delayOffset and delayOffset > 0 then task.wait(delayOffset) end
+            while scan and scan.Parent and fbScansEnabled and scanObj.enabled do
+                local t1 = TweenService:Create(scan, TweenInfo.new(travelTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = endPos })
+                local g1 = TweenService:Create(glow, TweenInfo.new(travelTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = endPos })
+                t1:Play(); g1:Play()
+                t1.Completed:Wait()
+                if not scan or not scan.Parent or not fbScansEnabled then break end
+
+                local t2 = TweenService:Create(scan, TweenInfo.new(travelTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = startPos })
+                local g2 = TweenService:Create(glow, TweenInfo.new(travelTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = startPos })
+                t2:Play(); g2:Play()
+                t2.Completed:Wait()
+            end
+        end)
+    end
+
+    -- Lado SUPERIOR (recorre de izquierda a derecha)
+    CreateFBScan("h", UDim2.new(0, 4, 0, 2),              UDim2.new(1, -60, 0, 2),              56, 1.4, 2, 0)
+    -- Lado INFERIOR (recorre de derecha a izquierda)
+    CreateFBScan("h", UDim2.new(1, -60, 1, -4),           UDim2.new(0, 4, 1, -4),               56, 1.4, 2, 0.7)
+    -- Lado IZQUIERDO (recorre de abajo hacia arriba)
+    CreateFBScan("v", UDim2.new(0, 2, 1, -18),            UDim2.new(0, 2, 0, 2),                16, 0.9, 2, 1.4)
+    -- Lado DERECHO (recorre de arriba hacia abajo)
+    CreateFBScan("v", UDim2.new(1, -4, 0, 2),             UDim2.new(1, -4, 1, -18),             16, 0.9, 2, 2.1)
 
     local DragIcon = Instance.new("Frame")
     DragIcon.Size = UDim2.fromOffset(26, 26)
@@ -1507,7 +1601,9 @@ function SZK:CreateWindow(config)
     local function ReallyClose()
         SZK:Info("UI Closed", "The interface has been closed successfully.", 3)
         scansEnabled = false
+        fbScansEnabled = false
         for _, s in ipairs(activeScans) do s.enabled = false end
+        for _, s in ipairs(fbActiveScans) do s.enabled = false end
         for _, c in ipairs(Connections) do pcall(function() c:Disconnect() end) end
         for i, w in ipairs(SZK.Windows) do
             if w == Window then table.remove(SZK.Windows, i) break end
@@ -1677,7 +1773,6 @@ function SZK:CreateWindow(config)
                     SZK.CurrentTheme = Theme
                     ThemePopup.Visible = false
 
-                    -- Actualizar ventana
                     MainFrame.BackgroundColor3 = Theme.Background
                     Overlay.BackgroundColor3 = Theme.Background
                     HeaderBar.BackgroundColor3 = Theme.Background2
@@ -1696,7 +1791,6 @@ function SZK:CreateWindow(config)
                     for _, l in ipairs(gripLines) do l.BackgroundColor3 = Theme.Accent end
                     for _, k in ipairs(ThemedElements.Knobs) do k.BackgroundColor3 = Theme.Background end
 
-                    -- Actualizar botón flotante
                     FloatBtn.BackgroundColor3 = Theme.Background2
                     fbStroke.Color = Theme.Accent
                     fbInnerStroke.Color = Blend(Theme.Accent, Color3.new(1, 1, 1), 0.4)
@@ -1704,10 +1798,9 @@ function SZK:CreateWindow(config)
                     crossV.BackgroundColor3 = Theme.Accent
                     FBLabel.TextColor3 = Theme.Text
 
-                    -- Actualizar scans
                     for _, s in ipairs(ThemedElements.Scans) do
                         s.scan.BackgroundColor3 = Theme.Accent
-                        s.glow.BackgroundColor3 = Theme.Accent
+                        if s.glow then s.glow.BackgroundColor3 = Theme.Accent end
                         if s.grad then
                             s.grad.Color = ColorSequence.new({
                                 ColorSequenceKeypoint.new(0, Theme.Accent),
@@ -2856,7 +2949,6 @@ function SZK:CreateWindow(config)
             for _, l in ipairs(gripLines) do l.BackgroundColor3 = t.Accent end
             for _, k in ipairs(ThemedElements.Knobs) do k.BackgroundColor3 = t.Background end
 
-            -- Botón flotante
             FloatBtn.BackgroundColor3 = t.Background2
             fbStroke.Color = t.Accent
             fbInnerStroke.Color = Blend(t.Accent, Color3.new(1, 1, 1), 0.4)
@@ -2864,10 +2956,9 @@ function SZK:CreateWindow(config)
             crossV.BackgroundColor3 = t.Accent
             FBLabel.TextColor3 = t.Text
 
-            -- Scans
             for _, s in ipairs(ThemedElements.Scans) do
                 s.scan.BackgroundColor3 = t.Accent
-                s.glow.BackgroundColor3 = t.Accent
+                if s.glow then s.glow.BackgroundColor3 = t.Accent end
                 if s.grad then
                     s.grad.Color = ColorSequence.new({
                         ColorSequenceKeypoint.new(0, t.Accent),
@@ -2896,7 +2987,9 @@ function SZK:CreateWindow(config)
 
     function Window:Destroy()
         scansEnabled = false
+        fbScansEnabled = false
         for _, s in ipairs(activeScans) do s.enabled = false end
+        for _, s in ipairs(fbActiveScans) do s.enabled = false end
         for _, c in ipairs(Connections) do
             pcall(function() c:Disconnect() end)
         end
