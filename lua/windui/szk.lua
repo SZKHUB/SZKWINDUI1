@@ -24,6 +24,7 @@ local UserInputService = game:GetService("UserInputService")
 local RunService       = game:GetService("RunService")
 local HttpService      = game:GetService("HttpService")
 local Players          = game:GetService("Players")
+local TeleportService  = game:GetService("TeleportService")
 local LocalPlayer      = Players.LocalPlayer
 local Mouse            = LocalPlayer and LocalPlayer:GetMouse()
 local CoreGui          = game:GetService("CoreGui")
@@ -304,9 +305,6 @@ SZK.Themes.SZK = BuildTheme("SZK", {
     bg = "#08080A", bg2 = "#101014", bg3 = "#15151A",
 })
 
--- ═══════════════════════════════════════════════════════════════
---  TEMAS ORIGINALES (SZK / DARK / LIGHT / etc.)
--- ═══════════════════════════════════════════════════════════════
 SZK.Themes["AMBIENT"]        = BuildTheme("AMBIENT",        {accent = "#E8B4B8", accent2 = "#F4C2C6", outline = "#F4C2C6", toggle = "#E8B4B8", slider = "#F4C2C6", text = "#F8E8E9", placeholder = "#D8A8A9", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F4C2C6"})
 SZK.Themes["SOFT MIST"]      = BuildTheme("SOFT MIST",      {accent = "#D4E0E6", accent2 = "#E8EEF0", outline = "#E8EEF0", toggle = "#D4E0E6", slider = "#E8EEF0", text = "#F5F8F9", placeholder = "#B8C0C4", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#E8EEF0"})
 SZK.Themes["WARM BLUSH"]     = BuildTheme("WARM BLUSH",     {accent = "#F5D0C5", accent2 = "#F8E0D6", outline = "#F8E0D6", toggle = "#F5D0C5", slider = "#F8E0D6", text = "#FFF5F2", placeholder = "#E8B4B0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E0D6"})
@@ -370,28 +368,17 @@ SZK.Themes["SOFT CORAL"]      = BuildTheme("SOFT CORAL",      {accent = "#F4C8B8
 SZK.Themes["SOFT FUCHSIA"]    = BuildTheme("SOFT FUCHSIA",    {accent = "#F4B8D0", accent2 = "#F8D0D8", outline = "#F8D0D8", toggle = "#F4B8D0", slider = "#F8D0D8", text = "#FFF5F8", placeholder = "#D8B8C0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8D0D8"})
 SZK.Themes["SOFT TANGERINE"]  = BuildTheme("SOFT TANGERINE",  {accent = "#F4E0A8", accent2 = "#F8E8B8", outline = "#F8E8B8", toggle = "#F4E0A8", slider = "#F8E8B8", text = "#FFF8E1", placeholder = "#D8C0A0", elemBg = "#0A0A0A", elemBg2 = "#101010", bg = "#000000", bg2 = "#050505", bg3 = "#080808", icon = "#F8E8B8"})
 
--- ═══════════════════════════════════════════════════════════════
---  ORDEN DE TEMAS EN EL SELECTOR
--- ═══════════════════════════════════════════════════════════════
 SZK.ThemeOrder = {
     "SZK",
-
-    -- Fluidos / Mist (nuevos)
     "MOONLIGHT", "DUSTY PINK", "SOFT IVORY", "SOFT LILAC", "SOFT SAGE",
     "SOFT BEIGE", "SOFT TERRACOTTA", "SOFT CYAN", "SOFT TURQUOISE", "SOFT INDIGO",
     "SOFT CHERRY", "SOFT MINT", "SOFT APRICOT", "SOFT LIME", "SOFT LAVENDER",
     "SOFT PEACH", "SOFT BLUSH", "SOFT IVY", "SOFT SUNRISE", "SOFT TWILIGHT",
     "SOFT DAWN", "SOFT CLOVER", "SOFT CORAL", "SOFT FUCHSIA", "SOFT TANGERINE",
-
-    -- Pastel originales
     "AMBIENT", "SOFT MIST", "WARM BLUSH", "SUNSET HUE", "SOFT GOLDEN",
     "PEACH BLOSSOM", "LAVENDER MIST", "SEAFOAM SOFT", "SOFT LEMON", "SOFT ROSE", "PEACH",
-
-    -- Vibrantes
     "VENOM", "CYBER", "PURPLE", "GOLD", "NEON", "OCEAN", "ROSE", "FOREST",
     "EMERALD", "CORAL", "LAVENDER", "COPPER", "SAPPHIRE", "LIME", "INDIGO", "AMBER",
-
-    -- Oscuros
     "DARK", "SLATE", "MIDNIGHT", "BLOOD", "COCOA", "LIGHT",
 }
 
@@ -2050,6 +2037,7 @@ function SZK:CreateWindow(config)
 
         local Tab = {}
         Window.Tabs[tabName] = Tab
+        Tab.Page = page  -- expose the page for custom layouts
 
         function Tab:CreateSection(secConfig)
             local secCfg = type(secConfig) == "table" and secConfig or {}
@@ -2939,6 +2927,246 @@ function SZK:CreateWindow(config)
         return Tab
     end
 
+    -- ═══════════════════════════════════════════════════════════
+    --  HOME TAB — auto-created as the first tab
+    -- ═══════════════════════════════════════════════════════════
+    if config.Home ~= false then
+        local homeTab = Window:CreateTab({ Name = "Home", Icon = "home" })
+        local homePage = homeTab.Page
+
+        -- Helper: create a small info card
+        local function makeInfoCard(parent, iconName, labelText, valueText)
+            local card = Instance.new("Frame")
+            card.BackgroundColor3 = Theme.ElementBackground
+            card.BackgroundTransparency = 0.08
+            card.Parent = parent
+            Round(10, card)
+            Outline(card, Theme.Outline, 1, 0.45)
+
+            local iconImg = Img(card, iconName, UDim2.fromOffset(16, 16), Theme.Accent, 0, 8)
+            if iconImg then
+                iconImg.Position = UDim2.new(0, 12, 0, 12)
+            end
+
+            local lbl = Instance.new("TextLabel")
+            lbl.Text = labelText
+            lbl.Font = Enum.Font.Gotham
+            lbl.TextSize = 11
+            lbl.TextColor3 = Theme.Placeholder
+            lbl.Position = UDim2.new(0, 36, 0, 11)
+            lbl.Size = UDim2.new(1, -48, 0, 14)
+            lbl.BackgroundTransparency = 1
+            lbl.TextXAlignment = Enum.TextXAlignment.Left
+            lbl.ZIndex = 7
+            lbl.Parent = card
+
+            local val = Instance.new("TextLabel")
+            val.Text = valueText
+            val.Font = Enum.Font.GothamBold
+            val.TextSize = 14
+            val.TextColor3 = Theme.Text
+            val.Position = UDim2.new(0, 36, 0, 27)
+            val.Size = UDim2.new(1, -48, 0, 18)
+            val.BackgroundTransparency = 1
+            val.TextXAlignment = Enum.TextXAlignment.Left
+            val.TextTruncate = Enum.TextTruncate.AtEnd
+            val.ZIndex = 7
+            val.Parent = card
+
+            return card
+        end
+
+        -- ─── Hero Card ───
+        local hero = Instance.new("Frame")
+        hero.Size = UDim2.new(1, 0, 0, 128)
+        hero.BackgroundColor3 = Theme.ElementBackground
+        hero.BackgroundTransparency = 0.02
+        hero.Parent = homePage
+        Round(14, hero)
+        Outline(hero, Theme.Accent, 1.5, 0.35)
+
+        MultiGradient(hero, {
+            Blend(Theme.Accent, Theme.ElementBackground, 0.82),
+            Theme.ElementBackground,
+            Shade(Theme.ElementBackground, -0.03),
+        }, 135)
+
+        local heroAvatar = Instance.new("ImageLabel")
+        heroAvatar.Size = UDim2.fromOffset(60, 60)
+        heroAvatar.Position = UDim2.new(0, 20, 0, 20)
+        heroAvatar.BackgroundColor3 = Theme.ElementBackground
+        heroAvatar.BackgroundTransparency = 0
+        heroAvatar.Image = LocalPlayer and string.format("rbxthumb://type=AvatarHeadShot&id=%d&w=150&h=150", LocalPlayer.UserId) or ""
+        heroAvatar.Parent = hero
+        Round(30, heroAvatar)
+        Outline(heroAvatar, Theme.Accent, 2, 0.15)
+
+        local welcomeLbl = Instance.new("TextLabel")
+        welcomeLbl.Text = "Welcome back,"
+        welcomeLbl.Font = Enum.Font.Gotham
+        welcomeLbl.TextSize = 14
+        welcomeLbl.TextColor3 = Theme.Placeholder
+        welcomeLbl.Position = UDim2.new(0, 94, 0, 22)
+        welcomeLbl.Size = UDim2.new(1, -114, 0, 16)
+        welcomeLbl.BackgroundTransparency = 1
+        welcomeLbl.TextXAlignment = Enum.TextXAlignment.Left
+        welcomeLbl.ZIndex = 7
+        welcomeLbl.Parent = hero
+
+        local usernameLbl = Instance.new("TextLabel")
+        usernameLbl.Text = LocalPlayer and LocalPlayer.DisplayName or "Player"
+        usernameLbl.Font = Enum.Font.GothamBold
+        usernameLbl.TextSize = 22
+        usernameLbl.TextColor3 = Theme.Text
+        usernameLbl.Position = UDim2.new(0, 94, 0, 38)
+        usernameLbl.Size = UDim2.new(1, -114, 0, 26)
+        usernameLbl.BackgroundTransparency = 1
+        usernameLbl.TextXAlignment = Enum.TextXAlignment.Left
+        usernameLbl.ZIndex = 7
+        usernameLbl.Parent = hero
+
+        local heroVersion = Instance.new("Frame")
+        heroVersion.Size = UDim2.fromOffset(72, 20)
+        heroVersion.Position = UDim2.new(0, 94, 0, 70)
+        heroVersion.BackgroundColor3 = Theme.Accent
+        heroVersion.BackgroundTransparency = 0.85
+        heroVersion.ZIndex = 7
+        heroVersion.Parent = hero
+        Round(6, heroVersion)
+        Outline(heroVersion, Theme.Accent, 1, 0.6)
+
+        local heroVerLbl = Instance.new("TextLabel")
+        heroVerLbl.Size = UDim2.fromScale(1, 1)
+        heroVerLbl.BackgroundTransparency = 1
+        heroVerLbl.Text = "v" .. SZK.Version
+        heroVerLbl.Font = Enum.Font.GothamBold
+        heroVerLbl.TextSize = 12
+        heroVerLbl.TextColor3 = Theme.Accent
+        heroVerLbl.ZIndex = 8
+        heroVerLbl.Parent = heroVersion
+
+        local heroDesc = Instance.new("TextLabel")
+        heroDesc.Text = "FLUID UI • Premium Roblox Interface"
+        heroDesc.Font = Enum.Font.Gotham
+        heroDesc.TextSize = 12
+        heroDesc.TextColor3 = Theme.Placeholder
+        heroDesc.Position = UDim2.new(0, 94, 0, 96)
+        heroDesc.Size = UDim2.new(1, -114, 0, 16)
+        heroDesc.BackgroundTransparency = 1
+        heroDesc.TextXAlignment = Enum.TextXAlignment.Left
+        heroDesc.ZIndex = 7
+        heroDesc.Parent = hero
+
+        -- ─── Info Grid ───
+        local infoFrame = Instance.new("Frame")
+        infoFrame.Size = UDim2.new(1, 0, 0, 136)
+        infoFrame.BackgroundTransparency = 1
+        infoFrame.Parent = homePage
+
+        local grid = Instance.new("UIGridLayout")
+        grid.CellSize = UDim2.new(0.5, -4, 0, 64)
+        grid.CellPadding = UDim2.new(0, 8, 0, 8)
+        grid.SortOrder = Enum.SortOrder.LayoutOrder
+        grid.Parent = infoFrame
+
+        local accountAge = LocalPlayer and LocalPlayer.AccountAge or 0
+        local ageText
+        if accountAge >= 365 then
+            ageText = tostring(math.floor(accountAge / 365)) .. "y " .. tostring(math.floor((accountAge % 365) / 30)) .. "m"
+        elseif accountAge >= 30 then
+            ageText = tostring(math.floor(accountAge / 30)) .. " months"
+        else
+            ageText = tostring(accountAge) .. " days"
+        end
+
+        makeInfoCard(infoFrame, "package", "Version", SZK.Version)
+        makeInfoCard(infoFrame, "map-pin", "Place ID", tostring(game.PlaceId))
+        makeInfoCard(infoFrame, "user", "User ID", tostring(LocalPlayer and LocalPlayer.UserId or 0))
+        makeInfoCard(infoFrame, "calendar", "Account Age", ageText)
+
+        -- ─── Quick Actions ───
+        local actionsSection = homeTab:CreateSection({ Name = "Quick Actions", Icon = "zap" })
+
+        actionsSection:CreateButton({
+            Name = "Copy Discord Invite",
+            Desc = "Join the community server",
+            Icon = "message-circle",
+            Callback = function()
+                if setclipboard then
+                    setclipboard("https://discord.gg/yourinvite")
+                    SZK:Success("Copied!", "Discord invite copied to clipboard.", 2)
+                else
+                    SZK:Warn("Clipboard unavailable", "Your executor does not support setclipboard.", 3)
+                end
+            end,
+        })
+
+        actionsSection:CreateButton({
+            Name = "Copy Script Link",
+            Desc = "Copy the loader URL",
+            Icon = "link",
+            Callback = function()
+                if setclipboard then
+                    setclipboard("https://raw.githubusercontent.com/SZKHUB/SZKWINDUI1/refs/heads/main/lua/windui/szk.lua")
+                    SZK:Success("Copied!", "Script link copied to clipboard.", 2)
+                else
+                    SZK:Warn("Clipboard unavailable", "Your executor does not support setclipboard.", 3)
+                end
+            end,
+        })
+
+        actionsSection:CreateButton({
+            Name = "Rejoin Server",
+            Desc = "Reconnect to the current server",
+            Icon = "refresh-cw",
+            Callback = function()
+                SZK:Info("Rejoining", "Reconnecting to the server...", 2)
+                task.wait(0.5)
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+            end,
+        })
+
+        actionsSection:CreateButton({
+            Name = "Server Hop",
+            Desc = "Join a different server",
+            Icon = "globe",
+            Callback = function()
+                SZK:Info("Server Hopping", "Looking for a new server...", 2)
+                task.spawn(function()
+                    local ok, servers = pcall(function()
+                        return HttpService:JSONDecode(game:HttpGet(
+                            "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+                        ))
+                    end)
+                    if ok and servers and servers.data then
+                        for _, s in ipairs(servers.data) do
+                            if s.id ~= game.JobId and s.playing < s.maxPlayers then
+                                TeleportService:TeleportToPlaceInstance(game.PlaceId, s.id, LocalPlayer)
+                                return
+                            end
+                        end
+                    end
+                    SZK:Error("Server Hop Failed", "Could not find an available server.", 3)
+                end)
+            end,
+        })
+
+        -- ─── What's New ───
+        local whatsNew = homeTab:CreateSection({ Name = "What's New", Icon = "sparkles" })
+        whatsNew:CreateParagraph(
+            "v1.0.0 — Initial release of FLUID UI.\n\n" ..
+            "• 26 new fluid / mist themes\n" ..
+            "• Compact modern notification system\n" ..
+            "• Scan animations on the floating button\n" ..
+            "• Auto-created Home tab with quick actions\n" ..
+            "• Full theme selector with live preview\n\n" ..
+            "Thanks for using FLUID UI by SZK."
+        )
+
+        Window.HomeTab = homeTab
+    end
+
+    -- ═══ API DE WINDOW ═══
     function Window:SetSize(newSize)
         if typeof(newSize) == "Vector2" then
             size = Vector2.new(
