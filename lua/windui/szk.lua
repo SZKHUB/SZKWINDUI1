@@ -1,6 +1,6 @@
 -- ═══════════════════════════════════════════════════════════════
---  FLUID UI v2 — By SZK
---  Estilo mejorado con scan cruzando + botón flotante estilo RysHub
+--  FLUID UI v2.1 — By SZK
+--  Compacto + Scans gruesos + Toggle del color del tema
 -- ═══════════════════════════════════════════════════════════════
 local SZK = { Themes = {}, Windows = {}, Flags = {}, Icons = {}, CurrentTheme = nil, ConfigFolder = "SZK_Configs" }
 
@@ -30,7 +30,6 @@ function SZK:LoadIcons()
 end
 pcall(SZK.LoadIcons, SZK)
 
--- ═══ Utilidades ═══
 local function GetUrlExtension(url, allowed, fallback)
     local clean = string.match(url, "^[^%?#]+") or url
     local ext = string.match(clean, "%.([%a%d]+)$")
@@ -156,7 +155,6 @@ local function TintIfAllowed(img, color)
     if img and not img:GetAttribute("SZKCustomIcon") then img.ImageColor3 = color end
 end
 
--- ═══ Temas ═══
 local function BuildTheme(name, accent, outline, toggle, slider, text, placeholder, bg, elemBg, icon)
     return {
         Name = name,
@@ -236,12 +234,13 @@ SZK.ThemeOrder = {
 local Theme = SZK.Themes.SZK
 SZK.CurrentTheme = Theme
 
-local ThemedElements = { Strokes = {}, Fills = {}, Labels = {}, Buttons = {}, Gradients = {}, Scans = {} }
+local ThemedElements = { Strokes = {}, Fills = {}, Labels = {}, Buttons = {}, Gradients = {}, Scans = {}, Knobs = {} }
 local function registerStroke(s) table.insert(ThemedElements.Strokes, s) end
 local function registerFill(f) table.insert(ThemedElements.Fills, f) end
 local function registerLabel(l) table.insert(ThemedElements.Labels, l) end
 local function registerButton(b) table.insert(ThemedElements.Buttons, b) end
 local function registerGradient(g) table.insert(ThemedElements.Gradients, g) end
+local function registerKnob(k) table.insert(ThemedElements.Knobs, k) end
 
 local animPhase = 0
 local accum = 0
@@ -276,6 +275,9 @@ local function applyBWColors(phase)
                 ColorSequenceKeypoint.new(1, c1),
             })
         end
+    end
+    for _, k in ipairs(ThemedElements.Knobs) do
+        k.BackgroundColor3 = c2
     end
 end
 
@@ -462,14 +464,11 @@ function SZK:Error(t, c, d)   return SZK:Notify({Title = t or "Error", Content =
 function SZK:Warn(t, c, d)    return SZK:Notify({Title = t or "Warning", Content = c or "", Type = "Warning", Duration = d or 3.5, Icon = "alert-triangle"}) end
 function SZK:Info(t, c, d)    return SZK:Notify({Title = t or "Info", Content = c or "", Type = "Info", Duration = d or 3.5, Icon = "info"}) end
 
--- ═══════════════════════════════════════════════════════════════
---  CREATE WINDOW
--- ═══════════════════════════════════════════════════════════════
 function SZK:CreateWindow(config)
     config = config or {}
     local title        = config.Title or "FLUID"
     local description  = config.Description or "AUTHOR SZK"
-    local size         = config.Size or Vector2.new(560, 500)
+    local size         = config.Size or Vector2.new(480, 420)  -- ⬅️ MÁS COMPACTO
     if typeof(size) == "UDim2" then size = Vector2.new(size.X.Offset, size.Y.Offset) end
     local toggleKey    = config.ToggleKey or Enum.KeyCode.RightShift
     local themeName    = config.Theme or "SZK"
@@ -480,8 +479,8 @@ function SZK:CreateWindow(config)
     local openBtnIcon  = config.OpenButtonIcon
     local openBtnText  = config.OpenButtonText or "RysHub"
 
-    local MIN_SIZE = Vector2.new(420, 340)
-    local MAX_SIZE = Vector2.new(1400, 1000)
+    local MIN_SIZE = Vector2.new(380, 300)   -- ⬅️ MÍNIMO MÁS CHICO
+    local MAX_SIZE = Vector2.new(1200, 800)
     if config.MinSize then MIN_SIZE = config.MinSize end
     if config.MaxSize then MAX_SIZE = config.MaxSize end
 
@@ -522,7 +521,7 @@ function SZK:CreateWindow(config)
     MainFrame.ClipsDescendants = true
     MainFrame.Visible = false
     MainFrame.Parent = WindowGui
-    Round(16, MainFrame)
+    Round(14, MainFrame)
 
     local SizeConstraint = Instance.new("UISizeConstraint")
     SizeConstraint.MinSize = MIN_SIZE
@@ -543,13 +542,12 @@ function SZK:CreateWindow(config)
         local marginY = math.max(viewport.Y * 0.85, 1)
         local scaleX = marginX / size.X
         local scaleY = marginY / size.Y
-        local target = math.clamp(math.min(scaleX, scaleY, 1), 0.45, 1)
+        local target = math.clamp(math.min(scaleX, scaleY, 1), 0.5, 1)
         WindowScale.Scale = target
     end
     RecalculateScale()
     Track(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(RecalculateScale))
 
-    -- ═══ BORDE EXTERIOR CON GLOW ═══
     local OuterGlow = Instance.new("Frame")
     OuterGlow.Size = UDim2.new(1, 0, 1, 0)
     OuterGlow.BackgroundColor3 = Theme.Accent
@@ -557,12 +555,11 @@ function SZK:CreateWindow(config)
     OuterGlow.BorderSizePixel = 0
     OuterGlow.ZIndex = 0
     OuterGlow.Parent = MainFrame
-    Round(18, OuterGlow)
+    Round(16, OuterGlow)
 
     local MainStroke = Outline(MainFrame, Theme.Accent, 1.5, 0.35)
     registerStroke(MainStroke)
 
-    -- ═══ BACKGROUND IMAGE ═══
     local BgImage = Instance.new("ImageLabel")
     BgImage.Size = UDim2.fromScale(1, 1)
     BgImage.BackgroundTransparency = 1
@@ -585,9 +582,8 @@ function SZK:CreateWindow(config)
     OverlayGrad.Parent = Overlay
 
     -- ═══════════════════════════════════════════════════════════
-    --  SCAN EFFECT MEJORADO — Múltiples líneas cruzando
+    --  SCAN EFFECT — Grosor aumentado (3px) 
     -- ═══════════════════════════════════════════════════════════
-    local scans = {}
     local scansEnabled = true
 
     local function CreateScan(orientation, startPos, endPos, length, travelTime, thickness, delayOffset)
@@ -604,7 +600,6 @@ function SZK:CreateWindow(config)
         end
         scan.Position = startPos
 
-        -- Gradiente de color (blanco → accent)
         local grad = Instance.new("UIGradient")
         grad.Rotation = orientation == "h" and 0 or 90
         grad.Color = ColorSequence.new({
@@ -621,19 +616,19 @@ function SZK:CreateWindow(config)
         })
         grad.Parent = scan
 
-        -- Capa de glow (bloom) — misma posición, más gruesa y transparente
+        -- Glow (bloom) — ancho mayor
         local glow = Instance.new("Frame")
         glow.BorderSizePixel = 0
         glow.BackgroundColor3 = Theme.Accent
-        glow.BackgroundTransparency = 0.5
+        glow.BackgroundTransparency = 0.6
         glow.ZIndex = 7
         glow.Parent = MainFrame
 
         if orientation == "h" then
-            glow.Size = UDim2.new(0, length, 0, thickness * 4)
+            glow.Size = UDim2.new(0, length, 0, thickness * 3)
             glow.Position = startPos
         else
-            glow.Size = UDim2.new(0, thickness * 4, 0, length)
+            glow.Size = UDim2.new(0, thickness * 3, 0, length)
             glow.Position = startPos
         end
 
@@ -650,7 +645,6 @@ function SZK:CreateWindow(config)
         registerFill(scan)
         registerFill(glow)
         table.insert(ThemedElements.Scans, { scan = scan, grad = grad })
-        table.insert(scans, { frame = scan, glow = glow, startPos = startPos, endPos = endPos, travelTime = travelTime, active = true })
 
         task.spawn(function()
             if delayOffset and delayOffset > 0 then task.wait(delayOffset) end
@@ -670,49 +664,42 @@ function SZK:CreateWindow(config)
         return scan
     end
 
-    -- ═══════════════════════════════════════════════════════════
-    --  SCANS CRUZANDO (mucho más frecuentes)
-    -- ═══════════════════════════════════════════════════════════
-    -- Horizontales (van de izquierda a derecha y viceversa, en distintos tiempos)
-    CreateScan("h", UDim2.new(0, 0, 0, 0),        UDim2.new(1, -140, 0, 0), 140, 1.6, 2, 0)
-    CreateScan("h", UDim2.new(1, -140, 0, 0),     UDim2.new(0, 0, 0, 0),     140, 1.8, 2, 0.4)
-    CreateScan("h", UDim2.new(0, 0, 1, -2),       UDim2.new(1, -140, 1, -2), 140, 1.7, 2, 0.8)
-    CreateScan("h", UDim2.new(1, -140, 1, -2),    UDim2.new(0, 0, 1, -2),    140, 1.9, 2, 1.2)
-    -- Horizontales medias (velocidad diferente)
-    CreateScan("h", UDim2.new(0, 0, 0.5, -1),     UDim2.new(1, -160, 0.5, -1), 160, 2.4, 1, 0.6)
+    -- ⬅️ AHORA CON GROSOR 3 (antes 2) Y 2 (antes 1)
+    CreateScan("h", UDim2.new(0, 0, 0, 0),        UDim2.new(1, -140, 0, 0), 140, 1.6, 3, 0)
+    CreateScan("h", UDim2.new(1, -140, 0, 0),     UDim2.new(0, 0, 0, 0),     140, 1.8, 3, 0.4)
+    CreateScan("h", UDim2.new(0, 0, 1, -3),       UDim2.new(1, -140, 1, -3), 140, 1.7, 3, 0.8)
+    CreateScan("h", UDim2.new(1, -140, 1, -3),    UDim2.new(0, 0, 1, -3),    140, 1.9, 3, 1.2)
+    CreateScan("h", UDim2.new(0, 0, 0.5, -1.5),   UDim2.new(1, -160, 0.5, -1.5), 160, 2.4, 2, 0.6)
 
-    -- Verticales (suben y bajan)
-    CreateScan("v", UDim2.new(0, 0, 0, 0),        UDim2.new(0, 0, 1, -110),   110, 1.7, 2, 0.2)
-    CreateScan("v", UDim2.new(0, 0, 1, -110),     UDim2.new(0, 0, 0, 0),      110, 1.9, 2, 0.7)
-    CreateScan("v", UDim2.new(1, -2, 0, 0),       UDim2.new(1, -2, 1, -110),  110, 1.8, 2, 1.1)
-    CreateScan("v", UDim2.new(1, -2, 1, -110),    UDim2.new(1, -2, 0, 0),     110, 2.0, 2, 0.3)
-    -- Verticales medias
-    CreateScan("v", UDim2.new(0.5, -1, 0, 0),     UDim2.new(0.5, -1, 1, -130), 130, 2.5, 1, 0.9)
+    CreateScan("v", UDim2.new(0, 0, 0, 0),        UDim2.new(0, 0, 1, -110),   110, 1.7, 3, 0.2)
+    CreateScan("v", UDim2.new(0, 0, 1, -110),     UDim2.new(0, 0, 0, 0),      110, 1.9, 3, 0.7)
+    CreateScan("v", UDim2.new(1, -3, 0, 0),       UDim2.new(1, -3, 1, -110),  110, 1.8, 3, 1.1)
+    CreateScan("v", UDim2.new(1, -3, 1, -110),    UDim2.new(1, -3, 0, 0),     110, 2.0, 3, 0.3)
+    CreateScan("v", UDim2.new(0.5, -1.5, 0, 0),   UDim2.new(0.5, -1.5, 1, -130), 130, 2.5, 2, 0.9)
 
     -- ═══ HEADER ═══
     local HeaderBar = Instance.new("Frame")
-    HeaderBar.Size = UDim2.new(1, 0, 0, 62)
+    HeaderBar.Size = UDim2.new(1, 0, 0, 52)
     HeaderBar.BackgroundColor3 = Theme.Background2
     HeaderBar.BackgroundTransparency = 0.15
     HeaderBar.BorderSizePixel = 0
     HeaderBar.ZIndex = 5
     HeaderBar.Parent = MainFrame
-    Round(16, HeaderBar)
+    Round(14, HeaderBar)
 
     local headerGrad = Instance.new("UIGradient")
     headerGrad.Color = ColorSequence.new(Shade(Theme.Background2, 0.08), Shade(Theme.Background2, -0.04))
     headerGrad.Rotation = 90
     headerGrad.Parent = HeaderBar
 
-    -- Avatar con borde brillante
     local AvatarHolder = Instance.new("Frame")
-    AvatarHolder.Size = UDim2.fromOffset(42, 42)
-    AvatarHolder.Position = UDim2.new(0, 16, 0.5, -21)
+    AvatarHolder.Size = UDim2.fromOffset(36, 36)
+    AvatarHolder.Position = UDim2.new(0, 12, 0.5, -18)
     AvatarHolder.BackgroundColor3 = Theme.ElementBackground
     AvatarHolder.ClipsDescendants = true
     AvatarHolder.ZIndex = 6
     AvatarHolder.Parent = HeaderBar
-    Round(12, AvatarHolder)
+    Round(10, AvatarHolder)
 
     local AvStroke = Outline(AvatarHolder, Theme.Accent, 1.5, 0.3)
     registerStroke(AvStroke)
@@ -739,8 +726,8 @@ function SZK:CreateWindow(config)
     TitleLabel.Font = Enum.Font.GothamBold
     TitleLabel.TextSize = 18
     TitleLabel.TextColor3 = Theme.Text
-    TitleLabel.Position = UDim2.new(0, 68, 0, 10)
-    TitleLabel.Size = UDim2.new(0, 260, 0, 24)
+    TitleLabel.Position = UDim2.new(0, 60, 0, 8)
+    TitleLabel.Size = UDim2.new(0, 220, 0, 22)
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     TitleLabel.ZIndex = 6
@@ -751,17 +738,23 @@ function SZK:CreateWindow(config)
     DescLabel.Font = Enum.Font.Gotham
     DescLabel.TextSize = 18
     DescLabel.TextColor3 = Theme.Placeholder
-    DescLabel.Position = UDim2.new(0, 68, 0, 34)
-    DescLabel.Size = UDim2.new(0, 260, 0, 20)
+    DescLabel.Position = UDim2.new(0, 60, 0, 28)
+    DescLabel.Size = UDim2.new(0, 220, 0, 18)
     DescLabel.BackgroundTransparency = 1
     DescLabel.TextXAlignment = Enum.TextXAlignment.Left
     DescLabel.ZIndex = 6
     DescLabel.Parent = HeaderBar
 
-    -- Botón cerrar
+    -- ═══════════════════════════════════════════════════════════
+    --  BOTONES DE VENTANA ESTILO RYSHUB
+    --  Orden: [−] [⧉] [✕]
+    -- ═══════════════════════════════════════════════════════════
+    local ctrlBtnSize = 26
+    local ctrlBtnSpacing = 6
+
     local CloseBtn = Instance.new("TextButton")
-    CloseBtn.Size = UDim2.fromOffset(32, 32)
-    CloseBtn.Position = UDim2.new(1, -42, 0.5, -16)
+    CloseBtn.Size = UDim2.fromOffset(ctrlBtnSize, ctrlBtnSize)
+    CloseBtn.Position = UDim2.new(1, -34, 0.5, -13)
     CloseBtn.BackgroundColor3 = Color3.fromRGB(240, 75, 75)
     CloseBtn.BackgroundTransparency = 1
     CloseBtn.Text = "✕"
@@ -771,7 +764,7 @@ function SZK:CreateWindow(config)
     CloseBtn.AutoButtonColor = false
     CloseBtn.ZIndex = 8
     CloseBtn.Parent = HeaderBar
-    Round(8, CloseBtn)
+    Round(7, CloseBtn)
     CloseBtn.MouseEnter:Connect(function()
         Tween(CloseBtn, 0.15, { BackgroundTransparency = 0 })
         Tween(CloseBtn, 0.15, { TextColor3 = Color3.fromRGB(255, 255, 255) })
@@ -781,12 +774,58 @@ function SZK:CreateWindow(config)
         Tween(CloseBtn, 0.15, { TextColor3 = Theme.Text })
     end)
 
-    -- Botón tema
+    -- Botón Maximizar (⧉)
+    local MaxBtn = Instance.new("TextButton")
+    MaxBtn.Size = UDim2.fromOffset(ctrlBtnSize, ctrlBtnSize)
+    MaxBtn.Position = UDim2.new(1, -34 - (ctrlBtnSize + ctrlBtnSpacing), 0.5, -13)
+    MaxBtn.BackgroundColor3 = Theme.ElementBackground
+    MaxBtn.BackgroundTransparency = 1
+    MaxBtn.Text = "⧉"
+    MaxBtn.Font = Enum.Font.GothamBold
+    MaxBtn.TextSize = 18
+    MaxBtn.TextColor3 = Theme.Placeholder
+    MaxBtn.AutoButtonColor = false
+    MaxBtn.ZIndex = 8
+    MaxBtn.Parent = HeaderBar
+    Round(7, MaxBtn)
+    MaxBtn.MouseEnter:Connect(function()
+        Tween(MaxBtn, 0.15, { BackgroundTransparency = 0.3 })
+        Tween(MaxBtn, 0.15, { TextColor3 = Theme.Text })
+    end)
+    MaxBtn.MouseLeave:Connect(function()
+        Tween(MaxBtn, 0.15, { BackgroundTransparency = 1 })
+        Tween(MaxBtn, 0.15, { TextColor3 = Theme.Placeholder })
+    end)
+
+    -- Botón Minimizar (−)
+    local MinBtn = Instance.new("TextButton")
+    MinBtn.Size = UDim2.fromOffset(ctrlBtnSize, ctrlBtnSize)
+    MinBtn.Position = UDim2.new(1, -34 - (ctrlBtnSize + ctrlBtnSpacing) * 2, 0.5, -13)
+    MinBtn.BackgroundColor3 = Theme.ElementBackground
+    MinBtn.BackgroundTransparency = 1
+    MinBtn.Text = "−"
+    MinBtn.Font = Enum.Font.GothamBold
+    MinBtn.TextSize = 18
+    MinBtn.TextColor3 = Theme.Placeholder
+    MinBtn.AutoButtonColor = false
+    MinBtn.ZIndex = 8
+    MinBtn.Parent = HeaderBar
+    Round(7, MinBtn)
+    MinBtn.MouseEnter:Connect(function()
+        Tween(MinBtn, 0.15, { BackgroundTransparency = 0.3 })
+        Tween(MinBtn, 0.15, { TextColor3 = Theme.Text })
+    end)
+    MinBtn.MouseLeave:Connect(function()
+        Tween(MinBtn, 0.15, { BackgroundTransparency = 1 })
+        Tween(MinBtn, 0.15, { TextColor3 = Theme.Placeholder })
+    end)
+
+    -- Botón tema (◐)
     local ThemeBtn
     if showThemeSel then
         ThemeBtn = Instance.new("TextButton")
-        ThemeBtn.Size = UDim2.fromOffset(32, 32)
-        ThemeBtn.Position = UDim2.new(1, -80, 0.5, -16)
+        ThemeBtn.Size = UDim2.fromOffset(ctrlBtnSize, ctrlBtnSize)
+        ThemeBtn.Position = UDim2.new(1, -34 - (ctrlBtnSize + ctrlBtnSpacing) * 3, 0.5, -13)
         ThemeBtn.BackgroundColor3 = Theme.ElementBackground
         ThemeBtn.BackgroundTransparency = 0.4
         ThemeBtn.Text = "◐"
@@ -796,7 +835,7 @@ function SZK:CreateWindow(config)
         ThemeBtn.AutoButtonColor = false
         ThemeBtn.ZIndex = 8
         ThemeBtn.Parent = HeaderBar
-        Round(8, ThemeBtn)
+        Round(7, ThemeBtn)
         local themeStroke = Outline(ThemeBtn, Theme.Outline, 1, 0.5)
         ThemeBtn.MouseEnter:Connect(function()
             Tween(ThemeBtn, 0.15, { BackgroundTransparency = 0.1 })
@@ -809,10 +848,10 @@ function SZK:CreateWindow(config)
     end
 
     -- ═══ SIDEBAR ═══
-    local SIDEBAR_W = 145
+    local SIDEBAR_W = 135
     local Sidebar = Instance.new("ScrollingFrame")
-    Sidebar.Size = UDim2.new(0, SIDEBAR_W, 1, -84)
-    Sidebar.Position = UDim2.new(0, 10, 0, 72)
+    Sidebar.Size = UDim2.new(0, SIDEBAR_W, 1, -72)
+    Sidebar.Position = UDim2.new(0, 8, 0, 60)
     Sidebar.BackgroundTransparency = 1
     Sidebar.BorderSizePixel = 0
     Sidebar.ScrollBarThickness = 3
@@ -832,21 +871,19 @@ function SZK:CreateWindow(config)
     SidebarPad.Parent = Sidebar
 
     local TabList = Instance.new("UIListLayout")
-    TabList.Padding = UDim.new(0, 5)
+    TabList.Padding = UDim.new(0, 4)
     TabList.SortOrder = Enum.SortOrder.LayoutOrder
     TabList.Parent = Sidebar
 
     local PageHost = Instance.new("Frame")
-    PageHost.Size = UDim2.new(1, -(SIDEBAR_W + 28), 1, -84)
-    PageHost.Position = UDim2.new(0, SIDEBAR_W + 18, 0, 72)
+    PageHost.Size = UDim2.new(1, -(SIDEBAR_W + 24), 1, -72)
+    PageHost.Position = UDim2.new(0, SIDEBAR_W + 16, 0, 60)
     PageHost.BackgroundTransparency = 1
     PageHost.ZIndex = 5
     PageHost.Parent = MainFrame
 
-    -- ═══════════════════════════════════════════════════════════
-    --  BOTÓN FLOTANTE ESTILO RYSHUB (píldora con icono drag + texto)
-    -- ═══════════════════════════════════════════════════════════
-    local FB_W, FB_H = 160, 52
+    -- ═══ BOTÓN FLOTANTE RYSHUB ═══
+    local FB_W, FB_H = 150, 48
 
     local FloatBtn = Instance.new("TextButton")
     FloatBtn.Size = UDim2.fromOffset(FB_W, FB_H)
@@ -861,12 +898,10 @@ function SZK:CreateWindow(config)
     FloatBtn.Parent = WindowGui
     Round(FB_H / 2, FloatBtn)
 
-    -- Borde naranja/amarillo estilo RysHub
-    local fbOutlineColor = Color3.fromRGB(255, 140, 0)  -- naranja
+    local fbOutlineColor = Color3.fromRGB(255, 140, 0)
     local fbStroke = Outline(FloatBtn, fbOutlineColor, 2, 0.05)
     fbStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-    -- Segunda capa de borde (glow interno)
     local fbInnerStroke = Instance.new("UIStroke")
     fbInnerStroke.Color = Color3.fromRGB(255, 200, 80)
     fbInnerStroke.Thickness = 1
@@ -874,15 +909,13 @@ function SZK:CreateWindow(config)
     fbInnerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     fbInnerStroke.Parent = FloatBtn
 
-    -- Icono de drag (las 4 flechas cruzadas) — dibujado a mano
     local DragIcon = Instance.new("Frame")
-    DragIcon.Size = UDim2.fromOffset(28, 28)
-    DragIcon.Position = UDim2.new(0, 12, 0.5, -14)
+    DragIcon.Size = UDim2.fromOffset(26, 26)
+    DragIcon.Position = UDim2.new(0, 12, 0.5, -13)
     DragIcon.BackgroundTransparency = 1
     DragIcon.ZIndex = 12
     DragIcon.Parent = FloatBtn
 
-    -- Cruz central (4 flechas)
     local crossH = Instance.new("Frame")
     crossH.Size = UDim2.fromOffset(16, 2)
     crossH.Position = UDim2.new(0.5, -8, 0.5, -1)
@@ -901,17 +934,9 @@ function SZK:CreateWindow(config)
     crossV.Parent = DragIcon
     Round(1, crossV)
 
-    -- Puntas (las flechitas)
-    local tips = {
-        { pos = UDim2.new(0.5, -6, 0, 0),  size = UDim2.fromOffset(12, 2), rot = 45 },  -- arriba-izq
-        { pos = UDim2.new(0.5, -6, 0, 26), size = UDim2.fromOffset(12, 2), rot = -45 }, -- abajo-izq
-    }
-    -- (Simplificamos: dejamos la cruz)
-
-    -- Texto "RysHub"
     local FBLabel = Instance.new("TextLabel")
-    FBLabel.Size = UDim2.new(1, -50, 1, 0)
-    FBLabel.Position = UDim2.new(0, 46, 0, 0)
+    FBLabel.Size = UDim2.new(1, -48, 1, 0)
+    FBLabel.Position = UDim2.new(0, 44, 0, 0)
     FBLabel.BackgroundTransparency = 1
     FBLabel.Text = openBtnText
     FBLabel.Font = Enum.Font.GothamBold
@@ -921,14 +946,13 @@ function SZK:CreateWindow(config)
     FBLabel.ZIndex = 12
     FBLabel.Parent = FloatBtn
 
-    -- Si el usuario provee icono, lo usamos
     if openBtnIcon then
         local resolvedOpenIcon = ResolveIcon(openBtnIcon)
         if resolvedOpenIcon ~= "" then
             DragIcon.Visible = false
             local iconImg = Instance.new("ImageLabel")
-            iconImg.Size = UDim2.fromOffset(28, 28)
-            iconImg.Position = UDim2.new(0, 12, 0.5, -14)
+            iconImg.Size = UDim2.fromOffset(26, 26)
+            iconImg.Position = UDim2.new(0, 12, 0.5, -13)
             iconImg.BackgroundTransparency = 1
             iconImg.Image = resolvedOpenIcon
             iconImg.ScaleType = Enum.ScaleType.Fit
@@ -938,7 +962,6 @@ function SZK:CreateWindow(config)
         end
     end
 
-    -- Drag del botón flotante
     local fbDragging, fbStart, fbInputStart, fbMoved = false, nil, nil, false
     Track(FloatBtn.InputBegan:Connect(function(i)
         if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
@@ -970,7 +993,6 @@ function SZK:CreateWindow(config)
         end
     end))
 
-    -- Hover del botón flotante
     Track(FloatBtn.MouseEnter:Connect(function()
         Tween(fbStroke, 0.2, { Transparency = 0, Thickness = 2.5 })
         Tween(FloatBtn, 0.2, { BackgroundColor3 = Color3.fromRGB(28, 28, 34) })
@@ -980,10 +1002,8 @@ function SZK:CreateWindow(config)
         Tween(FloatBtn, 0.2, { BackgroundColor3 = Color3.fromRGB(20, 20, 24) })
     end))
 
-    -- ═══════════════════════════════════════════════════════════
-    --  RESIZE GRIP
-    -- ═══════════════════════════════════════════════════════════
-    local RESIZE_HIT = 34
+    -- ═══ RESIZE GRIP ═══
+    local RESIZE_HIT = 32
     local ResizeGrip = Instance.new("TextButton")
     ResizeGrip.AnchorPoint = Vector2.new(1, 1)
     ResizeGrip.Position = UDim2.new(1, 0, 1, 0)
@@ -996,8 +1016,8 @@ function SZK:CreateWindow(config)
 
     local gripVisual = Instance.new("Frame")
     gripVisual.AnchorPoint = Vector2.new(1, 1)
-    gripVisual.Position = UDim2.new(1, -7, 1, -7)
-    gripVisual.Size = UDim2.fromOffset(14, 14)
+    gripVisual.Position = UDim2.new(1, -6, 1, -6)
+    gripVisual.Size = UDim2.fromOffset(12, 12)
     gripVisual.BackgroundTransparency = 1
     gripVisual.ZIndex = 25
     gripVisual.Parent = ResizeGrip
@@ -1006,8 +1026,8 @@ function SZK:CreateWindow(config)
     for i = 1, 3 do
         local line = Instance.new("Frame")
         line.AnchorPoint = Vector2.new(1, 1)
-        line.Position = UDim2.new(1, -((i - 1) * 4), 1, -((i - 1) * 4))
-        line.Size = UDim2.fromOffset(10 - (i - 1) * 3, 2)
+        line.Position = UDim2.new(1, -((i - 1) * 3.5), 1, -((i - 1) * 3.5))
+        line.Size = UDim2.fromOffset(9 - (i - 1) * 3, 2)
         line.BackgroundColor3 = Theme.Accent
         line.BackgroundTransparency = 0.4
         line.BorderSizePixel = 0
@@ -1024,7 +1044,6 @@ function SZK:CreateWindow(config)
             l.BackgroundTransparency = alpha
         end
     end
-    registerFill(gripVisual)
 
     local function EnableResize(handle)
         local startSize, startInput
@@ -1071,7 +1090,6 @@ function SZK:CreateWindow(config)
     end
     EnableResize(ResizeGrip)
 
-    -- ═══ DRAG VENTANA ═══
     local function EnableDrag(handle, target)
         local dragging, startPos, startInput
         Track(handle.InputBegan:Connect(function(input)
@@ -1095,6 +1113,11 @@ function SZK:CreateWindow(config)
     end
     EnableDrag(HeaderBar, MainFrame)
 
+    -- ═══ MINIMIZAR / RESTAURAR / MAXIMIZAR ═══
+    local isMaximized = false
+    local savedSize = size
+    local savedPos = MainFrame.Position
+
     local function CloseWindow()
         Tween(MainFrame, 0.28, { Size = UDim2.fromOffset(size.X * 0.75, size.Y * 0.75) }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
         task.delay(0.28, function()
@@ -1111,7 +1134,41 @@ function SZK:CreateWindow(config)
         FloatBtn.Visible = false
     end
 
+    local function Minimize()
+        -- Minimizar = cerrar visualmente pero mantener en memoria
+        Tween(MainFrame, 0.25, { Size = UDim2.fromOffset(size.X * 0.7, size.Y * 0.7) }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+        task.delay(0.25, function()
+            MainFrame.Visible = false
+            FloatBtn.Visible = true
+        end)
+    end
+
+    local function Maximize()
+        if isMaximized then
+            -- Restaurar
+            Tween(MainFrame, 0.3, {
+                Size = UDim2.fromOffset(savedSize.X, savedSize.Y),
+                Position = savedPos
+            }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+            isMaximized = false
+            MaxBtn.Text = "⧉"
+        else
+            -- Maximizar
+            savedSize = size
+            savedPos = MainFrame.Position
+            local vp = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1280, 720)
+            Tween(MainFrame, 0.3, {
+                Size = UDim2.fromOffset(vp.X * 0.75, vp.Y * 0.75),
+                Position = UDim2.fromScale(0.5, 0.5)
+            }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+            isMaximized = true
+            MaxBtn.Text = "❐"
+        end
+    end
+
     CloseBtn.MouseButton1Click:Connect(CloseWindow)
+    MinBtn.MouseButton1Click:Connect(Minimize)
+    MaxBtn.MouseButton1Click:Connect(Maximize)
 
     Track(UserInputService.InputBegan:Connect(function(input, gpe)
         if gpe then return end
@@ -1144,7 +1201,7 @@ function SZK:CreateWindow(config)
     local ThemePopup
     if showThemeSel then
         ThemePopup = Instance.new("Frame")
-        ThemePopup.Size = UDim2.fromOffset(210, 340)
+        ThemePopup.Size = UDim2.fromOffset(200, 320)
         ThemePopup.BackgroundColor3 = Theme.ElementBackground
         ThemePopup.BackgroundTransparency = 0.05
         ThemePopup.Visible = false
@@ -1179,7 +1236,7 @@ function SZK:CreateWindow(config)
             local tData = SZK.Themes[tName]
             if tData then
                 local btn = Instance.new("TextButton")
-                btn.Size = UDim2.new(1, -6, 0, 40)
+                btn.Size = UDim2.new(1, -6, 0, 38)
                 btn.BackgroundColor3 = Shade(Theme.ElementBackground, 0.02)
                 btn.BackgroundTransparency = 0.3
                 btn.AutoButtonColor = false
@@ -1189,8 +1246,8 @@ function SZK:CreateWindow(config)
                 Round(6, btn)
 
                 local swatch = Instance.new("Frame")
-                swatch.Size = UDim2.fromOffset(24, 24)
-                swatch.Position = UDim2.new(0, 8, 0.5, -12)
+                swatch.Size = UDim2.fromOffset(22, 22)
+                swatch.Position = UDim2.new(0, 8, 0.5, -11)
                 swatch.BackgroundColor3 = tData.Accent
                 swatch.ZIndex = 203
                 swatch.Parent = btn
@@ -1198,8 +1255,8 @@ function SZK:CreateWindow(config)
                 Outline(swatch, Color3.fromRGB(255, 255, 255), 1, 0.7)
 
                 local label = Instance.new("TextLabel")
-                label.Size = UDim2.new(1, -42, 1, 0)
-                label.Position = UDim2.new(0, 40, 0, 0)
+                label.Size = UDim2.new(1, -38, 1, 0)
+                label.Position = UDim2.new(0, 36, 0, 0)
                 label.BackgroundTransparency = 1
                 label.Text = tName
                 label.Font = Enum.Font.GothamSemibold
@@ -1225,6 +1282,7 @@ function SZK:CreateWindow(config)
                     OuterGlow.BackgroundColor3 = Theme.Accent
                     ThemePopup.BackgroundColor3 = Theme.ElementBackground
                     for _, l in ipairs(gripLines) do l.BackgroundColor3 = Theme.Accent end
+                    for _, k in ipairs(ThemedElements.Knobs) do k.BackgroundColor3 = Theme.Background end
                 end)
             end
         end
@@ -1236,9 +1294,9 @@ function SZK:CreateWindow(config)
             local abs = ThemeBtn.AbsolutePosition
             local asz = ThemeBtn.AbsoluteSize
             local viewport = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize or Vector2.new(1920, 1080)
-            local x = math.clamp(abs.X - 180, 6, math.max(6, viewport.X - 216))
+            local x = math.clamp(abs.X - 174, 6, math.max(6, viewport.X - 206))
             local belowY = abs.Y + asz.Y + 6
-            local y = belowY + 340 <= viewport.Y - 6 and belowY or math.max(6, abs.Y - 346)
+            local y = belowY + 320 <= viewport.Y - 6 and belowY or math.max(6, abs.Y - 326)
             ThemePopup.Position = UDim2.fromOffset(x, y)
             ThemePopup.Visible = true
         end)
@@ -1246,16 +1304,15 @@ function SZK:CreateWindow(config)
 
     local Window = { Tabs = {}, Connections = Connections }
 
-    -- ═══ ROW ═══
     local function RegisterRow(parent, height)
         local frame = Instance.new("Frame")
-        frame.Size = UDim2.new(1, 0, 0, height or 60)
+        frame.Size = UDim2.new(1, 0, 0, height or 54)
         frame.BackgroundColor3 = Theme.ElementBackground
         frame.BackgroundTransparency = 0.1
         frame.ClipsDescendants = true
         frame.ZIndex = 6
         frame.Parent = parent
-        Round(12, frame)
+        Round(10, frame)
 
         local rowGrad = Instance.new("UIGradient")
         rowGrad.Color = ColorSequence.new(Shade(Theme.ElementBackground, 0.05), Theme.ElementBackground)
@@ -1266,8 +1323,8 @@ function SZK:CreateWindow(config)
         registerStroke(stroke)
 
         local accentBar = Instance.new("Frame")
-        accentBar.Size = UDim2.new(0, 3, 1, -20)
-        accentBar.Position = UDim2.new(0, 0, 0, 10)
+        accentBar.Size = UDim2.new(0, 3, 1, -18)
+        accentBar.Position = UDim2.new(0, 0, 0, 9)
         accentBar.BackgroundColor3 = Theme.Accent
         accentBar.BorderSizePixel = 0
         accentBar.ZIndex = 7
@@ -1308,7 +1365,7 @@ function SZK:CreateWindow(config)
         page.Parent = PageHost
 
         local pageLayout = Instance.new("UIListLayout")
-        pageLayout.Padding = UDim.new(0, 10)
+        pageLayout.Padding = UDim.new(0, 8)
         pageLayout.SortOrder = Enum.SortOrder.LayoutOrder
         pageLayout.Parent = page
 
@@ -1318,7 +1375,7 @@ function SZK:CreateWindow(config)
         pagePad.Parent = page
 
         local tabBtn = Instance.new("TextButton")
-        tabBtn.Size = UDim2.new(1, 0, 0, 42)
+        tabBtn.Size = UDim2.new(1, 0, 0, 38)
         tabBtn.BackgroundColor3 = Theme.ElementBackground
         tabBtn.BackgroundTransparency = 1
         tabBtn.Text = ""
@@ -1344,13 +1401,13 @@ function SZK:CreateWindow(config)
         local tabIconImg
         local resolvedTabIcon = ResolveIcon(tabIcon)
         if resolvedTabIcon ~= "" then
-            tabIconImg = Img(tabBtn, tabIcon, UDim2.fromOffset(18, 18), Theme.Placeholder, 0, 8)
-            if tabIconImg then tabIconImg.Position = UDim2.new(0, 12, 0.5, -9) end
+            tabIconImg = Img(tabBtn, tabIcon, UDim2.fromOffset(16, 16), Theme.Placeholder, 0, 8)
+            if tabIconImg then tabIconImg.Position = UDim2.new(0, 10, 0.5, -8) end
         end
 
         local tLabel = Instance.new("TextLabel")
-        tLabel.Size = UDim2.new(1, tabIconImg and -40 or -18, 1, 0)
-        tLabel.Position = UDim2.new(0, tabIconImg and 38 or 14, 0, 0)
+        tLabel.Size = UDim2.new(1, tabIconImg and -36 or -16, 1, 0)
+        tLabel.Position = UDim2.new(0, tabIconImg and 34 or 12, 0, 0)
         tLabel.BackgroundTransparency = 1
         tLabel.Text = tabName
         tLabel.Font = Enum.Font.GothamSemibold
@@ -1381,7 +1438,7 @@ function SZK:CreateWindow(config)
             tLabel.TextColor3 = Theme.Text
             Tween(tabBtn, 0.15, { BackgroundTransparency = 0.88, BackgroundColor3 = Theme.Accent })
             Tween(tabStroke, 0.15, { Transparency = 0.4 })
-            Tween(activeBar, 0.25, { Size = UDim2.new(0, 3, 0, 24) }, Enum.EasingStyle.Back)
+            Tween(activeBar, 0.25, { Size = UDim2.new(0, 3, 0, 22) }, Enum.EasingStyle.Back)
             if tabIconImg then TintIfAllowed(tabIconImg, Theme.Accent) end
         end
 
@@ -1419,13 +1476,13 @@ function SZK:CreateWindow(config)
             container.Parent = page
 
             local layout = Instance.new("UIListLayout")
-            layout.Padding = UDim.new(0, 7)
+            layout.Padding = UDim.new(0, 6)
             layout.SortOrder = Enum.SortOrder.LayoutOrder
             layout.Parent = container
 
             if secName ~= "" then
                 local header = Instance.new("Frame")
-                header.Size = UDim2.new(1, 0, 0, 30)
+                header.Size = UDim2.new(1, 0, 0, 26)
                 header.BackgroundTransparency = 1
                 header.ZIndex = 6
                 header.Parent = container
@@ -1433,13 +1490,13 @@ function SZK:CreateWindow(config)
                 local secIconImg
                 local resolvedSec = ResolveIcon(secIcon)
                 if resolvedSec ~= "" then
-                    secIconImg = Img(header, secIcon, UDim2.fromOffset(16, 16), Theme.Icon, 0, 8)
-                    if secIconImg then secIconImg.Position = UDim2.new(0, 2, 0.5, -8) end
+                    secIconImg = Img(header, secIcon, UDim2.fromOffset(14, 14), Theme.Icon, 0, 8)
+                    if secIconImg then secIconImg.Position = UDim2.new(0, 2, 0.5, -7) end
                 end
 
                 local hLabel = Instance.new("TextLabel")
-                hLabel.Size = UDim2.new(1, secIconImg and -26 or -12, 1, 0)
-                hLabel.Position = UDim2.new(0, secIconImg and 24 or 2, 0, 0)
+                hLabel.Size = UDim2.new(1, secIconImg and -24 or -12, 1, 0)
+                hLabel.Position = UDim2.new(0, secIconImg and 22 or 2, 0, 0)
                 hLabel.BackgroundTransparency = 1
                 hLabel.Text = string.upper(tostring(secName))
                 hLabel.Font = Enum.Font.GothamBold
@@ -1456,17 +1513,20 @@ function SZK:CreateWindow(config)
                 local icon = cfg and cfg.Icon
                 if not icon then return nil end
                 local position = cfg.IconPosition or "Left"
-                local image = Img(row, icon, UDim2.fromOffset(18, 18), Theme.Icon, 0, 8)
+                local image = Img(row, icon, UDim2.fromOffset(16, 16), Theme.Icon, 0, 8)
                 if not image then return nil end
                 image.AnchorPoint = Vector2.new(position == "Right" and 1 or 0, 0.5)
-                image.Position = position == "Right" and UDim2.new(1, -14, 0.5, 0) or UDim2.new(0, 16, 0.5, 0)
+                image.Position = position == "Right" and UDim2.new(1, -12, 0.5, 0) or UDim2.new(0, 14, 0.5, 0)
                 if label and position == "Left" then
-                    label.Position = UDim2.new(0, 42, label.Position.Y.Scale, label.Position.Y.Offset)
-                    label.Size = UDim2.new(label.Size.X.Scale, label.Size.X.Offset - 36, label.Size.Y.Scale, label.Size.Y.Offset)
+                    label.Position = UDim2.new(0, 38, label.Position.Y.Scale, label.Position.Y.Offset)
+                    label.Size = UDim2.new(label.Size.X.Scale, label.Size.X.Offset - 30, label.Size.Y.Scale, label.Size.Y.Offset)
                 end
                 return image
             end
 
+            -- ═════════════════════════════════════════════════════
+            --  TOGGLE — Pelota más chica y del color del UI
+            -- ═════════════════════════════════════════════════════
             function Section:CreateToggle(tConfig)
                 local c = tConfig or {}
                 local name     = c.Name or c.Title or "Toggle"
@@ -1475,12 +1535,12 @@ function SZK:CreateWindow(config)
                 local callback = c.Callback or function() end
                 local flag     = c.Flag
 
-                local rowH = (desc ~= "" and 88 or 58)
+                local rowH = (desc ~= "" and 82 or 54)
                 local row, stroke, accentBar = RegisterRow(container, rowH)
 
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, -90, 0, 24)
-                lbl.Position = UDim2.new(0, 18, 0, 14)
+                lbl.Size = UDim2.new(1, -80, 0, 22)
+                lbl.Position = UDim2.new(0, 16, 0, 12)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
@@ -1493,8 +1553,8 @@ function SZK:CreateWindow(config)
 
                 if desc ~= "" then
                     local dLbl = Instance.new("TextLabel")
-                    dLbl.Size = UDim2.new(1, -24, 0, 34)
-                    dLbl.Position = UDim2.new(0, 18, 0, 42)
+                    dLbl.Size = UDim2.new(1, -22, 0, 32)
+                    dLbl.Position = UDim2.new(0, 16, 0, 38)
                     dLbl.BackgroundTransparency = 1
                     dLbl.Text = desc
                     dLbl.Font = Enum.Font.Gotham
@@ -1507,10 +1567,11 @@ function SZK:CreateWindow(config)
                     dLbl.Parent = row
                 end
 
-                local switchW, switchH, knobSize, inset = 52, 30, 24, 3
+                -- ⬅️ CAMBIO: pelota 20px (antes 24), inset 4
+                local switchW, switchH, knobSize, inset = 46, 26, 20, 3
                 local track = Instance.new("TextButton")
                 track.AnchorPoint = Vector2.new(1, 0)
-                track.Position = UDim2.new(1, -18, 0, 15)
+                track.Position = UDim2.new(1, -16, 0, 14)
                 track.Size = UDim2.fromOffset(switchW, switchH)
                 track.BackgroundColor3 = default and Theme.Accent or Color3.fromRGB(55, 55, 65)
                 track.Text = ""
@@ -1520,15 +1581,17 @@ function SZK:CreateWindow(config)
                 Round(switchH, track)
                 local trackStroke = Outline(track, Color3.new(1,1,1), 1, 0.85)
 
+                -- ⬅️ CAMBIO: pelota del color del tema (ya no blanca)
                 local knob = Instance.new("Frame")
                 knob.AnchorPoint = Vector2.new(0, 0.5)
                 knob.Position = default and UDim2.new(1, -(inset + knobSize), 0.5, 0) or UDim2.new(0, inset, 0.5, 0)
                 knob.Size = UDim2.fromOffset(knobSize, knobSize)
-                knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                knob.BackgroundColor3 = Theme.Background  -- ⬅️ CAMBIO
                 knob.BorderSizePixel = 0
                 knob.ZIndex = 9
                 knob.Parent = track
                 Round(knobSize, knob)
+                registerKnob(knob)  -- ⬅️ Registramos para que cambie con el tema
 
                 local state = default
                 if flag then SZK.Flags[flag] = state end
@@ -1570,11 +1633,11 @@ function SZK:CreateWindow(config)
                 local callback = c.Callback or function() end
                 local suffix   = c.Suffix or ""
 
-                local row, stroke, accentBar = RegisterRow(container, 68)
+                local row, stroke, accentBar = RegisterRow(container, 62)
 
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, -20, 0, 24)
-                lbl.Position = UDim2.new(0, 18, 0, 8)
+                lbl.Size = UDim2.new(1, -20, 0, 22)
+                lbl.Position = UDim2.new(0, 16, 0, 6)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
@@ -1586,8 +1649,8 @@ function SZK:CreateWindow(config)
                 local elementIcon = AttachIcon(row, c, lbl)
 
                 local valLbl = Instance.new("TextLabel")
-                valLbl.Size = UDim2.fromOffset(72, 24)
-                valLbl.Position = UDim2.new(1, -88, 0, 8)
+                valLbl.Size = UDim2.fromOffset(70, 22)
+                valLbl.Position = UDim2.new(1, -86, 0, 6)
                 valLbl.BackgroundTransparency = 1
                 valLbl.Text = tostring(default) .. suffix
                 valLbl.Font = Enum.Font.GothamBold
@@ -1599,12 +1662,12 @@ function SZK:CreateWindow(config)
                 registerLabel(valLbl)
 
                 local track = Instance.new("Frame")
-                track.Size = UDim2.new(1, -36, 0, 5)
-                track.Position = UDim2.new(0, 18, 0, 48)
+                track.Size = UDim2.new(1, -32, 0, 4)
+                track.Position = UDim2.new(0, 16, 0, 44)
                 track.BackgroundColor3 = Shade(Theme.ElementBackground, 0.06)
                 track.ZIndex = 7
                 track.Parent = row
-                Round(3, track)
+                Round(2, track)
 
                 local fill = Instance.new("Frame")
                 local t0 = (default - min) / math.max(max - min, 1)
@@ -1612,19 +1675,21 @@ function SZK:CreateWindow(config)
                 fill.BackgroundColor3 = Theme.Slider
                 fill.ZIndex = 8
                 fill.Parent = track
-                Round(3, fill)
+                Round(2, fill)
                 registerFill(fill)
 
+                -- ⬅️ Slider handle ahora del color del tema
                 local handle = Instance.new("Frame")
-                handle.Size = UDim2.fromOffset(16, 16)
+                handle.Size = UDim2.fromOffset(14, 14)
                 handle.AnchorPoint = Vector2.new(0.5, 0.5)
                 handle.Position = UDim2.new(t0, 0, 0.5, 0)
-                handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                handle.BackgroundColor3 = Theme.Background  -- ⬅️ CAMBIO
                 handle.ZIndex = 9
                 handle.Parent = track
-                Round(8, handle)
+                Round(7, handle)
                 local handleStroke = Outline(handle, Theme.Slider, 2, 0)
                 registerStroke(handleStroke)
+                registerKnob(handle)
 
                 local dragging = false
                 local function apply(v)
@@ -1647,7 +1712,7 @@ function SZK:CreateWindow(config)
                     if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
                         dragging = true
                         fromX(i.Position.X)
-                        Tween(handle, 0.15, { Size = UDim2.fromOffset(20, 20) }, Enum.EasingStyle.Back)
+                        Tween(handle, 0.15, { Size = UDim2.fromOffset(16, 16) }, Enum.EasingStyle.Back)
                     end
                 end)
                 Track(UserInputService.InputChanged:Connect(function(i)
@@ -1658,7 +1723,7 @@ function SZK:CreateWindow(config)
                 Track(UserInputService.InputEnded:Connect(function()
                     if dragging then
                         dragging = false
-                        Tween(handle, 0.15, { Size = UDim2.fromOffset(16, 16) })
+                        Tween(handle, 0.15, { Size = UDim2.fromOffset(14, 14) })
                     end
                 end))
 
@@ -1677,7 +1742,7 @@ function SZK:CreateWindow(config)
                 local callback = c.Callback or function() end
                 local customColor = c.Color
 
-                local totalHeight = desc and 68 or 54
+                local totalHeight = desc and 62 or 48
 
                 local btn = Instance.new("TextButton")
                 btn.Size = UDim2.new(1, 0, 0, totalHeight)
@@ -1688,7 +1753,7 @@ function SZK:CreateWindow(config)
                 btn.ClipsDescendants = true
                 btn.ZIndex = 6
                 btn.Parent = container
-                Round(12, btn)
+                Round(10, btn)
 
                 local btnGrad = Instance.new("UIGradient")
                 btnGrad.Color = ColorSequence.new(Shade(customColor or Theme.ElementBackground, 0.06), customColor or Theme.ElementBackground)
@@ -1699,8 +1764,8 @@ function SZK:CreateWindow(config)
                 registerStroke(stroke)
 
                 local accentBar = Instance.new("Frame")
-                accentBar.Size = UDim2.new(0, 3, 1, -20)
-                accentBar.Position = UDim2.new(0, 0, 0, 10)
+                accentBar.Size = UDim2.new(0, 3, 1, -18)
+                accentBar.Position = UDim2.new(0, 0, 0, 9)
                 accentBar.BackgroundColor3 = Theme.Accent
                 accentBar.BorderSizePixel = 0
                 accentBar.ZIndex = 7
@@ -1708,16 +1773,16 @@ function SZK:CreateWindow(config)
                 Round(2, accentBar)
                 registerFill(accentBar)
 
-                local elementIcon = c.Icon and Img(btn, c.Icon, UDim2.fromOffset(18, 18), Theme.Icon, 0, 8) or nil
-                local textLeft = 20
+                local elementIcon = c.Icon and Img(btn, c.Icon, UDim2.fromOffset(16, 16), Theme.Icon, 0, 8) or nil
+                local textLeft = 18
                 if elementIcon then
-                    elementIcon.Position = UDim2.new(0, 18, 0.5, -9)
-                    textLeft = 46
+                    elementIcon.Position = UDim2.new(0, 16, 0.5, -8)
+                    textLeft = 42
                 end
 
                 local titleLbl = Instance.new("TextLabel")
-                titleLbl.Position = UDim2.new(0, textLeft, 0, desc and 10 or 0)
-                titleLbl.Size = UDim2.new(1, -(textLeft + 16), 0, desc and 24 or totalHeight)
+                titleLbl.Position = UDim2.new(0, textLeft, 0, desc and 8 or 0)
+                titleLbl.Size = UDim2.new(1, -(textLeft + 14), 0, desc and 22 or totalHeight)
                 titleLbl.BackgroundTransparency = 1
                 titleLbl.Text = name
                 titleLbl.Font = Enum.Font.GothamBold
@@ -1729,8 +1794,8 @@ function SZK:CreateWindow(config)
 
                 if desc then
                     local dLbl = Instance.new("TextLabel")
-                    dLbl.Position = UDim2.new(0, textLeft, 0, 36)
-                    dLbl.Size = UDim2.new(1, -(textLeft + 16), 0, 22)
+                    dLbl.Position = UDim2.new(0, textLeft, 0, 32)
+                    dLbl.Size = UDim2.new(1, -(textLeft + 14), 0, 20)
                     dLbl.BackgroundTransparency = 1
                     dLbl.Text = desc
                     dLbl.Font = Enum.Font.Gotham
@@ -1762,11 +1827,11 @@ function SZK:CreateWindow(config)
                 local default     = c.Default or c.Value or ""
                 local callback    = c.Callback or function() end
 
-                local row, stroke, accentBar = RegisterRow(container, 54)
+                local row, stroke, accentBar = RegisterRow(container, 48)
 
                 local lbl = Instance.new("TextLabel")
                 lbl.Size = UDim2.new(0.4, 0, 1, 0)
-                lbl.Position = UDim2.new(0, 18, 0, 0)
+                lbl.Position = UDim2.new(0, 16, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
@@ -1778,8 +1843,8 @@ function SZK:CreateWindow(config)
                 local elementIcon = AttachIcon(row, c, lbl)
 
                 local boxFrame = Instance.new("Frame")
-                boxFrame.Size = UDim2.new(0.55, -14, 0, 36)
-                boxFrame.Position = UDim2.new(0.42, 0, 0.5, -18)
+                boxFrame.Size = UDim2.new(0.55, -14, 0, 32)
+                boxFrame.Position = UDim2.new(0.42, 0, 0.5, -16)
                 boxFrame.BackgroundColor3 = Shade(Theme.ElementBackground, 0.06)
                 boxFrame.ZIndex = 7
                 boxFrame.Parent = row
@@ -1787,8 +1852,8 @@ function SZK:CreateWindow(config)
                 local boxStroke = Outline(boxFrame, Theme.Outline, 1, 0.4)
 
                 local box = Instance.new("TextBox")
-                box.Size = UDim2.new(1, -18, 1, 0)
-                box.Position = UDim2.new(0, 10, 0, 0)
+                box.Size = UDim2.new(1, -16, 1, 0)
+                box.Position = UDim2.new(0, 8, 0, 0)
                 box.BackgroundTransparency = 1
                 box.Text = default
                 box.PlaceholderText = placeholder
@@ -1825,11 +1890,11 @@ function SZK:CreateWindow(config)
                 local selected = default
                 if flag then SZK.Flags[flag] = selected end
 
-                local row, stroke, accentBar = RegisterRow(container, 54)
+                local row, stroke, accentBar = RegisterRow(container, 48)
 
                 local lbl = Instance.new("TextLabel")
                 lbl.Size = UDim2.new(0.4, 0, 1, 0)
-                lbl.Position = UDim2.new(0, 18, 0, 0)
+                lbl.Position = UDim2.new(0, 16, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
@@ -1841,8 +1906,8 @@ function SZK:CreateWindow(config)
                 local elementIcon = AttachIcon(row, c, lbl)
 
                 local sel = Instance.new("TextButton")
-                sel.Size = UDim2.new(0.55, -14, 0, 36)
-                sel.Position = UDim2.new(0.42, 0, 0.5, -18)
+                sel.Size = UDim2.new(0.55, -14, 0, 32)
+                sel.Position = UDim2.new(0.42, 0, 0.5, -16)
                 sel.BackgroundColor3 = Shade(Theme.ElementBackground, 0.06)
                 sel.Text = ""
                 sel.AutoButtonColor = false
@@ -1852,8 +1917,8 @@ function SZK:CreateWindow(config)
                 Outline(sel, Theme.Outline, 1, 0.4)
 
                 local selLbl = Instance.new("TextLabel")
-                selLbl.Size = UDim2.new(1, -38, 1, 0)
-                selLbl.Position = UDim2.new(0, 12, 0, 0)
+                selLbl.Size = UDim2.new(1, -34, 1, 0)
+                selLbl.Position = UDim2.new(0, 10, 0, 0)
                 selLbl.BackgroundTransparency = 1
                 selLbl.Text = selected ~= nil and tostring(selected) or "Seleccionar..."
                 selLbl.Font = Enum.Font.Gotham
@@ -1865,8 +1930,8 @@ function SZK:CreateWindow(config)
                 selLbl.Parent = sel
 
                 local arrow = Instance.new("TextLabel")
-                arrow.Size = UDim2.fromOffset(26, 26)
-                arrow.Position = UDim2.new(1, -30, 0.5, -13)
+                arrow.Size = UDim2.fromOffset(24, 24)
+                arrow.Position = UDim2.new(1, -28, 0.5, -12)
                 arrow.BackgroundTransparency = 1
                 arrow.Text = "▾"
                 arrow.Font = Enum.Font.GothamBold
@@ -1883,7 +1948,7 @@ function SZK:CreateWindow(config)
                 list.BorderSizePixel = 0
                 list.ScrollBarThickness = 3
                 list.ScrollBarImageColor3 = Theme.Accent
-                list.CanvasSize = UDim2.new(0, 0, 0, #options * 38 + 8)
+                list.CanvasSize = UDim2.new(0, 0, 0, #options * 36 + 8)
                 list.Parent = WindowGui
                 Round(8, list)
                 Outline(list, Theme.Accent, 1, 0.3)
@@ -1899,7 +1964,7 @@ function SZK:CreateWindow(config)
                     local txt = type(opt) == "table" and (opt.Text or opt.Value) or tostring(opt)
                     local val = type(opt) == "table" and (opt.Value or opt.Text) or opt
                     local ob = Instance.new("TextButton")
-                    ob.Size = UDim2.new(1, 0, 0, 34)
+                    ob.Size = UDim2.new(1, 0, 0, 32)
                     ob.BackgroundColor3 = Shade(Theme.ElementBackground, 0.08)
                     ob.BackgroundTransparency = 1
                     ob.Text = "  " .. txt
@@ -1929,7 +1994,7 @@ function SZK:CreateWindow(config)
                     task.wait()
                     local abs = sel.AbsolutePosition
                     local asz = sel.AbsoluteSize
-                    local listH = math.clamp(#options * 38 + 8, 48, 280)
+                    local listH = math.clamp(#options * 36 + 8, 48, 260)
                     list.Size = UDim2.fromOffset(asz.X, listH)
                     list.Position = UDim2.fromOffset(abs.X, abs.Y + asz.Y + 4)
                     list.Visible = true
@@ -1949,11 +2014,11 @@ function SZK:CreateWindow(config)
                 local default  = c.Default or c.Value
                 local callback = c.Callback or function() end
 
-                local row, stroke, accentBar = RegisterRow(container, 54)
+                local row, stroke, accentBar = RegisterRow(container, 48)
 
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, -110, 1, 0)
-                lbl.Position = UDim2.new(0, 18, 0, 0)
+                lbl.Size = UDim2.new(1, -100, 1, 0)
+                lbl.Position = UDim2.new(0, 16, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = name
                 lbl.Font = Enum.Font.GothamBold
@@ -1965,8 +2030,8 @@ function SZK:CreateWindow(config)
                 local elementIcon = AttachIcon(row, c, lbl)
 
                 local keyBtn = Instance.new("TextButton")
-                keyBtn.Size = UDim2.fromOffset(96, 34)
-                keyBtn.Position = UDim2.new(1, -112, 0.5, -17)
+                keyBtn.Size = UDim2.fromOffset(86, 30)
+                keyBtn.Position = UDim2.new(1, -102, 0.5, -15)
                 keyBtn.BackgroundColor3 = Shade(Theme.ElementBackground, 0.06)
                 keyBtn.Text = default and default.Name or "Ninguno"
                 keyBtn.Font = Enum.Font.GothamBold
@@ -2009,20 +2074,20 @@ function SZK:CreateWindow(config)
 
             function Section:CreateLabel(text, iconKey)
                 local row = Instance.new("Frame")
-                row.Size = UDim2.new(1, 0, 0, 34)
+                row.Size = UDim2.new(1, 0, 0, 30)
                 row.BackgroundTransparency = 1
                 row.ZIndex = 6
                 row.Parent = container
 
                 local iconImg
                 if iconKey then
-                    iconImg = Img(row, iconKey, UDim2.fromOffset(18, 18), Theme.Placeholder, 0, 8)
-                    if iconImg then iconImg.Position = UDim2.new(0, 4, 0.5, -9) end
+                    iconImg = Img(row, iconKey, UDim2.fromOffset(16, 16), Theme.Placeholder, 0, 8)
+                    if iconImg then iconImg.Position = UDim2.new(0, 4, 0.5, -8) end
                 end
 
                 local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(1, iconImg and -30 or -12, 1, 0)
-                lbl.Position = UDim2.new(0, iconImg and 30 or 4, 0, 0)
+                lbl.Size = UDim2.new(1, iconImg and -28 or -12, 1, 0)
+                lbl.Position = UDim2.new(0, iconImg and 28 or 4, 0, 0)
                 lbl.BackgroundTransparency = 1
                 lbl.Text = tostring(text)
                 lbl.Font = Enum.Font.GothamMedium
@@ -2041,14 +2106,14 @@ function SZK:CreateWindow(config)
                 row.BackgroundTransparency = 0.3
                 row.ZIndex = 6
                 row.Parent = container
-                Round(12, row)
+                Round(10, row)
                 Outline(row, Theme.Outline, 1, 0.5)
 
                 local pad = Instance.new("UIPadding")
-                pad.PaddingTop = UDim.new(0, 16)
-                pad.PaddingBottom = UDim.new(0, 16)
-                pad.PaddingLeft = UDim.new(0, 18)
-                pad.PaddingRight = UDim.new(0, 16)
+                pad.PaddingTop = UDim.new(0, 14)
+                pad.PaddingBottom = UDim.new(0, 14)
+                pad.PaddingLeft = UDim.new(0, 16)
+                pad.PaddingRight = UDim.new(0, 14)
                 pad.Parent = row
 
                 local lbl = Instance.new("TextLabel")
@@ -2067,7 +2132,7 @@ function SZK:CreateWindow(config)
 
             function Section:CreateDivider()
                 local row = Instance.new("Frame")
-                row.Size = UDim2.new(1, 0, 0, 14)
+                row.Size = UDim2.new(1, 0, 0, 12)
                 row.BackgroundTransparency = 1
                 row.Parent = container
                 local line = Instance.new("Frame")
@@ -2128,6 +2193,7 @@ function SZK:CreateWindow(config)
             MainStroke.Color = t.Accent
             OuterGlow.BackgroundColor3 = t.Accent
             for _, l in ipairs(gripLines) do l.BackgroundColor3 = t.Accent end
+            for _, k in ipairs(ThemedElements.Knobs) do k.BackgroundColor3 = t.Background end
         end
     end
 
