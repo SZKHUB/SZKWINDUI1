@@ -1,19 +1,18 @@
 -- ═══════════════════════════════════════════════════════════════════
---  ███████╗██╗     ██╗   ██╗██╗██████╗     ██╗   ██╗██████╗
---  ██╔════╝██║     ██║   ██║██║██╔══██╗    ██║   ██║╚════██╗
---  █████╗  ██║     ██║   ██║██║██║  ██║    ██║   ██║ █████╔╝
---  ██╔══╝  ██║     ██║   ██║██║██║  ██║    ╚██╗ ██╔╝ ╚═══██╗
---  ██║     ███████╗╚██████╔╝██║██████╔╝     ╚████╔╝ ██████╔╝
---  ╚═╝     ╚══════╝ ╚═════╝ ╚═╝╚═════╝       ╚═══╝  ╚═════╝
+--  ███████╗██╗     ██╗   ██╗██╗██████╗     ██╗   ██╗██╗
+--  ██╔════╝██║     ██║   ██║██║██╔══██╗    ██║   ██║██║
+--  █████╗  ██║     ██║   ██║██║██║  ██║    ██║   ██║██║
+--  ██╔══╝  ██║     ██║   ██║██║██║  ██║    ╚██╗ ██╔╝██║
+--  ██║     ███████╗╚██████╔╝██║██████╔╝     ╚████╔╝ ██║
+--  ╚═╝     ╚══════╝ ╚═════╝ ╚═╝╚═════╝       ╚═══╝  ╚═╝
 --
---  FLUID UI v3.0 — Premium Edition
---  By SZK • Reescritura completa
+--  FLUID UI v1.0.0 — By SZK
 -- ═══════════════════════════════════════════════════════════════════
 
 local SZK = {
     Themes = {}, Windows = {}, Flags = {}, Icons = {},
     CurrentTheme = nil, ConfigFolder = "SZK_Configs",
-    Version = "3.0.0",
+    Version = "1.0.0",
     _connections = {},
 }
 
@@ -86,7 +85,6 @@ local function Tween(obj, t, props, style, dir)
     return anim
 end
 
--- Spring: rebote natural tipo iOS
 local function Spring(obj, t, props)
     local info = TweenInfo.new(t or 0.5, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out, 0, false, 0.5)
     local anim = TweenService:Create(obj, info, props)
@@ -121,7 +119,6 @@ local function Blend(c1, c2, t)
     )
 end
 
--- Efecto de presión (encoge y vuelve)
 local function PressFeedback(btn, scale)
     scale = scale or 0.96
     local origSize = btn.Size
@@ -163,23 +160,6 @@ local function Ripple(button, color, zIndexOffset)
             if circle.Parent then circle:Destroy() end
         end)
     end)
-end
-
--- Sombras multicapa
-local function DropShadow(parent, intensity, offset)
-    intensity = intensity or 0.85
-    offset = offset or 4
-    local shadow = Instance.new("Frame")
-    shadow.Name = "SZKShadow"
-    shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    shadow.BackgroundTransparency = intensity
-    shadow.BorderSizePixel = 0
-    shadow.Size = UDim2.new(1, offset * 2, 1, offset * 2)
-    shadow.Position = UDim2.new(0, -offset, 0, -offset)
-    shadow.ZIndex = (parent.ZIndex or 1) - 1
-    shadow.Parent = parent
-    Round((parent:FindFirstChildOfClass("UICorner") and parent:FindFirstChildOfClass("UICorner").CornerRadius.Offset or 12) + offset, shadow)
-    return shadow
 end
 
 -- ═══════════════════════════════════════════════════════════════
@@ -288,7 +268,7 @@ local function TintIfAllowed(img, color)
 end
 
 -- ═══════════════════════════════════════════════════════════════
---  SISTEMA DE TEMAS EXTENDIDO
+--  TEMAS
 -- ═══════════════════════════════════════════════════════════════
 
 local function BuildTheme(name, cfg)
@@ -405,7 +385,7 @@ NotifList.Padding = UDim.new(0, 10)
 NotifList.Parent = NotificationHolder
 
 -- ═══════════════════════════════════════════════════════════════
---  NOTIFICACIONES PREMIUM
+--  NOTIFICACIONES
 -- ═══════════════════════════════════════════════════════════════
 function SZK:Notify(config)
     config = config or {}
@@ -440,7 +420,6 @@ function SZK:Notify(config)
     frame.Parent = slot
     Round(16, frame)
 
-    -- Sombra
     local shadow = Instance.new("Frame")
     shadow.BackgroundColor3 = Color3.new(0, 0, 0)
     shadow.BackgroundTransparency = 0.65
@@ -453,7 +432,6 @@ function SZK:Notify(config)
 
     local stroke = Outline(frame, accent, 1.5, 0.15)
 
-    -- Barra lateral
     local bar = Instance.new("Frame")
     bar.Size = UDim2.new(0, 3, 1, -24)
     bar.Position = UDim2.new(0, 0, 0, 12)
@@ -464,7 +442,6 @@ function SZK:Notify(config)
     Round(2, bar)
     Gradient(bar, accent, Shade(accent, 0.2), 90)
 
-    -- Icon badge
     local iconImg
     local resolvedCheck = iconKey and ResolveIcon(iconKey) or ""
     if resolvedCheck ~= "" then
@@ -512,7 +489,6 @@ function SZK:Notify(config)
     cLbl.TextWrapped = true
     cLbl.Parent = frame
 
-    -- Progress bar
     local progressBg = Instance.new("Frame")
     progressBg.Size = UDim2.new(1, -4, 0, 3)
     progressBg.Position = UDim2.new(0, 2, 1, -4)
@@ -636,7 +612,6 @@ function SZK:CreateWindow(config)
     local Registered = {}
     local OpenPopups = {}
     local Connections = {}
-    local WindowElements = {}
 
     local function Track(conn)
         table.insert(Connections, conn)
@@ -698,7 +673,7 @@ function SZK:CreateWindow(config)
     RecalculateScale()
     Track(workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(RecalculateScale))
 
-    -- ═══ SOMBRA EXTERIOR (multicapa) ═══
+    -- ═══ SOMBRA MULTICAPA ═══
     for i = 1, 3 do
         local s = Instance.new("Frame")
         s.Name = "Shadow_" .. i
@@ -723,7 +698,7 @@ function SZK:CreateWindow(config)
     OuterGlow.Parent = MainFrame
     Round(18, OuterGlow)
 
-    -- ═══ BORDE PRINCIPAL con gradiente ═══
+    -- ═══ BORDE PRINCIPAL ═══
     local MainStroke = Instance.new("UIStroke")
     MainStroke.Color = Theme.Accent
     MainStroke.Thickness = 1.5
@@ -764,7 +739,7 @@ function SZK:CreateWindow(config)
     }, 135)
 
     -- ═══════════════════════════════════════════════════════════
-    --  SCAN EFFECTS — mejorados
+    --  SCAN EFFECTS — 12 líneas cruzando, más visibles y rápidas
     -- ═══════════════════════════════════════════════════════════
     local scansEnabled = true
     local activeScans = {}
@@ -775,7 +750,7 @@ function SZK:CreateWindow(config)
         local scan = Instance.new("Frame")
         scan.BorderSizePixel = 0
         scan.BackgroundColor3 = color
-        scan.ZIndex = 8
+        scan.ZIndex = 10
         scan.Parent = MainFrame
 
         if orientation == "h" then
@@ -801,19 +776,19 @@ function SZK:CreateWindow(config)
         })
         grad.Parent = scan
 
-        -- Glow layer
+        -- Glow
         local glow = Instance.new("Frame")
         glow.BorderSizePixel = 0
         glow.BackgroundColor3 = color
-        glow.BackgroundTransparency = 0.55
-        glow.ZIndex = 7
+        glow.BackgroundTransparency = 0.5
+        glow.ZIndex = 9
         glow.Parent = MainFrame
 
         if orientation == "h" then
-            glow.Size = UDim2.new(0, length, 0, thickness * 3)
+            glow.Size = UDim2.new(0, length, 0, thickness * 4)
             glow.Position = startPos
         else
-            glow.Size = UDim2.new(0, thickness * 3, 0, length)
+            glow.Size = UDim2.new(0, thickness * 4, 0, length)
             glow.Position = startPos
         end
 
@@ -822,14 +797,17 @@ function SZK:CreateWindow(config)
         glowGrad.Color = ColorSequence.new(color, color)
         glowGrad.Transparency = NumberSequence.new({
             NumberSequenceKeypoint.new(0, 1),
-            NumberSequenceKeypoint.new(0.5, 0.25),
+            NumberSequenceKeypoint.new(0.5, 0.2),
             NumberSequenceKeypoint.new(1, 1),
         })
         glowGrad.Parent = glow
 
         register("Fills", scan)
         register("Fills", glow)
-        table.insert(ThemedElements.Scans, { scan = scan, grad = grad, glow = glow })
+        table.insert(ThemedElements.Scans, {
+            scan = scan, grad = grad,
+            glow = glow, glowGrad = glowGrad,
+        })
 
         local scanObj = { scan = scan, glow = glow, enabled = true }
         table.insert(activeScans, scanObj)
@@ -842,6 +820,7 @@ function SZK:CreateWindow(config)
                 t1:Play(); g1:Play()
                 t1.Completed:Wait()
                 if not scan or not scan.Parent or not scansEnabled then break end
+
                 local t2 = TweenService:Create(scan, TweenInfo.new(travelTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = startPos })
                 local g2 = TweenService:Create(glow, TweenInfo.new(travelTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), { Position = startPos })
                 t2:Play(); g2:Play()
@@ -852,19 +831,25 @@ function SZK:CreateWindow(config)
         return scan
     end
 
-    -- Horizontales
-    CreateScan("h", UDim2.new(0, 0, 0, 0),         UDim2.new(1, -160, 0, 0),      160, 1.5, 3, 0)
-    CreateScan("h", UDim2.new(1, -160, 0, 0),      UDim2.new(0, 0, 0, 0),          160, 1.7, 3, 0.35)
-    CreateScan("h", UDim2.new(0, 0, 1, -3),        UDim2.new(1, -160, 1, -3),      160, 1.6, 3, 0.7)
-    CreateScan("h", UDim2.new(1, -160, 1, -3),     UDim2.new(0, 0, 1, -3),         160, 1.8, 3, 1.05)
-    CreateScan("h", UDim2.new(0, 0, 0.5, -1.5),    UDim2.new(1, -200, 0.5, -1.5),  200, 2.4, 2, 0.5)
+    -- ═══ HORIZONTALES ═══
+    CreateScan("h", UDim2.new(0, 0, 0, 0),         UDim2.new(1, -180, 0, 0),       180, 1.4, 3, 0)
+    CreateScan("h", UDim2.new(1, -180, 0, 0),      UDim2.new(0, 0, 0, 0),          180, 1.5, 3, 0.4)
+    CreateScan("h", UDim2.new(0, 0, 1, -3),        UDim2.new(1, -180, 1, -3),      180, 1.45, 3, 0.8)
+    CreateScan("h", UDim2.new(1, -180, 1, -3),     UDim2.new(0, 0, 1, -3),         180, 1.55, 3, 1.2)
 
-    -- Verticales
-    CreateScan("v", UDim2.new(0, 0, 0, 0),         UDim2.new(0, 0, 1, -120),       120, 1.5, 3, 0.15)
-    CreateScan("v", UDim2.new(0, 0, 1, -120),      UDim2.new(0, 0, 0, 0),          120, 1.7, 3, 0.6)
-    CreateScan("v", UDim2.new(1, -3, 0, 0),        UDim2.new(1, -3, 1, -120),      120, 1.6, 3, 0.95)
-    CreateScan("v", UDim2.new(1, -3, 1, -120),     UDim2.new(1, -3, 0, 0),         120, 1.8, 3, 0.25)
-    CreateScan("v", UDim2.new(0.5, -1.5, 0, 0),    UDim2.new(0.5, -1.5, 1, -160),  160, 2.5, 2, 0.8)
+    -- Horizontales al medio
+    CreateScan("h", UDim2.new(0, 0, 0.5, -1.5),    UDim2.new(1, -220, 0.5, -1.5),  220, 2.0, 2, 0.6)
+    CreateScan("h", UDim2.new(1, -220, 0.5, -1.5), UDim2.new(0, 0, 0.5, -1.5),     220, 2.2, 2, 1.4)
+
+    -- ═══ VERTICALES ═══
+    CreateScan("v", UDim2.new(0, 0, 0, 0),         UDim2.new(0, 0, 1, -140),       140, 1.4, 3, 0.2)
+    CreateScan("v", UDim2.new(0, 0, 1, -140),      UDim2.new(0, 0, 0, 0),          140, 1.5, 3, 0.7)
+    CreateScan("v", UDim2.new(1, -3, 0, 0),        UDim2.new(1, -3, 1, -140),      140, 1.45, 3, 1.05)
+    CreateScan("v", UDim2.new(1, -3, 1, -140),     UDim2.new(1, -3, 0, 0),         140, 1.55, 3, 0.35)
+
+    -- Verticales al medio
+    CreateScan("v", UDim2.new(0.5, -1.5, 0, 0),    UDim2.new(0.5, -1.5, 1, -180),  180, 2.1, 2, 0.9)
+    CreateScan("v", UDim2.new(0.5, -1.5, 1, -180), UDim2.new(0.5, -1.5, 0, 0),     180, 2.3, 2, 1.6)
 
     -- ═══ HEADER ═══
     local HeaderBar = Instance.new("Frame")
@@ -882,7 +867,6 @@ function SZK:CreateWindow(config)
         Shade(Theme.Background2, -0.05),
     }, 90)
 
-    -- Divisor de header
     local headerDivider = Instance.new("Frame")
     headerDivider.Size = UDim2.new(1, -32, 0, 1)
     headerDivider.Position = UDim2.new(0, 16, 1, -1)
@@ -891,11 +875,6 @@ function SZK:CreateWindow(config)
     headerDivider.BorderSizePixel = 0
     headerDivider.ZIndex = 6
     headerDivider.Parent = HeaderBar
-    Gradient(headerDivider, Color3.new(1,1,1), Theme.Accent, 0).Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0, 1),
-        NumberSequenceKeypoint.new(0.5, 0.6),
-        NumberSequenceKeypoint.new(1, 1),
-    })
 
     -- ═══ AVATAR ═══
     local AvatarHolder = Instance.new("Frame")
@@ -927,7 +906,6 @@ function SZK:CreateWindow(config)
         avatarImg.Parent = AvatarHolder
     end
 
-    -- Indicador online (punto verde)
     local onlineDot = Instance.new("Frame")
     onlineDot.Size = UDim2.fromOffset(10, 10)
     onlineDot.Position = UDim2.new(1, -10, 1, -10)
@@ -951,9 +929,8 @@ function SZK:CreateWindow(config)
     TitleLabel.ZIndex = 6
     TitleLabel.Parent = HeaderBar
 
-    -- Badge de versión
     local versionBadge = Instance.new("Frame")
-    versionBadge.Size = UDim2.fromOffset(60, 18)
+    versionBadge.Size = UDim2.fromOffset(68, 18)
     versionBadge.Position = UDim2.new(0, 64, 0, 32)
     versionBadge.BackgroundColor3 = Theme.Accent
     versionBadge.BackgroundTransparency = 0.85
@@ -972,13 +949,12 @@ function SZK:CreateWindow(config)
     versionLbl.ZIndex = 8
     versionLbl.Parent = versionBadge
 
-    -- Descripción
     local DescLabel = Instance.new("TextLabel")
     DescLabel.Text = description
     DescLabel.Font = Enum.Font.Gotham
     DescLabel.TextSize = 18
     DescLabel.TextColor3 = Theme.Placeholder
-    DescLabel.Position = UDim2.new(0, 130, 0, 32)
+    DescLabel.Position = UDim2.new(0, 140, 0, 32)
     DescLabel.Size = UDim2.new(0, 180, 0, 18)
     DescLabel.BackgroundTransparency = 1
     DescLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -986,9 +962,7 @@ function SZK:CreateWindow(config)
     DescLabel.ZIndex = 6
     DescLabel.Parent = HeaderBar
 
-    -- ═══════════════════════════════════════════════════════════
-    --  BOTONES DE VENTANA (control)
-    -- ═══════════════════════════════════════════════════════════
+    -- ═══ BOTONES DE VENTANA ═══
     local ctrlSize = 28
     local ctrlSpacing = 6
 
@@ -1077,7 +1051,6 @@ function SZK:CreateWindow(config)
     ModalShadow.Parent = ConfirmModal
     Round(22, ModalShadow)
 
-    -- Icono de advertencia
     local warnBadge = Instance.new("Frame")
     warnBadge.Size = UDim2.fromOffset(38, 38)
     warnBadge.Position = UDim2.new(0, 20, 0, 18)
@@ -1232,13 +1205,15 @@ function SZK:CreateWindow(config)
         footLbl.Parent = footer
     end
 
-    -- ═══ BOTÓN FLOTANTE RYSHUB ═══
+    -- ═══════════════════════════════════════════════════════════
+    --  BOTÓN FLOTANTE (color del theme)
+    -- ═══════════════════════════════════════════════════════════
     local FB_W, FB_H = 155, 50
 
     local FloatBtn = Instance.new("TextButton")
     FloatBtn.Size = UDim2.fromOffset(FB_W, FB_H)
     FloatBtn.Position = UDim2.new(0, 24, 0.5, -FB_H/2)
-    FloatBtn.BackgroundColor3 = Color3.fromRGB(18, 18, 22)
+    FloatBtn.BackgroundColor3 = Theme.Background2
     FloatBtn.BackgroundTransparency = 0
     FloatBtn.Text = ""
     FloatBtn.AutoButtonColor = false
@@ -1247,9 +1222,12 @@ function SZK:CreateWindow(config)
     FloatBtn.ZIndex = 10
     FloatBtn.Parent = WindowGui
     Round(FB_H / 2, FloatBtn)
-    Gradient(FloatBtn, Color3.fromRGB(22, 22, 28), Color3.fromRGB(14, 14, 18), 135)
+    Gradient(FloatBtn,
+        Blend(Theme.Background2, Theme.Accent, 0.12),
+        Theme.Background2,
+        135
+    )
 
-    -- Sombra del botón
     local fbShadow = Instance.new("Frame")
     fbShadow.BackgroundColor3 = Color3.new(0, 0, 0)
     fbShadow.BackgroundTransparency = 0.6
@@ -1260,18 +1238,16 @@ function SZK:CreateWindow(config)
     fbShadow.Parent = FloatBtn
     Round(FB_H / 2 + 4, fbShadow)
 
-    local fbOutlineColor = Color3.fromRGB(255, 140, 0)
-    local fbStroke = Outline(FloatBtn, fbOutlineColor, 2, 0.05)
+    local fbStroke = Outline(FloatBtn, Theme.Accent, 2, 0.1)
     fbStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
     local fbInnerStroke = Instance.new("UIStroke")
-    fbInnerStroke.Color = Color3.fromRGB(255, 200, 80)
+    fbInnerStroke.Color = Blend(Theme.Accent, Color3.new(1, 1, 1), 0.4)
     fbInnerStroke.Thickness = 1
-    fbInnerStroke.Transparency = 0.6
+    fbInnerStroke.Transparency = 0.7
     fbInnerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     fbInnerStroke.Parent = FloatBtn
 
-    -- Icono drag (cruz)
     local DragIcon = Instance.new("Frame")
     DragIcon.Size = UDim2.fromOffset(26, 26)
     DragIcon.Position = UDim2.new(0, 14, 0.5, -13)
@@ -1282,7 +1258,7 @@ function SZK:CreateWindow(config)
     local crossH = Instance.new("Frame")
     crossH.Size = UDim2.fromOffset(16, 2)
     crossH.Position = UDim2.new(0.5, -8, 0.5, -1)
-    crossH.BackgroundColor3 = fbOutlineColor
+    crossH.BackgroundColor3 = Theme.Accent
     crossH.BorderSizePixel = 0
     crossH.ZIndex = 13
     crossH.Parent = DragIcon
@@ -1291,7 +1267,7 @@ function SZK:CreateWindow(config)
     local crossV = Instance.new("Frame")
     crossV.Size = UDim2.fromOffset(2, 16)
     crossV.Position = UDim2.new(0.5, -1, 0.5, -8)
-    crossV.BackgroundColor3 = fbOutlineColor
+    crossV.BackgroundColor3 = Theme.Accent
     crossV.BorderSizePixel = 0
     crossV.ZIndex = 13
     crossV.Parent = DragIcon
@@ -1304,7 +1280,7 @@ function SZK:CreateWindow(config)
     FBLabel.Text = openBtnText
     FBLabel.Font = Enum.Font.GothamBold
     FBLabel.TextSize = 18
-    FBLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    FBLabel.TextColor3 = Theme.Text
     FBLabel.TextXAlignment = Enum.TextXAlignment.Center
     FBLabel.ZIndex = 12
     FBLabel.Parent = FloatBtn
@@ -1319,13 +1295,12 @@ function SZK:CreateWindow(config)
             iconImg.BackgroundTransparency = 1
             iconImg.Image = resolvedOpenIcon
             iconImg.ScaleType = Enum.ScaleType.Fit
-            iconImg.ImageColor3 = fbOutlineColor
+            iconImg.ImageColor3 = Theme.Accent
             iconImg.ZIndex = 12
             iconImg.Parent = FloatBtn
         end
     end
 
-    -- Drag float button
     local fbDragging, fbStart, fbInputStart, fbMoved = false, nil, nil, false
     Track(FloatBtn.InputBegan:Connect(function(i)
         if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
@@ -1360,11 +1335,11 @@ function SZK:CreateWindow(config)
 
     Track(FloatBtn.MouseEnter:Connect(function()
         Tween(fbStroke, 0.2, { Transparency = 0, Thickness = 2.5 })
-        Tween(FloatBtn, 0.2, { BackgroundColor3 = Color3.fromRGB(28, 28, 34) })
+        Tween(FloatBtn, 0.2, { BackgroundColor3 = Blend(Theme.Background2, Theme.Accent, 0.18) })
     end))
     Track(FloatBtn.MouseLeave:Connect(function()
-        Tween(fbStroke, 0.2, { Transparency = 0.05, Thickness = 2 })
-        Tween(FloatBtn, 0.2, { BackgroundColor3 = Color3.fromRGB(18, 18, 22) })
+        Tween(fbStroke, 0.2, { Transparency = 0.1, Thickness = 2 })
+        Tween(FloatBtn, 0.2, { BackgroundColor3 = Theme.Background2 })
     end))
 
     -- ═══ RESIZE GRIP ═══
@@ -1456,7 +1431,6 @@ function SZK:CreateWindow(config)
     end
     EnableResize(ResizeGrip)
 
-    -- ═══ DRAG ═══
     local function EnableDrag(handle, target)
         local dragging, startPos, startInput
         Track(handle.InputBegan:Connect(function(input)
@@ -1530,7 +1504,6 @@ function SZK:CreateWindow(config)
         end
     end
 
-    -- ═══ CIERRE REAL ═══
     local function ReallyClose()
         SZK:Info("UI Closed", "The interface has been closed successfully.", 3)
         scansEnabled = false
@@ -1695,18 +1668,16 @@ function SZK:CreateWindow(config)
 
                 btn.MouseEnter:Connect(function()
                     Tween(btn, 0.15, { BackgroundTransparency = 0 })
-                    Outline(btn, tData.Accent, 1, 0.5)
                 end)
                 btn.MouseLeave:Connect(function()
                     Tween(btn, 0.15, { BackgroundTransparency = 0.4 })
-                    for _, s in ipairs(btn:GetChildren()) do
-                        if s:IsA("UIStroke") and s.Name ~= "SZKBase" then s:Destroy() end
-                    end
                 end)
                 btn.MouseButton1Click:Connect(function()
                     Theme = tData
                     SZK.CurrentTheme = Theme
                     ThemePopup.Visible = false
+
+                    -- Actualizar ventana
                     MainFrame.BackgroundColor3 = Theme.Background
                     Overlay.BackgroundColor3 = Theme.Background
                     HeaderBar.BackgroundColor3 = Theme.Background2
@@ -1724,6 +1695,30 @@ function SZK:CreateWindow(config)
                     versionLbl.TextColor3 = Theme.Accent
                     for _, l in ipairs(gripLines) do l.BackgroundColor3 = Theme.Accent end
                     for _, k in ipairs(ThemedElements.Knobs) do k.BackgroundColor3 = Theme.Background end
+
+                    -- Actualizar botón flotante
+                    FloatBtn.BackgroundColor3 = Theme.Background2
+                    fbStroke.Color = Theme.Accent
+                    fbInnerStroke.Color = Blend(Theme.Accent, Color3.new(1, 1, 1), 0.4)
+                    crossH.BackgroundColor3 = Theme.Accent
+                    crossV.BackgroundColor3 = Theme.Accent
+                    FBLabel.TextColor3 = Theme.Text
+
+                    -- Actualizar scans
+                    for _, s in ipairs(ThemedElements.Scans) do
+                        s.scan.BackgroundColor3 = Theme.Accent
+                        s.glow.BackgroundColor3 = Theme.Accent
+                        if s.grad then
+                            s.grad.Color = ColorSequence.new({
+                                ColorSequenceKeypoint.new(0, Theme.Accent),
+                                ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 1)),
+                                ColorSequenceKeypoint.new(1, Theme.Accent),
+                            })
+                        end
+                        if s.glowGrad then
+                            s.glowGrad.Color = ColorSequence.new(Theme.Accent, Theme.Accent)
+                        end
+                    end
                 end)
             end
         end
@@ -1745,7 +1740,7 @@ function SZK:CreateWindow(config)
 
     local Window = { Tabs = {}, Connections = Connections }
 
-    -- ═══ ROW BUILDER (común a todos los elementos) ═══
+    -- ═══ ROW BUILDER ═══
     local function RegisterRow(parent, height)
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(1, 0, 0, height or 58)
@@ -1765,7 +1760,6 @@ function SZK:CreateWindow(config)
         local stroke = Outline(frame, Theme.Outline, 1, 0.5)
         register("Strokes", stroke)
 
-        -- Barra lateral de acento
         local accentBar = Instance.new("Frame")
         accentBar.Size = UDim2.new(0, 3, 1, -20)
         accentBar.Position = UDim2.new(0, 0, 0, 10)
@@ -1777,7 +1771,6 @@ function SZK:CreateWindow(config)
         Gradient(accentBar, Theme.Accent, Blend(Theme.Accent, Color3.new(1,1,1), 0.3), 90)
         register("Fills", accentBar)
 
-        -- Glow hover
         local hoverGlow = Outline(frame, Theme.Accent, 1.5, 1)
         register("Strokes", hoverGlow)
 
@@ -1825,7 +1818,6 @@ function SZK:CreateWindow(config)
         pagePad.PaddingRight = UDim.new(0, 8)
         pagePad.Parent = page
 
-        -- Tab button
         local tabBtn = Instance.new("TextButton")
         tabBtn.Size = UDim2.new(1, 0, 0, 42)
         tabBtn.BackgroundColor3 = Theme.ElementBackground
@@ -1964,21 +1956,6 @@ function SZK:CreateWindow(config)
                 hLabel.TextXAlignment = Enum.TextXAlignment.Left
                 hLabel.ZIndex = 7
                 hLabel.Parent = header
-
-                -- Línea decorativa después del título
-                local line = Instance.new("Frame")
-                line.Size = UDim2.new(1, -10, 0, 1)
-                line.Position = UDim2.new(0, 10, 1, -1)
-                line.BackgroundColor3 = Theme.Outline
-                line.BackgroundTransparency = 0.7
-                line.BorderSizePixel = 0
-                line.ZIndex = 7
-                line.Parent = header
-                Gradient(line, Theme.Accent, Color3.new(1,1,1), 0).Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0, 0.3),
-                    NumberSequenceKeypoint.new(0.5, 0.7),
-                    NumberSequenceKeypoint.new(1, 1),
-                })
             end
 
             local Section = {}
@@ -2053,9 +2030,6 @@ function SZK:CreateWindow(config)
 
                 local trackStroke = Outline(track, Color3.new(1,1,1), 1, 0.85)
 
-                -- Glow
-                local trackGlow = Outline(track, Theme.Accent, 1, 1)
-
                 local knob = Instance.new("Frame")
                 knob.AnchorPoint = Vector2.new(0, 0.5)
                 knob.Position = default and UDim2.new(1, -(inset + knobSize), 0.5, 0) or UDim2.new(0, inset, 0.5, 0)
@@ -2065,7 +2039,6 @@ function SZK:CreateWindow(config)
                 knob.ZIndex = 9
                 knob.Parent = track
                 Round(knobSize, knob)
-                Outline(knob, Color3.new(1,1,1), 1, 0.9)
                 register("Knobs", knob)
 
                 local state = default
@@ -2077,15 +2050,9 @@ function SZK:CreateWindow(config)
                     if animate then
                         Spring(knob, 0.5, { Position = kp })
                         Tween(track, 0.25, { BackgroundColor3 = tc })
-                        if state then
-                            Tween(trackGlow, 0.3, { Transparency = 0.4 })
-                        else
-                            Tween(trackGlow, 0.3, { Transparency = 1 })
-                        end
                     else
                         knob.Position = kp
                         track.BackgroundColor3 = tc
-                        trackGlow.Transparency = state and 0.4 or 1
                     end
                 end
                 refresh(false)
@@ -2723,31 +2690,6 @@ function SZK:CreateWindow(config)
                 grad.Parent = line
             end
 
-            -- ─── SEPARATOR (con texto) ───
-            function Section:CreateSeparator(text)
-                local row = Instance.new("Frame")
-                row.Size = UDim2.new(1, 0, 0, 24)
-                row.BackgroundTransparency = 1
-                row.Parent = container
-
-                local lbl = Instance.new("TextLabel")
-                lbl.Size = UDim2.new(0, 0, 1, 0)
-                lbl.Position = UDim2.new(0.5, 0, 0, 0)
-                lbl.AnchorPoint = Vector2.new(0.5, 0)
-                lbl.AutomaticSize = Enum.AutomaticSize.X
-                lbl.BackgroundTransparency = 1
-                lbl.Text = tostring(text)
-                lbl.Font = Enum.Font.GothamSemibold
-                lbl.TextSize = 18
-                lbl.TextColor3 = Theme.Placeholder
-                lbl.ZIndex = 7
-                lbl.Parent = row
-
-                task.defer(function()
-                    lbl.Position = UDim2.new(0.5, 0, 0, 0)
-                end)
-            end
-
             -- ─── PROGRESS BAR ───
             function Section:CreateProgressBar(pConfig)
                 local c = pConfig or {}
@@ -2806,7 +2748,9 @@ function SZK:CreateWindow(config)
                     Tween(fill, 0.3, { Size = UDim2.new(v / 100, 0, 1, 0) })
                     if callback then callback(v) end
                 end
-                function obj:Get() return tonumber(string.match(valLbl.Text, "(%d+)")) end
+                function obj:Get()
+                    return tonumber(string.match(valLbl.Text, "(%d+)"))
+                end
                 return obj
             end
 
@@ -2854,19 +2798,17 @@ function SZK:CreateWindow(config)
             return Section
         end
 
-        -- Métodos directos en Tab
-        function Tab:CreateToggle(...)    return Tab:CreateSection(""):CreateToggle(...) end
-        function Tab:CreateSlider(...)    return Tab:CreateSection(""):CreateSlider(...) end
-        function Tab:CreateButton(...)    return Tab:CreateSection(""):CreateButton(...) end
-        function Tab:CreateInput(...)     return Tab:CreateSection(""):CreateInput(...) end
-        function Tab:CreateDropdown(...)  return Tab:CreateSection(""):CreateDropdown(...) end
-        function Tab:CreateKeybind(...)   return Tab:CreateSection(""):CreateKeybind(...) end
-        function Tab:CreateLabel(...)     return Tab:CreateSection(""):CreateLabel(...) end
-        function Tab:CreateParagraph(...) return Tab:CreateSection(""):CreateParagraph(...) end
-        function Tab:CreateDivider()      return Tab:CreateSection(""):CreateDivider() end
-        function Tab:CreateSeparator(...) return Tab:CreateSection(""):CreateSeparator(...) end
+        function Tab:CreateToggle(...)      return Tab:CreateSection(""):CreateToggle(...) end
+        function Tab:CreateSlider(...)      return Tab:CreateSection(""):CreateSlider(...) end
+        function Tab:CreateButton(...)      return Tab:CreateSection(""):CreateButton(...) end
+        function Tab:CreateInput(...)       return Tab:CreateSection(""):CreateInput(...) end
+        function Tab:CreateDropdown(...)    return Tab:CreateSection(""):CreateDropdown(...) end
+        function Tab:CreateKeybind(...)     return Tab:CreateSection(""):CreateKeybind(...) end
+        function Tab:CreateLabel(...)       return Tab:CreateSection(""):CreateLabel(...) end
+        function Tab:CreateParagraph(...)   return Tab:CreateSection(""):CreateParagraph(...) end
+        function Tab:CreateDivider()        return Tab:CreateSection(""):CreateDivider() end
         function Tab:CreateProgressBar(...) return Tab:CreateSection(""):CreateProgressBar(...) end
-        function Tab:CreateBadge(...)     return Tab:CreateSection(""):CreateBadge(...) end
+        function Tab:CreateBadge(...)       return Tab:CreateSection(""):CreateBadge(...) end
 
         return Tab
     end
@@ -2913,6 +2855,30 @@ function SZK:CreateWindow(config)
             versionLbl.TextColor3 = t.Accent
             for _, l in ipairs(gripLines) do l.BackgroundColor3 = t.Accent end
             for _, k in ipairs(ThemedElements.Knobs) do k.BackgroundColor3 = t.Background end
+
+            -- Botón flotante
+            FloatBtn.BackgroundColor3 = t.Background2
+            fbStroke.Color = t.Accent
+            fbInnerStroke.Color = Blend(t.Accent, Color3.new(1, 1, 1), 0.4)
+            crossH.BackgroundColor3 = t.Accent
+            crossV.BackgroundColor3 = t.Accent
+            FBLabel.TextColor3 = t.Text
+
+            -- Scans
+            for _, s in ipairs(ThemedElements.Scans) do
+                s.scan.BackgroundColor3 = t.Accent
+                s.glow.BackgroundColor3 = t.Accent
+                if s.grad then
+                    s.grad.Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0, t.Accent),
+                        ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 1)),
+                        ColorSequenceKeypoint.new(1, t.Accent),
+                    })
+                end
+                if s.glowGrad then
+                    s.glowGrad.Color = ColorSequence.new(t.Accent, t.Accent)
+                end
+            end
         end
     end
 
@@ -2943,7 +2909,6 @@ function SZK:CreateWindow(config)
         pcall(function() WindowGui:Destroy() end)
     end
 
-    -- Mostrar
     MainFrame.Visible = true
     MainFrame.BackgroundTransparency = 0.3
     MainFrame.Size = UDim2.fromOffset(size.X * 0.9, size.Y * 0.9)
@@ -2958,7 +2923,6 @@ end
 
 SZK.New = SZK.CreateWindow
 
--- ═══ FLAG API ═══
 function SZK:GetFlag(name) return SZK.Flags[name] end
 function SZK:SetFlag(name, v) SZK.Flags[name] = v end
 function SZK:Get(name) return SZK.Flags[name] end
