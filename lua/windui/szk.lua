@@ -385,7 +385,7 @@ NotifList.Padding = UDim.new(0, 6)
 NotifList.Parent = NotificationHolder
 
 -- ═══════════════════════════════════════════════════════════════
---  NOTIFICACIONES — COMPACTAS Y MODERNAS
+--  NOTIFICACIONES
 -- ═══════════════════════════════════════════════════════════════
 function SZK:Notify(config)
     config = config or {}
@@ -2477,7 +2477,7 @@ function SZK:CreateWindow(config)
             end
 
             -- ───────────────────────────────────────────────────
-            --  DROPDOWN  (opciones inline debajo del selector)
+            --  DROPDOWN  (FLOATING POPUP — Como en la 2da foto)
             -- ───────────────────────────────────────────────────
             function Section:CreateDropdown(dConfig)
                 local c = dConfig or {}
@@ -2490,63 +2490,7 @@ function SZK:CreateWindow(config)
                 local selected = default
                 if flag then SZK.Flags[flag] = selected end
 
-                local HEADER_H   = 54
-                local OPT_H      = 34
-                local OPT_GAP    = 4
-                local OPTS_PAD_B = 10
-
-                local n = #options
-                local totalOptsH = (n * OPT_H) + (math.max(0, n - 1) * OPT_GAP) + OPTS_PAD_B
-                local targetH    = HEADER_H + totalOptsH
-
-                -- Fila contenedora (autoexpandible)
-                local row = Instance.new("Frame")
-                row.Size = UDim2.new(1, 0, 0, HEADER_H)
-                row.BackgroundColor3 = Theme.ElementBackground
-                row.BackgroundTransparency = 0.05
-                row.ClipsDescendants = true
-                row.ZIndex = 6
-                row.Parent = container
-                Round(12, row)
-
-                MultiGradient(row, {
-                    Shade(Theme.ElementBackground, 0.06),
-                    Theme.ElementBackground,
-                    Shade(Theme.ElementBackground, -0.02),
-                }, 135)
-
-                local stroke = Outline(row, Theme.Outline, 1, 0.5)
-                register("Strokes", stroke)
-
-                local accentBar = Instance.new("Frame")
-                accentBar.Size = UDim2.new(0, 3, 0, 34)
-                accentBar.Position = UDim2.new(0, 0, 0, 10)
-                accentBar.BackgroundColor3 = Theme.Accent
-                accentBar.BorderSizePixel = 0
-                accentBar.ZIndex = 7
-                accentBar.Parent = row
-                Round(2, accentBar)
-                Gradient(accentBar, Theme.Accent, Blend(Theme.Accent, Color3.new(1,1,1), 0.3), 90)
-                register("Fills", accentBar)
-
-                local hoverGlow = Outline(row, Theme.Accent, 1.5, 1)
-                register("Strokes", hoverGlow)
-
-                row.MouseEnter:Connect(function()
-                    Tween(row, 0.2, { BackgroundTransparency = 0 })
-                    Tween(hoverGlow, 0.25, { Transparency = 0.4 })
-                end)
-                row.MouseLeave:Connect(function()
-                    Tween(row, 0.2, { BackgroundTransparency = 0.05 })
-                    Tween(hoverGlow, 0.25, { Transparency = 1 })
-                end)
-
-                -- Header (área fija arriba)
-                local header = Instance.new("Frame")
-                header.Size = UDim2.new(1, 0, 0, HEADER_H)
-                header.BackgroundTransparency = 1
-                header.ZIndex = 7
-                header.Parent = row
+                local row, stroke, accentBar = RegisterRow(container, 54)
 
                 local lbl = Instance.new("TextLabel")
                 lbl.Size = UDim2.new(0.4, 0, 1, 0)
@@ -2558,8 +2502,8 @@ function SZK:CreateWindow(config)
                 lbl.TextColor3 = Theme.Text
                 lbl.TextXAlignment = Enum.TextXAlignment.Left
                 lbl.ZIndex = 7
-                lbl.Parent = header
-                local elementIcon = AttachIcon(header, c, lbl)
+                lbl.Parent = row
+                local elementIcon = AttachIcon(row, c, lbl)
 
                 local sel = Instance.new("TextButton")
                 sel.Size = UDim2.new(0.55, -14, 0, 36)
@@ -2567,8 +2511,8 @@ function SZK:CreateWindow(config)
                 sel.BackgroundColor3 = Shade(Theme.ElementBackground, 0.08)
                 sel.Text = ""
                 sel.AutoButtonColor = false
-                sel.ZIndex = 8
-                sel.Parent = header
+                sel.ZIndex = 7
+                sel.Parent = row
                 Round(9, sel)
                 local selStroke = Outline(sel, Theme.Outline, 1, 0.5)
 
@@ -2582,19 +2526,18 @@ function SZK:CreateWindow(config)
                 selLbl.TextColor3 = Theme.Text
                 selLbl.TextXAlignment = Enum.TextXAlignment.Left
                 selLbl.TextTruncate = Enum.TextTruncate.AtEnd
-                selLbl.ZIndex = 9
+                selLbl.ZIndex = 8
                 selLbl.Parent = sel
 
                 local arrow = Instance.new("TextLabel")
                 arrow.Size = UDim2.fromOffset(26, 26)
                 arrow.Position = UDim2.new(1, -30, 0.5, -13)
-                arrow.AnchorPoint = Vector2.new(0, 0)
                 arrow.BackgroundTransparency = 1
                 arrow.Text = "▾"
                 arrow.Font = Enum.Font.GothamBold
                 arrow.TextSize = 14
                 arrow.TextColor3 = Theme.Placeholder
-                arrow.ZIndex = 9
+                arrow.ZIndex = 8
                 arrow.Parent = sel
 
                 sel.MouseEnter:Connect(function()
@@ -2604,47 +2547,47 @@ function SZK:CreateWindow(config)
                     Tween(selStroke, 0.15, { Color = Theme.Outline, Transparency = 0.5 })
                 end)
 
-                -- Contenedor de opciones (debajo del header, colapsado a 0)
-                local optsWrap = Instance.new("Frame")
-                optsWrap.Size = UDim2.new(1, 0, 0, 0)
-                optsWrap.Position = UDim2.new(0, 0, 0, HEADER_H)
-                optsWrap.BackgroundTransparency = 1
-                optsWrap.ClipsDescendants = true
-                optsWrap.ZIndex = 7
-                optsWrap.Parent = row
+                -- ─── Floating List ───
+                local list = Instance.new("ScrollingFrame")
+                list.BackgroundColor3 = Theme.ElementBackground
+                list.Visible = false
+                list.ZIndex = 150
+                list.ClipsDescendants = true
+                list.BorderSizePixel = 0
+                list.ScrollBarThickness = 3
+                list.ScrollBarImageColor3 = Theme.Accent
+                list.ScrollBarImageTransparency = 0.3
+                list.CanvasSize = UDim2.new(0, 0, 0, 0)
+                list.AutomaticCanvasSize = Enum.AutomaticSize.Y
+                list.Parent = WindowGui
+                Round(10, list)
+                Outline(list, Theme.Outline, 1.5, 0.25)
 
-                local optsPad = Instance.new("UIPadding")
-                optsPad.PaddingLeft = UDim.new(0, 12)
-                optsPad.PaddingRight = UDim.new(0, 12)
-                optsPad.PaddingBottom = UDim.new(0, OPTS_PAD_B)
-                optsPad.Parent = optsWrap
+                local listShadow = Instance.new("Frame")
+                listShadow.BackgroundColor3 = Color3.new(0, 0, 0)
+                listShadow.BackgroundTransparency = 0.6
+                listShadow.BorderSizePixel = 0
+                listShadow.Size = UDim2.new(1, 12, 1, 12)
+                listShadow.Position = UDim2.new(0, -6, 0, -6)
+                listShadow.ZIndex = -1
+                listShadow.Parent = list
+                Round(16, listShadow)
 
-                local optsLayout = Instance.new("UIListLayout")
-                optsLayout.Padding = UDim.new(0, OPT_GAP)
-                optsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-                optsLayout.Parent = optsWrap
-
-                local expanded = false
-
-                local function setExpanded(state)
-                    expanded = state
-                    Tween(arrow, 0.3, { Rotation = state and 180 or 0 }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-                    Tween(optsWrap, 0.32, {
-                        Size = UDim2.new(1, 0, 0, state and totalOptsH or 0)
-                    }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-                    Tween(row, 0.32, {
-                        Size = UDim2.new(1, 0, 0, state and targetH or HEADER_H)
-                    }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-                end
+                local listPad = Instance.new("UIPadding")
+                listPad.PaddingTop = UDim.new(0, 6)
+                listPad.PaddingBottom = UDim.new(0, 6)
+                listPad.PaddingLeft = UDim.new(0, 6)
+                listPad.PaddingRight = UDim.new(0, 6)
+                listPad.Parent = list
 
                 for i, opt in ipairs(options) do
                     local txt = type(opt) == "table" and (opt.Text or opt.Value) or tostring(opt)
                     local val = type(opt) == "table" and (opt.Value or opt.Text) or opt
 
                     local ob = Instance.new("TextButton")
-                    ob.Size = UDim2.new(1, 0, 0, OPT_H)
-                    ob.BackgroundColor3 = Shade(Theme.ElementBackground, 0.12)
-                    ob.BackgroundTransparency = 0.35
+                    ob.Size = UDim2.new(1, 0, 0, 34)
+                    ob.BackgroundColor3 = Shade(Theme.ElementBackground, 0.1)
+                    ob.BackgroundTransparency = 0.4
                     ob.Text = "   " .. txt
                     ob.Font = Enum.Font.Gotham
                     ob.TextSize = 14
@@ -2652,10 +2595,9 @@ function SZK:CreateWindow(config)
                     ob.TextXAlignment = Enum.TextXAlignment.Left
                     ob.AutoButtonColor = false
                     ob.LayoutOrder = i
-                    ob.ZIndex = 8
-                    ob.Parent = optsWrap
+                    ob.ZIndex = 151
+                    ob.Parent = list
                     Round(7, ob)
-                    Outline(ob, Theme.Outline, 1, 0.75)
 
                     ob.MouseEnter:Connect(function()
                         Tween(ob, 0.12, {
@@ -2665,21 +2607,41 @@ function SZK:CreateWindow(config)
                     end)
                     ob.MouseLeave:Connect(function()
                         Tween(ob, 0.12, {
-                            BackgroundTransparency = 0.35,
-                            BackgroundColor3 = Shade(Theme.ElementBackground, 0.12),
+                            BackgroundTransparency = 0.4,
+                            BackgroundColor3 = Shade(Theme.ElementBackground, 0.1),
                         })
                     end)
                     ob.MouseButton1Click:Connect(function()
                         selected = val
                         selLbl.Text = txt
+                        list.Visible = false
+                        Tween(arrow, 0.2, { Rotation = 0 })
                         if flag then SZK.Flags[flag] = selected end
                         callback(val)
-                        if expanded then setExpanded(false) end
                     end)
                 end
 
+                local listLayout = Instance.new("UIListLayout")
+                listLayout.Padding = UDim.new(0, 4)
+                listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                listLayout.Parent = list
+
+                RegisterPopup(list, sel)
+
                 sel.MouseButton1Click:Connect(function()
-                    setExpanded(not expanded)
+                    if list.Visible then
+                        list.Visible = false
+                        Tween(arrow, 0.2, { Rotation = 0 })
+                        return
+                    end
+                    CloseAllPopups(sel)
+                    local abs = sel.AbsolutePosition
+                    local asz = sel.AbsoluteSize
+                    local listH = math.clamp(#options * 38 + 12, 40, 260)
+                    list.Size = UDim2.fromOffset(asz.X, listH)
+                    list.Position = UDim2.fromOffset(abs.X, abs.Y + asz.Y + 4)
+                    list.Visible = true
+                    Tween(arrow, 0.2, { Rotation = 180 })
                 end)
 
                 table.insert(Registered, {
@@ -2694,8 +2656,23 @@ function SZK:CreateWindow(config)
                     if flag then SZK.Flags[flag] = v end
                 end
                 function obj:Get() return selected end
-                function obj:Open() if not expanded then setExpanded(true) end end
-                function obj:Close() if expanded then setExpanded(false) end end
+                function obj:Open()
+                    if not list.Visible then
+                        local abs = sel.AbsolutePosition
+                        local asz = sel.AbsoluteSize
+                        local listH = math.clamp(#options * 38 + 12, 40, 260)
+                        list.Size = UDim2.fromOffset(asz.X, listH)
+                        list.Position = UDim2.fromOffset(abs.X, abs.Y + asz.Y + 4)
+                        list.Visible = true
+                        Tween(arrow, 0.2, { Rotation = 180 })
+                    end
+                end
+                function obj:Close()
+                    if list.Visible then
+                        list.Visible = false
+                        Tween(arrow, 0.2, { Rotation = 0 })
+                    end
+                end
                 return obj
             end
 
